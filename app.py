@@ -6,7 +6,7 @@ import redis
 app = Flask(__name__)
 
 #redis db
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
+r = redis.Redis(host='redis', port=6379)
 
 @app.route('/')
 def hello_world():
