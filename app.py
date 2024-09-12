@@ -14,7 +14,7 @@ r = redis.from_url(redis_url)
 
 @app.route('/')
 def hello_world():
-    r.set('message', 'Hello, Redis!') #store value in db
+    r.set('message', 'Hello, Team 14!') #store value in db
 
     message = r.get('message').decode('utf-8')
     return render_template('index.html', message=message)
