@@ -1,0 +1,212 @@
+
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html
+{
+    height: 100%;
+    width: 100%;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+body
+{
+    background: linear-gradient(to bottom,#800000, #0000007b);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.title-container
+{
+    background-color: #FFBC60;
+    color: #DF5353;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    
+   
+}
+
+.circle-container
+{
+    margin-top: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle
+{
+   height: 300px;
+   width: 300px;
+    background-color: #FFBC60;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0 10px rbga(0,0,0, 0.1);
+    transition: transform 0.2s;
+}
+
+.circle.active
+{
+    animation: pulse 1s infinite;
+    transform: scale(1.1);
+}
+
+.circle:hover
+{
+    transform: scale(1.03);
+}
+
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.7), 0 0 0 0 rgba(255, 165, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 0 30px rgba(255, 69, 0, 0), 0 0 0 60px rgba(255, 165, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 69, 0, 0), 0 0 0 0 rgba(255, 165, 0, 0);
+    }
+}
+
+.logo
+{
+    font-size: 20px;
+}
+
+.history-container
+{
+    background-color: #FFBC60;
+    color: #DF5353;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 140px;
+    border-radius: 20px;
+}
+
+.btn-history a
+{
+    background-color: #FFBC60;
+    color: #DF5353;
+    font-size: large;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 10PX;
+    font-family: 'Times New Roman';
+}
+
+.btn-history:hover
+{
+    cursor: pointer;
+    transform: scale(1.03);
+}
+
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+
+.modal-content
+{
+    background: linear-gradient(to bottom, #800000, #0000007b);
+    border-radius: 20px;
+    margin: 1% auto;
+    padding: 20px;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.album-cover-container
+{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.album-cover
+{
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+}
+
+.song-info
+{
+    text-align: right;
+    color:white;
+}
+
+.song-info h2
+{
+    margin: 0;
+    font-size: 18px;
+}
+
+.song-info p
+{
+    margin: 0;
+    font-size: 14px;
+}
+
+textarea
+{
+    background-color: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+}
+ 
+.translation-btn a
+{
+    background-color: #FFBC60;
+    color:#DF5353;
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.close
+{
+    color: white;
+    font-size: 24px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
