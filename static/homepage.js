@@ -28,7 +28,7 @@ function simulateSongRecongize()
             'Sample native lyrics of the song...'
         );
         alert("Song Recongized!");
-    }, 5000);
+    }, 1000);
 }
 
 async function startListening()

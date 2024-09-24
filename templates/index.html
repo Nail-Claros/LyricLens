@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lyric Lens</title>
-    <link rel="icon" href="images/LL13.png" type="">
     <link rel="stylesheet" href="static/homepage.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/LL21.png')}}">
     <script defer src="static/homepage.js"></script>
 </head>
 <body>
+
+
     <div class="title-container">
     <h1>LyricLens</h1>
     </div>
     <div class="circle-container">
         <button id="btn-toggle" class="circle">
-            <div class="logo"><img src="images/LL13.png" alt="logo"></div>
+            <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
         </button>
     </div>
     <div class="history-container">
@@ -30,7 +32,7 @@
                 <h2 id="song-name">Song Name</h2>
                 <p id="artist-name">Artist Name</p>
             </div>
-            <textarea id="lyrics" rows="4" readonly>Native Lyrics</textarea>
+            <textarea id="lyrics" rows="2" readonly>Native Lyrics</textarea>
             <button class="translation-btn"><a href="translation.html">Translations</a></button>
         </div>
     </div>
