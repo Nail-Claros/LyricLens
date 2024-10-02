@@ -19,5 +19,3 @@ def hello_world():
     message = r.get('message').decode('utf-8')
     return render_template('index.html', message=message)
 
-if __name__ == '__main__':
-    app.run(debug=True)
