@@ -114,6 +114,7 @@ body
 
 .btn-history
 {
+    display: flex;
     color: #DF5353;
     font-size: large;
     border: none;
@@ -123,7 +124,6 @@ body
     border-radius: 10PX;
     font-family: 'Times New Roman';
 }
-
 
 .btn-history:hover
 {
@@ -215,14 +215,27 @@ textarea
 {
     grid-area: translations;
     background-color: #FFBC60;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color:#DF5353;
-    font-weight: bold;
-    font-size: 20px;
     border-radius: 10px;
     padding: 10px;
     border: none;
+}
+
+.translation-btn  a
+{
+    height: 100%;
+    width: 100%;
+    color: #DF5353;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
     cursor: pointer;
 }
+
+
 
 .translation-btn:hover
 {
