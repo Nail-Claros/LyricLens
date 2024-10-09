@@ -23,3 +23,7 @@ def translations():
 @app.route('/history', methods=['get'])
 def history():
     return render_template('history.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')

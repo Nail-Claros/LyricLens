@@ -9,7 +9,47 @@ body {
     background: linear-gradient(to bottom, #800000, #0000007b);
 }
 
+.title-container
+{
+    background-color: #FFBC60;
+    text-decoration: none;
+    color: #DF5353;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-container:hover
+{
+    transform: scale(1.1);
+}
+
+.btn-history
+{
+    display: flex;
+    text-decoration: none;
+    color: #DF5353;
+    background-color: #FFBC60;
+    font-size: large;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 10PX;
+    font-family: 'Times New Roman';
+}
+
+.btn-history:hover
+{
+    cursor: pointer;
+
+}
+
 .container {
+    text-decoration: none;
     display: flex;
     flex-direction: column;
     align-items: center;

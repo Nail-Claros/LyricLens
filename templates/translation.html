@@ -31,11 +31,17 @@
             <textarea placeholder="Translated" readonly></textarea>
         </div>
         <div class="buttons">
-            <button class="btn" id="home"><a href="{{url_for('index')}}">Home</a></button>
             <div class="media-buttons">
                 <button onclick="togglePlayPause()">&#9658; / &#10074;&#10074;</button>
             </div>
-            <button class="btn" id="history"><a href="{{url_for('history')}}">Histroy</a></button>
+            
+            <div class="title-container">
+                <button class="btn-history"><a href="{{url_for('index')}}" class="btn-history">Home</a></button>
+            </div>
+           
+            <div class="title-container">
+                <button class="btn-history"><a href="{{url_for('history')}}" class="btn-history">History</a></button>
+            </div>
         </div>
     </div>
     <script>

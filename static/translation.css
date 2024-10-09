@@ -6,6 +6,42 @@ body {
     padding: 20px;
 }
 
+.title-container
+{
+    background-color: #FFBC60;
+    color: #DF5353;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-container:hover
+{
+    transform: scale(1.1);
+}
+
+.btn-history
+{
+    display: flex;
+    color: #DF5353;
+    font-size: large;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 10PX;
+    font-family: 'Times New Roman';
+}
+
+.btn-history:hover
+{
+    cursor: pointer;
+
+}
+
 .container {
     width: 60%;
     margin: auto;
