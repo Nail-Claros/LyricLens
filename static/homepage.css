@@ -39,6 +39,11 @@ body
     align-items: center;
 }
 
+.title-container:hover
+{
+    transform: scale(1.1);
+}
+
 .circle-container
 {
     margin-top: 90px;
