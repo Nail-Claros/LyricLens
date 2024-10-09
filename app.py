@@ -13,7 +13,7 @@ app = Flask(__name__)
 r = redis.from_url(redis_url)
 
 @app.route('/')
-def hello_world():
+def index():
     return render_template('index.html')
 
 @app.route('/translation', methods=['get'])
