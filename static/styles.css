@@ -1,0 +1,64 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #800000, #0000007b);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.song-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Album placeholder styling */
+.album-placeholder {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    background-color: #e0e0e0;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Song info container */
+.song-info {
+    display: flex;
+    flex-direction: column; /* Stack song name and artist vertically */
+    background-color: #ffa500;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: black;
+}
+
+/* Song name and artist styling */
+.song-name {
+    font-weight: bold; /* Make the song name stand out */
+    margin-bottom: 5px; /* Space between song name and artist */
+}
+
+.song-artist {
+    font-style: italic; /* Different style for artist name */
+}
+
+.home-btn {
+    background-color: #ffa500;
+    border: none;
+    padding: 10px 30px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 20px;
+    border-radius: 20px;
+    color: #ffb0a0;
+}

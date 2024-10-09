@@ -20,8 +20,9 @@
         </button>
     </div>
     <div class="history-container">
-        <button class="btn-history"><a href="history.html">Histroy</a></button>
+        <button class="btn-history"><a href="{{url_for('history')}}">History</a></button>
     </div>
+
     <div id="modal" class="modal">
         <span class="close">X</span>
         <div class="modal-content"> 
@@ -33,7 +34,8 @@
                 <p id="artist-name">Artist Name</p>
             </div>
             <textarea id="lyrics" rows="2" readonly>Native Lyrics</textarea>
-            <button class="translation-btn"><a href="translation.html">Translations</a></button>
+            <button class="translation-btn"><a href="{{url_for('translations')}}">Translations</a></button>
+            
         </div>
     </div>
 </body>
