@@ -3,9 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Translations</title>
+    <title>Translations Page</title>
+    <link rel="stylesheet" href="static/translation.css"> 
 </head>
 <body>
-    <h1>hi</h1>
+    <div class="container">
+        <div class="header">
+            <h1>Select a Language:</h1>
+            <select>
+                <option>English</option>
+                <option>Spanish</option>
+                <option>French</option>
+                <option>German</option>
+                <option>Chinese</option>
+                <option>Hindi</option>
+                <option>Arabic</option>
+                <option>Bengali</option>
+                <option>Portuguese</option>
+                <option>Russian</option> 
+            </select>
+        </div>
+        <div class="translation-box"> 
+            <label for="Original">Original</label>
+            <textarea readonly placeholder="Original"></textarea>
+            <span class="arrow">→</span>
+            <label for="Translated">Translated</label>
+            <textarea placeholder="Translated" readonly></textarea>
+        </div>
+        <div class="buttons">
+            <button class="btn" id="home">Home</button>
+            <div class="media-buttons">
+                <button onclick="togglePlayPause()">&#9658; / &#10074;&#10074;</button>
+            </div>
+            <button class="btn" id="history">History</button>
+        </div>
+    </div>
+    <script>
+        let isPlaying = false;
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            document.querySelector('.media-buttons button').innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9658;';
+        }
+    </script>
 </body>
 </html>
