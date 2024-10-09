@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, redirect
 import requests
 import redis
 import os
@@ -14,10 +14,12 @@ r = redis.from_url(redis_url)
 
 @app.route('/')
 def hello_world():
-    r.set('message', 'Hello, Team 14!') #store value in db
+    return render_template('index.html')
 
-    message = r.get('message').decode('utf-8')
-    return render_template('index.html', message=message)
+@app.route('/translation', methods=['get'])
+def translations():
+    return render_template('translation.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/history', methods=['get'])
+def history():
+    return render_template('history.html')
