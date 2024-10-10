@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyric Lens</title>
+</head>
+<body>
+    <h1>Shazamio Audio Recognition - press the button to start the recording</h1>
+    <form action="/run_listener" method="post">
+        <button type="submit">
+            <img src="{{ url_for('static', filename='images/l3.png') }}" style="height: 100px; width: 100px;">
+        </button>
+    </form>
+
+    <h1>
+        <a href="{{ url_for('history') }}">Link to history</a>
+    </h1>
+    <img src="https://images.rawpixel.com/image_png_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcHUyMzMxNzg4LWltYWdlLXJtNTAzLTAxXzEtbDBqOXFyYzMucG5n.png">
+</body>
+</html>
+
