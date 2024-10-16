@@ -32,25 +32,31 @@ def detect(text):
 
 
 def translate(text, lang):
-    url = "https://deep-translate1.p.rapidapi.com/language/translate/v2"
+    if len(text) > 1000:
+        val = ""
+        for x in range(0, len(text), 1000): 
+            val+= translate(text[x:x + 1000], "en")
+    else:
+        url = "https://deep-translate1.p.rapidapi.com/language/translate/v2"
 
-    payload = {
-        "q": str(text),
-        "source": "auto",
-        "target": str(lang)
-    }
-    headers = {
-        "x-rapidapi-key": key,
-        "x-rapidapi-host": "deep-translate1.p.rapidapi.com",
-        "Content-Type": "application/json"
-    }
+        payload = {
+            "q": str(text),
+            "source": "auto",
+            "target": str(lang)
+        }
+        headers = {
+            "x-rapidapi-key": key,
+            "x-rapidapi-host": "deep-translate1.p.rapidapi.com",
+            "Content-Type": "application/json"
+        }
 
-    response = requests.post(url, json=payload, headers=headers)
+        response = requests.post(url, json=payload, headers=headers)
 
-    print(response.json())
-    ax = json.loads(response.text)
-    
-    return ax['data']['translations']['translatedText']
+        print(response.json())
+        ax = json.loads(response.text)
+        
+        return ax['data']['translations']['translatedText']
+    return val
 
 ###Title
 ###Coverart
