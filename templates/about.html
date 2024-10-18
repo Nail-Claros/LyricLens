@@ -4,24 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About LyricLens</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png')}}">
     <link rel="stylesheet" href="static/homepage.css">
 </head>
 <body>
-    <h1>About LyricLens</h1>
-    <p>Welcome to <strong>LyricLens</strong>, a project designed to capture your audio recording, recognize the song, fetch the lyrics, and display translations in real-time.</p>
-   
-    <h2>How it works:</h2>
-    <ul>
-        <li><strong>Audio Capture:</strong> Record your audio through the app.</li>
-        <li><strong>Song Recognition:</strong> Our system recognizes the song based on your recording.</li>
-        <li><strong>Lyric Fetching:</strong> We fetch the lyrics for the recognized song.</li>
-        <li><strong>Translations:</strong> Translations of the lyrics are displayed in your preferred language.</li>
-    </ul>
+    <div class="about-us-section">
+        <div class="about-title">
+            <h1>About LyricLens</h1>
+            <p>Welcome to <strong>LyricLens</strong>, a project designed to capture your audio recording, recognize the song, fetch the lyrics, and display translations in real-time.</p>
+        </div>
 
-    <p>LyricLens makes it easy to enjoy your favorite music with lyrics in any language!</p>
-    <div class="title-container">
-        <button class="btn-history"><a href="{{url_for('index')}}">Home</a></button>
+        <div class="how-it-works">
+            <h2>How it works:</h2>
+            <ul>
+                <li><strong>Audio Capture:</strong> Record your audio through the app.</li>
+                <li><strong>Song Recognition:</strong> Our system recognizes the song based on your recording.</li>
+                <li><strong>Lyric Fetching:</strong> We fetch the lyrics for the recognized song.</li>
+                <li><strong>Translations:</strong> Translations of the lyrics are displayed in your preferred language.</li>
+            </ul>
+        </div>
+    
+        <div style="font-style: italic; font-size: 20px;" >
+            <p>LyricLens makes it easy to enjoy your favorite music with lyrics in any language!</p> 
+        </div>
     </div>
     
+    <div class="home-btn-container">
+        <button class="home-btn"><a class="btn-text" href="{{url_for('index')}}">Home</a></button>
+    </div>
 </body>
 </html>
