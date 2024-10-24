@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 #redis db
 #r = redis.Redis(host='redis', port=6379)
-r = redis.from_url(redis_url)
+#r = redis.from_url(redis_url)
 
 @app.route('/')
 def index():
