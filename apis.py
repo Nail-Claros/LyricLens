@@ -11,7 +11,7 @@ def read_audio_file(file_path):
 		with open(file_path, 'rb') as audio_file:
 			return base64.b64encode(audio_file.read()).decode('utf-8')
 		
-def run_apis_1():
+def run_apis_1(full_tile):
 	genius_id = 0
 	url = "https://shazam.p.rapidapi.com/songs/v2/detect"
 	querystring = {"timezone":"America/Chicago","locale":"en-US"}
