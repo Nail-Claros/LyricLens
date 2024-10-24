@@ -86,7 +86,7 @@ if __name__ == "__main__":
         recorder.record((secs + 1), f"audio_stream/clips/clip_{x}.wav")
         exa = f"audio_stream/clips/clip_{x}.wav"
         
-        code, name = run_apis_1(exa)
+        code, name, art, lang, lyric, ca = run_apis_1(exa)
         if code == 3: #perfect run
             print(name)
             print("NEW WAY FOUND!!!")
