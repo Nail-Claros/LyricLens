@@ -7,6 +7,7 @@ import os
 key = os.getenv('SHAZ_API_KEY')
 
 app = Flask(__name__)
+
 db = []
 def db_check(val):
     if db.__contains__(val):
@@ -17,6 +18,7 @@ def db_check(val):
 # redis db
 # r = redis.Redis(host='redis', port=6379)
 # r = redis.from_url(redis_url)
+
 
 @app.route('/')
 def index():
