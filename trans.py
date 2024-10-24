@@ -1,8 +1,7 @@
 import requests
 import json
 import os
-
-key = os.environ.get('SHAZ_API_KEY')
+from app import key
 
 def detect(text):
     url = "https://google-translate-api8.p.rapidapi.com/google-translate/detect/"
@@ -35,7 +34,7 @@ def translate(text, lang):
     if len(text) > 1000:
         val = ""
         for x in range(0, len(text), 1000): 
-            val+= translate(text[x:x + 1000], "en")
+            val+= translate(text[x:x + 1000], lang=lang)
     else:
         url = "https://deep-translate1.p.rapidapi.com/language/translate/v2"
 

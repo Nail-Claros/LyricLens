@@ -1,7 +1,8 @@
 import wave
 from dataclasses import dataclass, asdict
 import pyaudio
-
+import os
+import glob
 ##this code is originally by musikalkemist and has been implemented into our program for educational purposes
 ##link to the original work https://github.com/musikalkemist/recorder
 @dataclass
@@ -65,11 +66,94 @@ class Recorder:
         self._pyaudio.terminate()
 
 
-from splitter import auto_split
+
 from apis import run_apis_1
 if __name__ == "__main__":
-    stream_params = StreamParams()
-    recorder = Recorder(stream_params)
-    recorder.record(6, "audio_stream/audio.wav")
-    auto_split()
-    run_apis_1()
+    cycles = 3
+    secs = 3
+    name = ""
+    code = 0
+    import time
+    st = time.time()
+    files = glob.glob('audio_stream/clips/*')
+    for f in files:
+        os.remove(f)
+
+
+    for x in range (cycles):
+        stream_params = StreamParams()
+        recorder = Recorder(stream_params)
+        recorder.record((secs + 1), f"audio_stream/clips/clip_{x}.wav")
+        exa = f"audio_stream/clips/clip_{x}.wav"
+        
+        code, name = run_apis_1(exa)
+        if code == 3: #perfect run
+            print(name)
+            print("NEW WAY FOUND!!!")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            break
+        if code == 2: #confirmed instrumental
+            print(name)
+            print("Confirmed Intrumental")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            break
+        if code == 1: #likely lyrics not recorded or is an instrumental
+            print(name)
+            print("Unlucky")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            break
+    if code == 0:
+        print("Could retrieve nothing....")
+        et = time.time()
+        print(f"time = {et - st} seconds")
+
+
+def run():
+    cycles = 3
+    secs = 3
+    name = ""
+    art = ""
+    lang = ""
+    lyric = ""
+    ca = ""
+    code = 0
+    import time
+    st = time.time()
+    files = glob.glob('audio_stream/clips/*')
+    for f in files:
+        os.remove(f)
+
+
+    for x in range (cycles):
+        stream_params = StreamParams()
+        recorder = Recorder(stream_params)
+        recorder.record((secs + 1), f"audio_stream/clips/clip_{x}.wav")
+        exa = f"audio_stream/clips/clip_{x}.wav"
+        
+        code, name, art, lang, lyric, ca = run_apis_1(exa)
+        if code == 3: #perfect run
+            print(name)
+            print("NEW WAY FOUND!!!")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            return code, name, art, lang, lyric, ca
+        if code == 2: #confirmed instrumental
+            print(name)
+            print("Confirmed Intrumental")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            return code, name, art, lang, lyric, ca
+        if code == 1: #likely lyrics not recorded or is an instrumental
+            print(name)
+            print("Unlucky")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            return code, name, art, lang, lyric, ca
+    if code == 0:
+        print("Could retrieve nothing....")
+        et = time.time()
+        print(f"time = {et - st} seconds")
+        return code, name, art, lang, lyric, ca
