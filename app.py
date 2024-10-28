@@ -3,8 +3,12 @@ import requests
 import redis
 import os
 
-# redis_url = os.getenv('REDIS_URL')
+
 key = os.getenv('SHAZ_API_KEY')
+
+redis_url = os.getenv('REDIS_URL')
+
+redis_client = redis.Redis.from_url(redis_url)
 
 app = Flask(__name__)
 
@@ -15,9 +19,20 @@ def db_check(val):
         db.append(x)
     else:
         db.append(val)
-# redis db
-# r = redis.Redis(host='redis', port=6379)
-# r = redis.from_url(redis_url)
+
+@app.route('/redistest')
+def redis_test():
+    message = redis_client.get('my_message')
+    message = message.decode('utf-8') if message else "No message found."
+    return render_template('redistest.html', message=message)
+
+#store a message for testing purposes
+@app.route('/store_message')
+def store_message():
+    redis_client.flushall()
+    message = "Hello, this is a CAM!"
+    redis_client.set('my_message', message)
+    return "Message stored in Redis!"
 
 
 @app.route('/')

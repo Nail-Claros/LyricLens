@@ -107,7 +107,7 @@ def run_apis_1(full_title):
         # return 0, ""
 		# full_title = "Bye Bye Bye *NSYNC"
 
-	# return 0, "", "", "", "" ##return code 0 to indicate no song could be identified at all
+	return 0, "", "", "", "" ##return code 0 to indicate no song could be identified at all
 
 
 
