@@ -22,9 +22,12 @@ def detect(text):
 
     print(response.json())
     ax = json.loads(response.text)
-    code = ax['result']['code']
-    language = ax['result']['language']
-    return code, language
+    if ax['result']:
+        code = ax['result']['code']
+        language = ax['result']['language']
+        return code, language
+
+    return "MUL", "Made up Language/gibberish"
 
 
 

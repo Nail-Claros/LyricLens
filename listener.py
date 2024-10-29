@@ -87,6 +87,12 @@ if __name__ == "__main__":
         exa = f"audio_stream/clips/clip_{x}.wav"
         
         code, name, art, lang, lyric, ca = run_apis_1(exa)
+        if lang == "Made up Language/gibberish": #made up
+            print(name)
+            print("Made up Langauge!!!")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            break
         if code == 3: #perfect run
             print(name)
             print("NEW WAY FOUND!!!")
@@ -134,6 +140,12 @@ def run():
         exa = f"audio_stream/clips/clip_{x}.wav"
         
         code, name, art, lang, lyric, ca = run_apis_1(exa)
+        if code == 4: #made up
+            print(name)
+            print("Made up Langauge!!!")
+            et = time.time()
+            print(f"time = {et - st} seconds")
+            return code, name, art, lang, lyric, ca
         if code == 3: #perfect run
             print(name)
             print("NEW WAY FOUND!!!")
