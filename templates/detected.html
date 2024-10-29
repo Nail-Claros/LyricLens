@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyric Lens</title>
+    <link rel="stylesheet" href="static/homepage.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png')}}">
+    <script defer src="static/homepage.js"></script>
+</head>
+<body>
+    {% block body %}
+        <div class="title-container">
+            <button><a href="{{url_for('about')}}">LyricLens</a></button>
+        </div>
+        <div class="circle-container">
+            <form action="/run_listener" method="post">
+                <button id="btn-toggle" class="circle" type="submit">
+                    <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
+                </button>
+            </form>
+        </div>
+        <div class="history-container">
+            <button class="btn-history"><a href="{{url_for('history')}}">History</a></button>
+        </div>
+        {% if code == 3 %}
+            <div id="modal"  class="modal" style="display: block;">
+                <span class="close">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName }}</p>
+                    </div>
+                    <textarea id="lyrics" rows="2" readonly>{{ songLyric }}</textarea>
+                    <button class="translation-btn"><a href="{{url_for('translations')}}">Translations</a></button>   
+                </div>
+            </div>
+        {% endif %}
+        {% if code == 2 %}
+            <div id="modal" class="modal" style="display: block;">
+                <span class="close">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName }}</p>
+                    </div>
+                    <textarea id="lyrics" rows="2" readonly>Confirmed instrumental</textarea>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+        {% if code == 1 %}
+            <div id="modal"  class="modal" style="display: block;">
+                <span class="close">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName }}</p>
+                    </div>
+                    <textarea id="lyrics" rows="2" readonly>Likely no lyrics recorded or is an instrumental</textarea>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+        {% if code == 0 %}
+            <div id="modal"  class="modal" style="display: block;">
+                <span class="close">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                    <img src="" alt="Album Cover" class="album-cover" id="album-cover">
+                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name"></h2>
+                        <p id="artist-name"></p>
+                    </div>
+                    <textarea id="lyrics" rows="2" readonly>No song could be found please try again</textarea>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+        {% if code == 4 %}
+            <div id="modal" class="modal" style="display: block;">
+                <span class="close">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName }}</p>
+                        <p>Song lyrics are in a made up language</p>
+                    </div>
+                    <textarea id="lyrics" rows="2" readonly>{{ songLyric }}</textarea>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

@@ -23,6 +23,17 @@ def db_check(val):
 @app.route('/')
 def index():
     return render_template('index.html')
+    
+@app.route('/detected')
+def detected():
+    code = request.args.get('code')
+    songName = request.args.get('name')
+    artistName = request.args.get('artist')
+    songLang = request.args.get('lang')
+    songLyric = request.args.get('lyric')
+    albumCover = request.args.get('ca')
+    code = int(code)
+    return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
 @app.route('/translation', methods=['get'])
 def translations():
@@ -47,8 +58,5 @@ def run_listener():
     name = ""
     code = 0
     code, name, art, lang, lyric, ca = run()
-    if code == 0:
-        return redirect('/')
-    else:
-        db_check([name, art, lang, lyric, ca])
-        return redirect(url_for('detected', name=name, artist=art, lang=lang, lyric=lyric, ca=ca))
+    db_check([name, art, lang, lyric, ca])
+    return redirect(url_for('detected', code=code, name=name, artist=art, lang=lang, lyric=lyric, ca=ca))

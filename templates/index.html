@@ -15,28 +15,13 @@
         <button><a href="{{url_for('about')}}">LyricLens</a></button>
     </div>
     <div class="circle-container">
-        <button id="btn-toggle" class="circle">
-            <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
-        </button>
+        <form action="/run_listener" method="post">
+            <button id="btn-toggle" class="circle" type="submit">
+                <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
+            </button>
+        </form>
     </div>
     <div class="history-container">
         <button class="btn-history"><a href="{{url_for('history')}}">History</a></button>
-    </div>
-
-    <div id="modal" class="modal">
-        <span class="close">X</span>
-        <div class="modal-content"> 
-            <div class="album-cover-container">
-            <img src="" alt="Album Cover" class="album-cover" id="album-cover">
-            </div> 
-            <div class="song-info">
-                <h2 id="song-name">Song Name</h2>
-                <p id="artist-name">Artist Name</p>
-            </div>
-            <textarea id="lyrics" rows="2" readonly>Native Lyrics</textarea>
-            <button class="translation-btn"><a href="{{url_for('translations')}}">Translations</a></button>
-            
-        </div>
-    </div>
 </body>
 </html>

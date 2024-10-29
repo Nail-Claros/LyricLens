@@ -35,14 +35,15 @@
                 <button onclick="togglePlayPause()">&#9658; / &#10074;&#10074;</button>
             </div>
             
-            <div class="title-container">
-                <button class="btn-history"><a href="{{url_for('index')}}" class="btn-history">Home</a></button>
-            </div>
-           
-            <div class="title-container">
-                <button class="btn-history"><a href="{{url_for('history')}}" class="btn-history">History</a></button>
-            </div>
+
         </div>
+    </div>
+    <div class="btn-container">
+        <button class="btn"><a href="{{url_for('index')}}" class="btn-text">Home</a></button>
+    </div>
+   
+    <div class="btn-container">
+        <button class="btn"><a href="{{url_for('history')}}" class="btn-text">History</a></button>
     </div>
     <script>
         let isPlaying = false;
