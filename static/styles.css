@@ -9,43 +9,11 @@ body {
     background: linear-gradient(to bottom, #800000, #0000007b);
 }
 
-.title-container
+a
 {
-    background-color: #FFBC60;
     text-decoration: none;
     color: #DF5353;
-    border-radius: 10px;
-    padding: 10px 20px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.title-container:hover
-{
-    transform: scale(1.1);
-}
-
-.btn-history
-{
-    display: flex;
-    text-decoration: none;
-    color: #DF5353;
-    background-color: #FFBC60;
-    font-size: large;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    font-size: 30px;
-    border-radius: 10PX;
-    font-family: 'Times New Roman';
-}
-
-.btn-history:hover
-{
-    cursor: pointer;
-
+    
 }
 
 .container {
@@ -92,13 +60,26 @@ body {
     font-style: italic; /* Different style for artist name */
 }
 
-.home-btn {
-    background-color: #ffa500;
+.home-btn-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFBC60;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.home-btn
+{
+    background-color: #FFBC60;
     border: none;
-    padding: 10px 30px;
-    cursor: pointer;
-    font-size: 18px;
-    margin-top: 20px;
-    border-radius: 20px;
-    color: #ffb0a0;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.home-btn-container:hover
+{
+    transform: scale(1.1);
 }

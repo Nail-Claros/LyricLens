@@ -140,6 +140,7 @@ def run():
             et = time.time()
             print(f"time = {et - st} seconds")
             return code, name, art, lang, lyric, ca
+            break
         if code == 2: #confirmed instrumental
             print(name)
             print("Confirmed Intrumental")

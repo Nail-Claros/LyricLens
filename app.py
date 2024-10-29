@@ -23,6 +23,15 @@ def db_check(val):
 @app.route('/')
 def index():
     return render_template('index.html')
+    
+@app.route('/detected')
+def detected():
+    songName = request.args.get('name')
+    artistName = request.args.get('artist')
+    songLang = request.args.get('lang')
+    songLyric = request.args.get('lyric')
+    albumCover = request.args.get('ca')
+    return render_template('detected.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
 @app.route('/translation', methods=['get'])
 def translations():
