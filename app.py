@@ -32,6 +32,7 @@ def detected():
     songLang = request.args.get('lang')
     songLyric = request.args.get('lyric')
     albumCover = request.args.get('ca')
+    code = int(code)
     return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
 @app.route('/translation', methods=['get'])
