@@ -173,6 +173,45 @@ button{
         "translations translations";
 }
 
+.modal-content-zero
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: cneter;
+    align-items: center;
+    background-color: #DF5353;
+    border-radius: 20px;
+    margin: 1% auto;
+    padding: 20px;
+    width: 600px;
+    height: 200px;
+}
+
+.h2-text
+{
+    color: white;
+    padding: 10px;
+}
+
+.modal-content-four
+{
+    background-color: #DF5353;
+    border-radius: 20px;
+    margin: 1% auto;
+    padding: 20px;
+    width: 600px;
+    height: 400px;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-template-rows: 100px 1fr 50px 50px;
+    gap: 20px;
+    grid-template-areas:
+        "album-cover song-info"
+        "lyrics lyrics"
+        "p p"
+        "translations translations";
+}
+
 .album-cover-container
 {
     grid-area: album-cover;
@@ -196,6 +235,13 @@ button{
     justify-content: center;
     align-items: flex-start;
     color: #fff;
+}
+.p
+{
+    grid-area: p;
+    color: white;
+    display: flex;
+    font-family: monospace;
 }
 
 .song-info h2
