@@ -36,15 +36,7 @@
                         <p >Language: {{ songLang }}</p>
                     </div>
                     <textarea id="lyrics" rows="2" readonly>{{ songLyric }}</textarea>
-                    <form action="{{ url_for('translations') }}" method="POST">
-                        <input type="hidden" name="songName" value="{{ songName }}">
-                        <input type="hidden" name="artistName" value="{{ artistName }}">
-                        <input type="hidden" name="songLyric" value="{{ songLyric }}">
-                        <input type="hidden" name="songLang" value="{{ songLang }}">
-                        <input type="hidden" name="albumCover" value="{{ albumCover }}">
-                        <button type="submit" class="translation-btn">Translations</button>
-                    </form>
-                </div>
+                    <button class="translation-btn"><a href="{{url_for('translations')}}">Translations</a></button>                  </div>
             </div>
         {% endif %}
         {% if code == 2 %}
