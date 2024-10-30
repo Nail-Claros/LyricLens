@@ -16,7 +16,8 @@
                 <div class="song-info">
                     <div class="song-name">{{ x[0][:67] }}{% if x[0]|length > 67 %}...{% endif %}</div>
                     <div class="song-artist">{{ x[1][:67] }}{% if x[1]|length > 67 %}...{% endif %}</div>
-                </div>
+                    <a href="{{ url_for('from_history', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Head to translations</a>    
+                </div>        
             </div>
             {% endfor %}
         {% else %}

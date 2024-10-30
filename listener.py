@@ -129,8 +129,9 @@ def run():
     import time
     st = time.time()
     files = glob.glob('audio_stream/clips/*')
-    for f in files:
-        os.remove(f)
+    if len(files) != 0:
+        for f in files:
+            os.remove(f)
 
 
     for x in range (cycles):

@@ -50,6 +50,16 @@ def translations():
     ca = session.get('albumCover')
     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
 
+@app.route('/translations', methods=['GET'])
+def from_history():
+    name = request.args.get('songName')
+    art =  request.args.get('artistName')
+    lyric =  request.args.get('songLyric')
+    lang =  request.args.get('songLang')
+    ca =  request.args.get('albumCover')
+    return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
+
+
 @app.route('/translate', methods=['POST'])
 def translate():
     data = request.get_json()
