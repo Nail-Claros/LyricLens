@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="static/translation.css"> 
 </head>
 <body>
+    {% block body %}
     <div class="container">
         <div class="header">
             <h1>Select a Language:</h1>
@@ -25,7 +26,7 @@
         </div>
         <div class="translation-box"> 
             
-            <textarea readonly placeholder="Original"></textarea>
+            <textarea readonly placeholder="{{ lyric }}"></textarea>
             <span class="arrow">→</span>
             
             <textarea placeholder="Translated" readonly></textarea>
@@ -52,5 +53,6 @@
             document.querySelector('.media-buttons button').innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9658;';
         }
     </script>
+    {% endblock %}
 </body>
 </html>

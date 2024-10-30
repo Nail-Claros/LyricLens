@@ -35,13 +35,13 @@ def detected():
     code = int(code)
     return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
-@app.route('/translation', methods=['get'])
+@app.route('/translation', methods=['POST'])
 def translations():
-    name = request.args.get('name')
-    art = request.args.get('artist')
-    lang = request.args.get('lang')
-    lyric = request.args.get('lyric')
-    ca = request.args.get('ca')
+    name = request.form.get('songName')
+    art = request.form.get('artistName')
+    lyric = request.form.get('songLyric')
+    lang = request.form.get('songLang')
+    ca = request.form.get('albumCover')
     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca)
 
 @app.route('/history', methods=['get'])
