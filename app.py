@@ -26,13 +26,13 @@ def index():
     
 @app.route('/detected')
 def detected():
-    code = request.args.get('code')
+    code = int(request.args.get('code'))
     songName = request.args.get('name')
     artistName = request.args.get('artist')
     songLang = request.args.get('lang')
     songLyric = request.args.get('lyric')
     albumCover = request.args.get('ca')
-    code = int(code)
+    
     session['songName'] = songName
     session['artistName'] = artistName
     session['songLyric'] = songLyric
@@ -40,7 +40,7 @@ def detected():
     session['albumCover'] = albumCover
     return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
-@app.route('/translation', methods=['POST'])
+@app.route('/translation')
 def translations():
     name = session.get('songName')
     art = session.get('artistName')
