@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, session
 import requests
 import redis
 import os
@@ -7,7 +7,7 @@ import os
 key = os.getenv('SHAZ_API_KEY')
 
 app = Flask(__name__)
-
+app.secret_key = os.getenv('sec_key')
 db = []
 def db_check(val):
     if db.__contains__(val):
@@ -26,22 +26,27 @@ def index():
     
 @app.route('/detected')
 def detected():
-    code = request.args.get('code')
+    code = int(request.args.get('code'))
     songName = request.args.get('name')
     artistName = request.args.get('artist')
     songLang = request.args.get('lang')
     songLyric = request.args.get('lyric')
     albumCover = request.args.get('ca')
-    code = int(code)
+    
+    session['songName'] = songName
+    session['artistName'] = artistName
+    session['songLyric'] = songLyric
+    session['songLang'] = songLang
+    session['albumCover'] = albumCover
     return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
-@app.route('/translation', methods=['get'])
+@app.route('/translation')
 def translations():
-    name = request.args.get('name')
-    art = request.args.get('artist')
-    lang = request.args.get('lang')
-    lyric = request.args.get('lyric')
-    ca = request.args.get('ca')
+    name = session.get('songName')
+    art = session.get('artistName')
+    lyric = session.get('songLyric')
+    lang = session.get('songLang')
+    ca = session.get('albumCover')
     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca)
 
 @app.route('/history', methods=['get'])
@@ -59,4 +64,5 @@ def run_listener():
     code = 0
     code, name, art, lang, lyric, ca = run()
     db_check([name, art, lang, lyric, ca])
+    
     return redirect(url_for('detected', code=code, name=name, artist=art, lang=lang, lyric=lyric, ca=ca))
