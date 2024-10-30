@@ -32,7 +32,8 @@
                     </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
-                        <p id="artist-name">{{ artistName }}</p>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
+                        <p >Language: {{ songLang }}</p>
                     </div>
                     <textarea id="lyrics" rows="2" readonly>{{ songLyric }}</textarea>
                     <form action="{{ url_for('translations') }}" method="POST">
@@ -55,7 +56,7 @@
                     </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
-                        <p id="artist-name">{{ artistName }}</p>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
                     </div>
                     <textarea id="lyrics" rows="2" readonly style="font-size: 20px;" >Your song is an instrumental so there is no lyrics to translate.</textarea>
                     <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
@@ -71,7 +72,7 @@
                     </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
-                        <p id="artist-name">{{ artistName }}</p>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
                     </div>
                     <textarea id="lyrics" rows="2" readonly style="font-size: 20px;">Lyrics are likely not recorded and could not be found or the attempted to song be found is an instrumental.</textarea>
                     <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
@@ -97,7 +98,8 @@
                     </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
-                        <p id="artist-name">{{ artistName }}</p>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
+                        <p >Language: {{ songLang }}</p>
                     </div>
                     <textarea id="lyrics" rows="2" readonly>{{ songLyric }}</textarea>
                     <p id="p" class="p" style="font-size: 20px;">we have found the song lyrics along with song information, however the song consists of gibberish/made up language.</p>
