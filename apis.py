@@ -38,7 +38,8 @@ def run_apis_1(full_title):
         
         if 'images' in ax['track']:
             coverart = ax['track']['images']['coverart']
-            ax = return_lyrics(song_name, song_artist)
+        
+        ax = return_lyrics(song_name, song_artist)
         
         if response.status_code == 200 and "hits" in ax:
             print("IN____________________ ID FOUND")
