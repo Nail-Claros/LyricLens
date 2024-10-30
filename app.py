@@ -5,10 +5,10 @@ import os
 
 # redis_url = os.getenv('REDIS_URL')
 key = os.getenv('SHAZ_API_KEY')
-
+db = []
 app = Flask(__name__)
 app.secret_key = os.getenv('sec_key')
-db = []
+
 def db_check(val):
     if db.__contains__(val):
         x = db.pop(db.index(val))

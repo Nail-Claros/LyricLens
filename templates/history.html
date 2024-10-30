@@ -8,30 +8,27 @@
 </head>
 <body>
     <div class="container">
-        <div class="song-item">
-            <img class="album-placeholder" src="{{ url_for('static', filename='images/placeholder-image.png')}}" alt="Album Placeholder">
-            <div class="song-info">
-                <div class="song-name">Song name</div>
-                <div class="song-artist">Artist name</div>
+        {% block body %}
+        {% if red %}
+            {% for x in red|reverse %}
+            <div class="song-item">
+                <img class="album-placeholder" src="{{ x[4] }}" alt="Album Placeholder">
+                <div class="song-info">
+                    <div class="song-name">{{ x[0][:67] }}{% if x[0]|length > 67 %}...{% endif %}</div>
+                    <div class="song-artist">{{ x[1][:67] }}{% if x[1]|length > 67 %}...{% endif %}</div>
+                </div>
             </div>
-        </div>
+            {% endfor %}
+        {% else %}
         <div class="song-item">
-            <img class="album-placeholder" src="{{ url_for('static', filename='images/placeholder-image.png')}}" alt="Album Placeholder">
-            <div class="song-info">
-                <div class="song-name">Song name</div>
-                <div class="song-artist">Artist name</div>
-            </div>
+            <h1>Nothing in here for now!</h1>
         </div>
-        <div class="song-item">
-            <img class="album-placeholder" src="{{ url_for('static', filename='images/placeholder-image.png')}}" alt="Album Placeholder">
-            <div class="song-info">
-                <div class="song-name">Song name</div>
-                <div class="song-artist">Artist name</div>
-            </div>
-        </div>
+        {% endif %}
+
         <div class="home-btn-container">
             <button class="home-btn"><a href="{{url_for('index')}}" class="btn-text">Home</a></button>
         </div>
-    </div>
+        {% endblock %}
+    </div> 
 </body>
 </html>
