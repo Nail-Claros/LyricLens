@@ -5,31 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Translations Page</title>
     <link rel="stylesheet" href="static/translation.css"> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
     {% block body %}
     <div class="container">
         <div class="header">
             <h1>Select a Language:</h1>
-            <select>
-                <option>English</option>
-                <option>Spanish</option>
-                <option>French</option>
-                <option>German</option>
-                <option>Chinese</option>
-                <option>Hindi</option>
-                <option>Arabic</option>
-                <option>Bengali</option>
-                <option>Portuguese</option>
-                <option>Russian</option> 
-            </select>
+            <select id="myDropdown">
+                <option value="">Select a language</option>
+                {% for key, value in ldict.items() %}
+                    {% if value|upper != lang|upper %}            
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endif %}
+                {% endfor %}
         </div>
         <div class="translation-box"> 
             
             <textarea readonly placeholder="{{ lyric }}"></textarea>
             <span class="arrow">→</span>
             
-            <textarea placeholder="Translated" readonly></textarea>
+            <textarea id="translation" class="textbox" placeholder="Pick a language! Translations will appear here!" readonly></textarea>
         </div>
         <div class="buttons">
             <div class="media-buttons">
@@ -51,6 +48,33 @@
         function togglePlayPause() {
             isPlaying = !isPlaying;
             document.querySelector('.media-buttons button').innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9658;';
+        }
+
+        $(document).ready(function() {
+            $('#myDropdown').change(function() {
+                updateTranslation($(this).val());
+            });
+        });
+
+        function updateTranslation(selectedLang) {
+            const textToTranslate = `{{ lyric }}`; 
+
+            if (selectedLang) {
+                $.ajax({
+                    url: '/translate',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ text: textToTranslate, lang: selectedLang }),
+                    success: function(response) {
+                        $('#translation').val(response.translatedText); 
+                    },
+                    error: function() {
+                        alert('Error translating text');
+                    }
+                });
+            } else {
+                $('#translation').val(''); 
+            }
         }
     </script>
     {% endblock %}

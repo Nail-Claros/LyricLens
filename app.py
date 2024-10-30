@@ -1,5 +1,6 @@
-from flask import Flask, render_template, url_for, redirect, request, session
+from flask import Flask, jsonify, render_template, url_for, redirect, request, session
 import requests
+import trans
 import redis
 import os
 
@@ -47,7 +48,17 @@ def translations():
     lyric = session.get('songLyric')
     lang = session.get('songLang')
     ca = session.get('albumCover')
-    return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca)
+    return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
+
+@app.route('/translate', methods=['POST'])
+def translate():
+    data = request.get_json()
+    text = data.get('text')
+    lang = data.get('lang')
+
+    translated_text = trans.translate(text=text, lang=lang) 
+
+    return jsonify({'translatedText': translated_text})
 
 @app.route('/history', methods=['get'])
 def history():

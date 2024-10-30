@@ -1,7 +1,9 @@
 import requests
 import json
 import os
-from app import key
+
+key = os.getenv('SHAZ_API_KEY')
+
 
 def detect(text):
     url = "https://google-translate-api8.p.rapidapi.com/google-translate/detect/"
