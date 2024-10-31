@@ -4,52 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Translations Page</title>
-    <link rel="stylesheet" href="static/translation.css"> 
+    <link rel="stylesheet" href="static/translation.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </head>
 <body>
     {% block body %}
     <div class="container">
-        <div class="header">
-            <h1>Select a Language:</h1>
-            <select id="myDropdown">
-                <option value="">Select a language</option>
-                {% for key, value in ldict.items() %}
-                    {% if value|upper != lang|upper %}            
-                        <option value="{{ key }}">{{ value }}</option>
-                    {% endif %}
-                {% endfor %}
+        <!-- Album Cover and Song Information -->
+        <div class="album-info">
+            <img src="{{ ca }}" alt="Album Cover" class="album-cover">
+            <div class="song-details">
+                <h2 class="song-name">{{ name }}</h2>
+                <p class="song-artist">{{ art }}</p>
+            </div>
         </div>
-        <div class="translation-box"> 
-            
-            <textarea readonly placeholder="{{ lyric }}"></textarea>
-            <span class="arrow">→</span>
-            
-            <textarea id="translation" class="textbox" placeholder="Pick a language! Translations will appear here!" readonly></textarea>
-        </div>
-        <div class="buttons">
-            <div class="media-buttons">
-                <button onclick="togglePlayPause()">&#9658; / &#10074;&#10074;</button>
+        
+        <!-- Translation Section -->
+        <div class="translation-section">
+            <!-- Original Language -->
+            <div class="original-lang">
+                <h4>Original Language:</h4>
+                <h5>{{lang | capitalize }}</h5>
+                <textarea readonly placeholder="{{ lyric }}">{{ lyric }}</textarea>
             </div>
             
+            <span class="arrow">→</span>
+            
+            <!-- Translation Language -->
+            <div class="translated-lang">
+                <h3>Translated:</h3>
+                <select id="myDropdown">
+                    <option value="">Select a language</option>
+                    {% for key, value in ldict.items() %}
+                        {% if value|upper != lang|upper %}
+                            <option value="{{ key }}">{{ value }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <textarea id="translation" class="textbox" placeholder="Pick a language! Translations will appear here!" readonly></textarea>
+            </div>
+        </div>
 
+        <!-- Buttons Section -->
+        <div class="btn-container">
+            <button class="btn"><a href="{{url_for('index')}}" class="btn-text">Return Home</a></button>
+            <button class="btn"><a href="{{url_for('history')}}" class="btn-text">History</a></button>
         </div>
     </div>
-    <div class="btn-container">
-        <button class="btn"><a href="{{url_for('index')}}" class="btn-text">Home</a></button>
-    </div>
-   
-    <div class="btn-container">
-        <button class="btn"><a href="{{url_for('history')}}" class="btn-text">History</a></button>
-    </div>
+    
     <script>
-        let isPlaying = false;
-        function togglePlayPause() {
-            isPlaying = !isPlaying;
-            document.querySelector('.media-buttons button').innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9658;';
-        }
-
         $(document).ready(function() {
             $('#myDropdown').change(function() {
                 updateTranslation($(this).val());
@@ -57,7 +60,7 @@
         });
 
         function updateTranslation(selectedLang) {
-            const textToTranslate = `{{ lyric }}`; 
+            const textToTranslate = `{{ lyric }}`;
 
             if (selectedLang) {
                 $.ajax({
@@ -66,14 +69,14 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ text: textToTranslate, lang: selectedLang }),
                     success: function(response) {
-                        $('#translation').val(response.translatedText); 
+                        $('#translation').val(response.translatedText);
                     },
                     error: function() {
                         alert('Error translating text');
                     }
                 });
             } else {
-                $('#translation').val(''); 
+                $('#translation').val('');
             }
         }
     </script>
