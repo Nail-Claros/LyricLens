@@ -15,7 +15,7 @@
         </div>
         <div class="circle-container">
             <form action="/run_listener" method="post">
-                <button id="btn-toggle" class="circle" type="submit">
+                <button id="btn-toggle" class="circle" type="submit" onclick="disableButton(event)">
                     <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
                 </button>
             </form>
@@ -23,7 +23,7 @@
         <div class="history-container">
             <button class="btn-history"><a href="{{url_for('history')}}">History</a></button>
         </div>
-        {% if code == 3 %}
+        {% if code == 3 %} <!-- Perfect run-->
             <div id="modal"  class="modal" style="display: block;">
                 <span class="close">X</span>
                 <div class="modal-content"> 
@@ -39,7 +39,7 @@
                     <button class="translation-btn"><a href="{{url_for('translations')}}">Translations</a></button>                  </div>
             </div>
         {% endif %}
-        {% if code == 2 %}
+        {% if code == 2 %} <!-- instrumental song-->
             <div id="modal" class="modal" style="display: block;">
                 <span class="close">X</span>
                 <div class="modal-content"> 
@@ -55,7 +55,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if code == 1 %}
+        {% if code == 1 %} <!-- no lyrics or instructmental-->
             <div id="modal"  class="modal" style="display: block;">
                 <span class="close">X</span>
                 <div class="modal-content"> 
@@ -71,7 +71,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if code == 0 %}
+        {% if code == 0 %} <!-- Can not find anything-->
             <div id="modal"  class="modal" style="display: block;">
                 <span class="close">X</span>
                 <div class="modal-content-zero"> 
@@ -81,7 +81,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if code == 4 %}
+        {% if code == 4 %} <!-- Made up Langauge or Gibberish-->
             <div id="modal" class="modal" style="display: block;">
                 <span class="close">X</span>
                 <div class="modal-content-four"> 
