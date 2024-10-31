@@ -16,7 +16,7 @@
     </div>
     <div class="circle-container">
         <form action="/run_listener" method="post">
-            <button id="btn-toggle" class="circle" type="submit">
+            <button id="btn-toggle" class="circle" type="submit" onclick="disableButton(event)">
                 <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
             </button>
         </form>
