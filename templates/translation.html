@@ -12,10 +12,10 @@
     <div class="container">
         <!-- Album Cover and Song Information -->
         <div class="album-info">
-            <img src="{{ albumCover }}" alt="Album Cover" class="album-cover">
+            <img src="{{ ca }}" alt="Album Cover" class="album-cover">
             <div class="song-details">
-                <h2 class="song-name">{{ songName }}</h2>
-                <p class="song-artist">{{ artistName }}</p>
+                <h2 class="song-name">{{ name }}</h2>
+                <p class="song-artist">{{ art }}</p>
             </div>
         </div>
         
@@ -23,7 +23,8 @@
         <div class="translation-section">
             <!-- Original Language -->
             <div class="original-lang">
-                <h3>Original Language:</h3>
+                <h4>Original Language:</h4>
+                <h5>{{lang | capitalize }}</h5>
                 <textarea readonly placeholder="{{ lyric }}">{{ lyric }}</textarea>
             </div>
             
