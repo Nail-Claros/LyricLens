@@ -1,14 +1,17 @@
 
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #800000, #0000007b);
-    color: white;
+    background-image: url('../images/Lyric Lens (Background Image).png');
+    background-repeat: no-repeat;
+    background-size: cover;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    color: yellow;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 
@@ -18,10 +21,10 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: rgba(36, 36, 36, 0.7);
-    border-radius: 10px;
     max-width: 1200px;
     width: 150%;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 
@@ -30,6 +33,8 @@ body {
     align-items: center;
     margin-bottom: 30px;
     width: 100%;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 .album-cover {
@@ -45,6 +50,8 @@ body {
     display: flex;
     flex-direction: column;
     text-align: left;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 .song-name {
@@ -52,6 +59,8 @@ body {
     font-weight: bold;
     color: #ffa527;
     margin: 0;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 .song-artist {
@@ -59,6 +68,8 @@ body {
     font-style: italic;
     color: #d3d3d3;
     margin: 5px 0 0 0;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 
@@ -69,6 +80,8 @@ body {
     width: 100%;
     max-width: 1000px;
     margin-bottom: 20px;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 .original-lang, .translated-lang {
@@ -76,52 +89,109 @@ body {
     flex-direction: column;
     align-items: center;
     width: 45%;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 h3 {
     margin: 5px 0;
-   
     font-size: 18px;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 h5 {
     margin: 0px 0;
     margin-bottom: 25px;
     font-size: 18px;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 h4 {
     margin: 5px 0;
-    
-    font-size: 18px;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
 textarea {
-    width: 105%;
-    height: 350px;
-    margin-top: 5px;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
-    resize: none;
+    width: 100%;
+    height: 400px;
+    background-color: #ffa527;
     border: none;
-    color: black;
+    border-radius: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    font-size: 16px;
+    line-height: 1.5;
+    resize: none;
+    color: yellow;
+    scrollbar-color: #f4a263;
+    border-color: yellow;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+textarea.text{
+    background-color: hsla(30, 100%, 50%, 0.232);
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
 }
 
-.arrow {
-    font-size: 24px;
-    color: #ffa527;
-    align-self: center;
-    margin: 0 10px;
+textarea::-webkit-scrollbar {
+    width: 0px;
 }
 
+textarea::-webkit-scrollbar-track {
+    background: #ffa527;
+    border-radius: 20px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background-color: #f4a263;
+    border-radius: 10px;
+    border: 3px solid #ffa527;
+}
+
+
+.navbar {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+}
+
+.navbar-img{
+    position: absolute;
+    top: 20px;
+    left: 40px;
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: rgb(237, 179, 20);
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #ff7700;
+}
 
 select {
     padding: 8px 12px;
-    border-radius: 5px;
-    background-color: #ffa527;
-    color: white;
+    border-radius: 50px;
+    background-color: #ffffff;
+    color:black;
     border: none;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
     margin-bottom: 10px;
     cursor: pointer;
 }
@@ -136,7 +206,7 @@ select {
 }
 
 .btn {
-    background-color: #ffa527;
+    background-color: #ffa52700;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -153,7 +223,7 @@ select {
 }
 
 .btn:hover {
-    background-color: #ffb049;
+    color: #ffb049;
 }
 
 

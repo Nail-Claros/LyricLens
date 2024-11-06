@@ -5,10 +5,21 @@
 {% endblock %}
 {% block body %}
 <body>
-    
+    <nav class="navbar-img">
+        <img src="{{ url_for('static', filename='images/Lyric Lens (Text Logo and Icon) - Horizontal.png')}}" style="height: 100px; width: 300px; padding-bottom: 80px;">
+    </nav>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{url_for('index')}}">HOME</a></li>
+            <li><a href="{{url_for('about')}}">ABOUT</a></li>
+            <li><a href="{{url_for('history')}}">HISTORY</a></li>
+        </ul>
+    </nav>
+
+
     <div class="container">
         <!-- Album Cover and Song Information -->
-        <div class="album-info">
+        <div class="album-info" style="justify-content: center;">
             <img src="{{ ca }}" alt="Album Cover" class="album-cover">
             <div class="song-details">
                 <h2 class="song-name">{{ name }}</h2>
@@ -22,15 +33,14 @@
             <div class="original-lang">
                 <h4>Original Language:</h4>
                 <h5>{{lang | capitalize }}</h5>
-                <textarea readonly placeholder="{{ lyric }}">{{ lyric }}</textarea>
+                <textarea readonly class="text" placeholder="{{ lyric }}">{{ lyric }}</textarea>
             </div>
             
-            <span class="arrow">→</span>
             
             <!-- Translation Language -->
             <div class="translated-lang">
                 <h3>Translated:</h3>
-                <select id="myDropdown">
+                <select id="myDropdown" style="justify-content: center; align-items: center; text-align: center;">
                     <option value="">Select a language</option>
                     {% for key, value in ldict.items() %}
                         {% if value|upper != lang|upper %}
@@ -38,15 +48,10 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-                <textarea id="translation" class="textbox" placeholder="Pick a language! Translations will appear here!" readonly></textarea>
+                <textarea id="translation" class="textbox, text" placeholder="Pick a language! Translations will appear here!" readonly>Translated</textarea>
             </div>
         </div>
 
-        <!-- Buttons Section -->
-        <div class="btn-container">
-            <button class="btn"><a href="{{url_for('index')}}" class="btn-text">Return Home</a></button>
-            <button class="btn"><a href="{{url_for('history')}}" class="btn-text">History</a></button>
-        </div>
     </div>
     
     <script>
