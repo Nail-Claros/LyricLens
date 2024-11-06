@@ -11,29 +11,57 @@
 a
 {
     text-decoration: none;
-    color: #DF5353;
 }
 
 body
 {
-    background: linear-gradient(to bottom,#800000, #0000007b);
+    background-image: url('../images/Lyric\ Lens\ \(Background\ Image\).png');
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-repeat: no-repeat;
+    background-size: cover;
     height: 100vh;
+    font-family: 'Albert Sans';
+    font-size: 22px;
+    color: yellow;
 }
 
-.title-container
+/* Navbar styling */
+.navbar {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: rgb(237, 179, 20);
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #ff7700; /* Hover color */
+}
+
+
+.title-container img
 {
-    background-color: #FFBC60;
-    color: #DF5353;
-    border-radius: 10px;
-    padding: 10px 20px;
-    margin-top: 10px;
+    height: 40px;
+    width: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
 button{
@@ -48,24 +76,23 @@ button{
 
 }
 
-.title-container:hover
-{
-    transform: scale(1.1);
-}
 
 .circle-container
 {
-    margin-top: 90px;
+    margin-top: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 50%;
+}
+
+.circle img
+{
+    border-radius: 50%;
 }
 
 .circle /*button*/
 {
-   height: 400px;
-   width: 400px;
-    background-color: #FFBC60;
     border: none;
     border-radius: 50%;
     display: flex;
@@ -84,29 +111,31 @@ button{
     transform: scale(1.1);
 }
 
+
 .circle:hover
 {
     transform: scale(1.03);
+    filter: drop-shadow(10px 0 30px rgb(187, 12, 12));
 }
 
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.7), 0 0 0 0 rgb(0, 229, 255);
+        box-shadow: 0 0 0 0 rgba(220, 20, 60, 0.3), 0 0 0 0 rgba(220, 20, 60, 0.3);
     }
     50% {
-        box-shadow: 0 0 0 30px rgb(255, 196, 0), 0 0 0 60px rgba(255, 196, 0, 0.63);
+        box-shadow: 0 0 0 30px rgba(220, 20, 60, 0.3), 0 0 0 60px rgba(220, 20, 60, 0.2);
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(120,245,206), 0 0 0 0 rgba(244, 150, 52);
+        box-shadow: 0 0 0 0 rgba(220, 20, 60, 0.2), 0 0 0 0 rgba(220, 20, 60, 0.2);
     }
 }
 
+
 .logo
 {
-    font-size: 20px;
-    width: 450px;
-    height: 450px;
+    width: 300px;
+    height: 300px;
 }
 
 .history-container

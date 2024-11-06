@@ -6,20 +6,25 @@
 
 {% block body %}
 <body>
-   
-        <div class="title-container">
-            <button><a href="{{url_for('about')}}">LyricLens</a></button>
-        </div>
-        <div class="circle-container">
-            <form action="/run_listener" method="post">
-                <button id="btn-toggle" class="circle" type="submit" onclick="disableButton(event)">
-                    <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
-                </button>
-            </form>
-        </div>
-        <div class="history-container">
-            <button class="btn-history"><a href="{{url_for('history')}}">History</a></button>
-        </div>
+  
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{url_for('index')}}">HOME</a></li>
+            <li><a href="{{url_for('about')}}">ABOUT</a></li>
+            <li><a href="{{url_for('history')}}">HISTORY</a></li>
+        </ul>
+    </nav>
+    
+    <div class="title-container">
+        <button><a href="{{url_for('about')}}"><img src="{{ url_for('static', filename='images/Lyric Lens (Text logo).png')}}" alt=""></a></button>
+    </div>
+    <div class="circle-container">
+        <form action="/run_listener" method="post">
+            <button id="btn-toggle" class="circle" type="submit" onclick="disableButton(event)">
+                <img  src="{{ url_for('static', filename='images/Lyric Lens (Icon).png')}}" alt="logo" class="logo">
+            </button>
+        </form>
+    </div>
         {% if code == 3 %} <!-- Perfect run-->
             <div id="modal"  class="modal" style="display: block;">
                 <span class="close">X</span>
