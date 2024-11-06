@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lyric Lens</title>
-    <link rel="stylesheet" href="static/homepage.css">
-    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png')}}">
-    <script defer src="static/homepage.js"></script>
-</head>
+{% extends '_template.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="static/styles/homepage.css">
+    <script defer src="static/styles/homepage.js"></script>
+{% endblock %}
+
+{% block body %}
 <body>
 
 
@@ -24,4 +22,4 @@
     <div class="history-container">
         <button class="btn-history"><a href="{{url_for('history')}}">History</a></button>
 </body>
-</html>
+{% endblock %}

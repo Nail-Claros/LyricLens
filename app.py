@@ -10,12 +10,13 @@ db = []
 app = Flask(__name__)
 app.secret_key = os.getenv('sec_key')
 
-def db_check(val):
+def db_check(code, val):
     if db.__contains__(val):
         x = db.pop(db.index(val))
         db.append(x)
     else:
-        db.append(val)
+        if code != 0:
+            db.append(val)
 # redis db
 # r = redis.Redis(host='redis', port=6379)
 # r = redis.from_url(redis_url)
@@ -92,6 +93,6 @@ def run_listener():
     name = ""
     code = 0
     code, name, art, lang, lyric, ca = run()
-    db_check([name, art, lang, lyric, ca])
+    db_check(code, [name, art, lang, lyric, ca])
     
     return redirect(url_for('detected', code=code, name=name, artist=art, lang=lang, lyric=lyric, ca=ca))
