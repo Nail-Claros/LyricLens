@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music List</title>
-    <link rel="stylesheet" href="static/styles.css">
-</head>
+{% extends '_template.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="static/styles/styles.css">
+{% endblock %}
+{% block body %}
 <body>
     <div class="container">
-        {% block body %}
         {% if red %}
             {% for x in red|reverse %}
             <div class="song-item">
@@ -36,7 +33,8 @@
         <div class="home-btn-container">
             <button class="home-btn"><a href="{{url_for('index')}}" class="btn-text">Home</a></button>
         </div>
-        {% endblock %}
+        
     </div> 
 </body>
-</html>
+{% endblock %}
+

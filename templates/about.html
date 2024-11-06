@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About LyricLens</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png')}}">
-    <link rel="stylesheet" href="static/homepage.css">
-</head>
+{% extends '_template.html' %}
+{% block styles %}
+    <link rel="stylesheet" href="static/styles/homepage.css">
+{% endblock %}
+
+{% block body %}
 <body>
     <div class="about-us-section">
         <div class="about-title">
@@ -33,4 +30,4 @@
         <button class="home-btn"><a class="btn-text" href="{{url_for('index')}}">Home</a></button>
     </div>
 </body>
-</html>
+{% endblock %}

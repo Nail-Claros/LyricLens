@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/Lyric Lens (Icon).png') }}">
+    <title>Lyric Lens</title>
+    <link href='https://fonts.googleapis.com/css?family=Albert Sans' rel='stylesheet'>
+    {% block styles %} 
+    
+    {% endblock %}
+    <link rel="preload" href="{{ url_for('static', filename='images/Lyric Lens (Background Image).png') }}" as="image">
+</head>
+<body>
+
+    {% block body %} 
+    
+    {% endblock %}
+    <script>
+        document.body.style.visibility = "hidden";
+        const bgImage = new Image();
+        bgImage.src = "{{ url_for('static', filename='images/Lyric Lens (Background Image).png') }}";
+        
+        bgImage.onload = function() {
+            document.body.style.visibility = "visible";
+        };
+    </script>
+</body>
+</html>

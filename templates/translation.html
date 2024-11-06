@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Translations Page</title>
-    <link rel="stylesheet" href="static/translation.css">
+{% extends '_template.html' %}
+{% block styles %}
+    <link rel="stylesheet" href="static/styles/translation.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+{% endblock %}
+{% block body %}
 <body>
-    {% block body %}
+    
     <div class="container">
         <!-- Album Cover and Song Information -->
         <div class="album-info">
@@ -80,6 +77,6 @@
             }
         }
     </script>
-    {% endblock %}
+    
 </body>
-</html>
+{% endblock %}
