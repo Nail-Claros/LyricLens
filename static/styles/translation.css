@@ -48,6 +48,7 @@ body {
 
 .song-details {
     display: flex;
+    width: 550px;
     flex-direction: column;
     text-align: left;
     font-family: 'Albert Sans'; 
