@@ -87,6 +87,15 @@ def history():
 def about():
     return render_template('about.html')
 
+@app.route('/lyrics')
+def lyrics():
+    songName = request.args.get('songName')
+    artistName = request.args.get('artistName')
+    songLang = request.args.get('songLang')
+    songLyric = request.args.get('songLyric')
+    albumCover = request.args.get('albumCover')
+    return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+
 @app.route('/run_listener', methods=['POST'])
 def run_listener():
     from listener import run
