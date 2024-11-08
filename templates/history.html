@@ -29,7 +29,7 @@
                         <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Head to Lyrics</a>  
                     {% endif %}    
                     {% if x[2] == "Made up Language/gibberish" %}
-                        <p>coming soon!</p>
+                    <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Head to Lyrics</a>  
                     {% elif x[3] == "" %}
                         <p>No Lyrics</p>
                     {% endif %}

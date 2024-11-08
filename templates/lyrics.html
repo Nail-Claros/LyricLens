@@ -25,7 +25,7 @@
         <div class="songinfo">
             <h2 id="song-name" class="e">{{ songName[:40] }}{% if songName|length > 40 %}...{% endif %}</h2>
             <p id="artist-name" class="e">{{ artistName[:80] }}{% if artistName|length > 80 %}...{% endif %}</p>
-            <p class="e">Language: {{ songLang }}</p>
+            <p class="e" style="text-decoration: underline;">Language: {{ songLang }}</p>
         </div>
 
         <div class="lyric-container">
