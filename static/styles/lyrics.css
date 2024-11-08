@@ -8,21 +8,21 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: yellow;
+    color: rgb(240, 197, 80);
     font-family: 'Albert Sans'; 
     font-size: 22px;
 }
 
 .navbar {
     position: absolute;
-    top: 20px;
+    top: 1px;
     right: 40px;
 }
 
 .navbar-img{
     position: absolute;
-    top: 20px;
-    left: 40px;
+    top: 1px;
+    left: 10px;
 }
 
 .nav-links {
@@ -97,7 +97,7 @@ textarea
     background-color: transparent;
     border: 2px solid rgba(255, 255, 255, 0.7);
     border-radius: 10px;
-    color: white;
+    color: rgb(240, 197, 80);
     padding: 10px;
     font-size: 14px;
     resize: none;

@@ -9,7 +9,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: yellow;
+    color: rgb(240, 197, 80);
     font-family: 'Albert Sans'; 
     font-size: 22px;
 }
@@ -127,14 +127,15 @@ textarea {
     font-size: 16px;
     line-height: 1.5;
     resize: none;
-    color: yellow;
+    color: rgb(240, 197, 80);
     scrollbar-color: #f4a263;
     border-color: yellow;
     font-family: 'Albert Sans'; 
     font-size: 22px;
+    opacity: 90%;
 }
 textarea.text{
-    background-color: hsla(30, 100%, 50%, 0.232);
+    background-color: hsla(0, 100%, 50%, 0.1);
     font-family: 'Albert Sans'; 
     font-size: 22px;
 }
@@ -157,20 +158,20 @@ textarea::-webkit-scrollbar-thumb {
 
 .navbar {
     position: absolute;
-    top: 20px;
+    top: 1px;
     right: 40px;
 }
 
 .navbar-img{
     position: absolute;
-    top: 20px;
-    left: 40px;
+    top: 1px;
+    left: 10px;
 }
 
 .nav-links {
     list-style-type: none;
     display: flex;
-    gap: 20px;
+    gap: 20px
 }
 
 .nav-links li a {

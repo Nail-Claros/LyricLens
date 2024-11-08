@@ -24,7 +24,7 @@ def detect(text):
 
     print(response.json())
     ax = json.loads(response.text)
-    if ax['result']:
+    if 'result' in ax:
         code = ax['result']['code']
         language = ax['result']['language']
         return code, language
