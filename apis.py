@@ -3,7 +3,8 @@ import base64
 import json
 from bs4 import BeautifulSoup
 from app import key
-
+import os
+akey = os.getenv('alt_key')
 coverart = ""
 full_title = ""
 
@@ -18,7 +19,7 @@ def run_apis_1(full_title):
     payload = read_audio_file(full_title)
     
     headers = {
-        "x-rapidapi-key": key,
+        "x-rapidapi-key": akey,
         "x-rapidapi-host": "shazam.p.rapidapi.com",
         "Content-Type": "text/plain"
     }

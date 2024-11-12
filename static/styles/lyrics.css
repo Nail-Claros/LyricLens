@@ -95,11 +95,26 @@ textarea
     width: 400px;
     height: 550px;
     background-color: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.7);
+    border: 2px solid rgba(227, 171, 32, 0.7);
     border-radius: 10px;
     color: rgb(240, 197, 80);
     padding: 10px;
     font-size: 14px;
     resize: none;
     outline: none;
+}
+
+textarea::-webkit-scrollbar {
+    width: 0px;
+}
+
+textarea::-webkit-scrollbar-track {
+    background: #ffa527;
+    border-radius: 20px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background-color: #f4a263;
+    border-radius: 10px;
+    border: none solid #ffa527;
 }
