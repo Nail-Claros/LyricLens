@@ -4,7 +4,7 @@ import json
 from bs4 import BeautifulSoup
 from app import key
 import os
-akey = os.getenv('alt_key')
+# akey = os.getenv('alt_key')
 coverart = ""
 full_title = ""
 
@@ -19,7 +19,7 @@ def run_apis_1(full_title):
     payload = read_audio_file(full_title)
     
     headers = {
-        "x-rapidapi-key": akey,
+        "x-rapidapi-key": key,
         "x-rapidapi-host": "shazam.p.rapidapi.com",
         "Content-Type": "text/plain"
     }
@@ -63,7 +63,7 @@ def run_apis_1(full_title):
             if response.status_code == 200 and "lyrics" in ax:
                 print("IN____________________ LYRICS FOUND")
                 lyric_check = ax['lyrics']['lyrics']['body']['html']
-                if lyric_check:
+                if lyric_check != "":
                     if not isinstance(lyric_check, str):
                         lyric_check = str(lyric_check)
                     ret_val = lyric_check
@@ -74,6 +74,7 @@ def run_apis_1(full_title):
                     if co == "MUL":
                         return 4, song_name, song_artist, la, ret_val, coverart
                     return 3, song_name, song_artist, la, ret_val, coverart
+                return 1, song_name, song_artist, "", "", coverart
             elif response.status_code == 200:
                 print('Error: cant find track___________________lyrics')
              
