@@ -6,6 +6,7 @@ import os
 from apis import run_apis
 
 # redis_url = os.getenv('REDIS_URL')
+#redis
 
 db = []
 app = Flask(__name__)
