@@ -98,20 +98,33 @@ def lyrics():
     albumCover = request.args.get('albumCover')
     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
+
+def read_audio_from_filestorage(file_storage):
+    import base64
+    # Read the binary content from the FileStorage object
+    audio_data = file_storage.read()
+    
+    # Encode the binary data to base64
+    audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+    return audio_base64
+
+
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if 'audio' not in request.files:
         return jsonify({"error": "No audio file uploaded"}), 400
     
     audio_file = request.files['audio']
-    file_path = os.path.join('audio/', audio_file.filename)
-    code = 0
-    audio_file.save(file_path)
+    # file_path = os.path.join('audio/', audio_file.filename)
+    # code = 0
+    # audio_file.save(file_path)
+    x = read_audio_from_filestorage(audio_file)
     try:
         
-        print(f"Audio file saved at {file_path}")  
+        # print(f"Audio file saved at {file_path}")  
         
-        code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
+        # code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
+        code, song_name, song_artist, la, ret_val, coverart = run_apis(x)
         db_check(code, [song_name, song_artist, la, ret_val, coverart])
         if code != 0:
             print("Ending loop based on code from API response") 
