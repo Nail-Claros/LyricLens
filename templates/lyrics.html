@@ -19,7 +19,11 @@
 
     <div class="grid-container">
         <div class="ca">
-            <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+                {% if albumCover != "fail" %}
+                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                {% endif %}
         </div>
 
         <div class="songinfo">

@@ -22,7 +22,12 @@
     <div class="container">
         <!-- Album Cover and Song Information -->
         <div class="album-info" style="justify-content: center;">
-            <img src="{{ ca }}" alt="Album Cover" class="album-cover">
+            {% if ca != "fail" %}
+                    <img src="{{ ca }}" alt="Album Cover" class="album-cover">
+            {% else %}
+                    <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover">
+            {% endif %}
+            
             <div class="song-details">
                 <h2 class="song-name">{{ name[:119] }}{% if name|length > 119 %}...{% endif %}</h2>
                 <p class="song-artist">{{ art[:112] }}{% if art|length > 112 %}...{% endif %}</p>

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import os
 
 key = os.getenv('SHAZ_API_KEY')
-# akey = os.getenv('alt_key')
+akey = os.getenv('alt_key')
 
 coverart = ""
 full_title = ""
