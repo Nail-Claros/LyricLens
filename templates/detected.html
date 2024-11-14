@@ -30,7 +30,12 @@
                 <span class="close">X</span>
                 <div class="modal-content"> 
                     <div class="album-cover-container">
-                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}
                     </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
@@ -47,8 +52,12 @@
                 <span class="close">X</span>
                 <div class="modal-content"> 
                     <div class="album-cover-container">
-                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
-                    </div> 
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}                    </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
                         <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
@@ -63,8 +72,12 @@
                 <span class="close">X</span>
                 <div class="modal-content"> 
                     <div class="album-cover-container">
-                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
-                    </div> 
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}                    </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
                         <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
@@ -89,8 +102,12 @@
                 <span class="close">X</span>
                 <div class="modal-content-four"> 
                     <div class="album-cover-container">
-                    <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
-                    </div> 
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}                    </div> 
                     <div class="song-info">
                         <h2 id="song-name">{{ songName }}</h2>
                         <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>

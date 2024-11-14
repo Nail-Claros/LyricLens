@@ -20,7 +20,12 @@
         {% if red %}
             {% for x in red|reverse %}
             <div class="song-item">
-                <img class="album-placeholder" src="{{ x[4] }}" alt="Album Placeholder">
+                {% if x[4] != "fail" %}
+                    <img class="album-placeholder" src="{{ x[4] }}" alt="Album Placeholder">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Placeholder" style="width: 100px; height: 100px;">
+                {% endif %}
+                
                 <div class="song-info">
                     <div class="song-name">{{ x[0][:67] }}{% if x[0]|length > 67 %}...{% endif %}</div>
                     <div class="song-artist">{{ x[1][:67] }}{% if x[1]|length > 67 %}...{% endif %}</div>
@@ -42,9 +47,6 @@
         </div>
         {% endif %}
 
-        <div class="home-btn-container">
-            <button class="home-btn"><a href="{{url_for('index')}}" class="btn-text">Home</a></button>
-        </div>
         
     </div> 
 </body>
