@@ -1,7 +1,7 @@
 {% extends '_template.html' %}
 {% block styles %}
     <link rel="stylesheet" href="static/styles/homepage.css">
-    <script defer src="static/styles/homepage.js"></script>
+    <script defer src="static/styles/detected.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -19,11 +19,11 @@
         <button><a href="{{url_for('about')}}"><img src="{{ url_for('static', filename='images/Lyric Lens (Text logo).png')}}" alt=""></a></button>
     </div>
     <div class="circle-container">
-        <form action="/run_listener" method="post">
-            <button id="btn-toggle" class="circle" type="submit" onclick="disableButton(event)">
-                <img  src="{{ url_for('static', filename='images/Lyric Lens (Icon).png')}}" alt="logo" class="logo">
+ 
+            <button id="btn-toggle" class="circle" onclick="recordAudio(); disableButton(event);">
+                <img src="{{ url_for('static', filename='images/Lyric Lens (Icon).png')}}" alt="logo" class="logo">
             </button>
-        </form>
+
     </div>
         {% if code == 3 %} <!-- Perfect run-->
             <div id="modal"  class="modal" style="display: block;">
