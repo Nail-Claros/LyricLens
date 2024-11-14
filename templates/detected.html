@@ -38,7 +38,8 @@
                         <p >Language: {{ songLang }}</p>
                     </div>
                     <textarea id="lyrics" class="lyric-container" rows="2" readonly>{{ songLyric }}</textarea>
-                    <button class="translation-btn"><a href="{{url_for('translations')}}">Translations</a></button>                  </div>
+                    <button class="translation-btn"><a href="{{url_for('translations')}}">Translations</a></button>                 
+                 </div>
             </div>
         {% endif %}
         {% if code == 2 %} <!-- instrumental song-->

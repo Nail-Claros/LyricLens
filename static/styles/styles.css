@@ -6,7 +6,39 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(to bottom, #800000, #0000007b);
+    background-image: url('../images/Lyric Lens (Background Image).png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.navbar {
+    position: absolute;
+    top: 1px;
+    right: 40px;
+}
+
+.navbar-img{
+    position: absolute;
+    top: 1px;
+    left: 10px;
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: rgb(237, 179, 20);
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #ff7700;
 }
 
 a
