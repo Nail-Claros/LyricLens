@@ -24,15 +24,15 @@ s3_client = boto3.client(
 
 
 def get_s3_file_binary(bucket_name, object_key):
-    """
-    Downloads a file from S3 and returns its binary content.
-    """
+    print(f"Fetching file from S3: Bucket={bucket_name}, Key={object_key}")
     try:
         response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
-        return response['Body'].read()  # Read the binary content
+        print("File fetched successfully from S3.")
+        return response['Body'].read()
     except Exception as e:
         print(f"Error fetching file from S3: {e}")
         return None
+
 
 def run_apis(bucket_name, object_key):
     genius_id = 0

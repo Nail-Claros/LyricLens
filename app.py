@@ -123,9 +123,15 @@ def upload_audio():
     try:
         # Upload the audio file to S3
         s3_client.upload_fileobj(audio_file, S3_BUCKET, s3_path)
+        print(f"Audio file uploaded to S3: {s3_path}")
 
-        # Pass bucket name and object key to your API function
-        code, song_name, song_artist, la, ret_val, coverart = run_apis(S3_BUCKET, s3_path)
+        result = run_apis(S3_BUCKET, s3_path)
+        print(f"run_apis returned: {result}")
+
+        if result is None:
+            return jsonify({"error": "run_apis returned None"}), 500
+
+        code, song_name, song_artist, la, ret_val, coverart = result
 
         if code == 0:
             return jsonify({"message": "Unable to process audio file"}), 400
