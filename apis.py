@@ -36,12 +36,12 @@ def get_s3_file_binary(bucket_name, object_key):
 
 def run_apis(bucket_name, object_key):
     genius_id = 0
-    
+
     # Get binary content from S3
     file_binary = get_s3_file_binary(bucket_name, object_key)
     if file_binary is None:
-        return "Error: Unable to fetch or read file from S3."
-    
+        return 0, "", "", "", "", ""
+
     url = "https://shazam.p.rapidapi.com/songs/v2/detect"
     querystring = {"timezone": "America/Chicago", "locale": "en-US"}
     headers = {
@@ -59,24 +59,16 @@ def run_apis(bucket_name, object_key):
             print("IN____________________ SONG FOUND")
             song_name = ax['track']['title']
             song_artist = ax['track']['subtitle']
-            
-            print(f'Title Name: {song_name}')
-            print(f'Artist: {song_artist}')
             full_title = song_name + " " + song_artist
             print(full_title)
-            
-            if 'images' in ax['track']:
-                coverart = ax['track']['images']['coverart']
-            else:
-                coverart = "fail"
-            
+
+            coverart = ax['track']['images'].get('coverart', "fail")
+
             ax = return_lyrics(song_name, song_artist)
-            
             if response.status_code == 200 and "hits" in ax:
                 print("IN____________________ ID FOUND")
                 genius_id = ax['hits'][0]['result']['id']
-                print(f'Genius ID: {genius_id}')
-                
+
                 if ax['hits'][0]['result']['instrumental']:
                     print("This song is a confirmed instrumental")
                     return 2, song_name, song_artist, "", "", coverart
@@ -99,15 +91,15 @@ def run_apis(bucket_name, object_key):
                         ret_val = lyric_check
                         soup = BeautifulSoup(lyric_check, features="html.parser")
                         ret_val = soup.get_text()
-                        from trans import detect, translate
+                        from trans import detect
                         co, la = detect(ret_val[:130])
                         if co == "MUL":
                             return 4, song_name, song_artist, la, ret_val, coverart
                         return 3, song_name, song_artist, la, ret_val, coverart
                     return 1, song_name, song_artist, "", "", coverart
-                elif response.status_code == 200:
-                    print('Error: cant find track___________________lyrics')
-                    return 1, song_name, song_artist, "", "", coverart
+
+                print('Error: cant find track___________________lyrics')
+                return 1, song_name, song_artist, "", "", coverart
 
             ax = return_lyrics_MM(song_name, song_artist)
             if ax != 'fail':
@@ -116,22 +108,23 @@ def run_apis(bucket_name, object_key):
                 from trans import detect
                 co, la = detect(ret_val[:130])
                 if co == "MUL":
-                    print(co)
                     return 4, song_name, song_artist, la, ret_val, coverart
                 return 3, song_name, song_artist, la, ret_val, coverart
 
-            elif response.status_code == 200:
-                print('Error: cant find track___________________Id')
-                print("Songs lyrics have not been located on the API/not recorded or song is likely an instrumental")
-                return 1, song_name, song_artist, "", "", coverart
-        
-        elif response.status_code == 200:
-            print('Error: cant find track___________________at all')
-            return 0, "", "", "", "", ""
-        
+            print('Error: cant find track___________________Id')
+            print("Songs lyrics have not been located on the API/not recorded or song is likely an instrumental")
+            return 1, song_name, song_artist, "", "", coverart
+
+        print('Error: cant find track___________________at all')
+        return 0, "", "", "", "", ""
+
     except Exception as e:
         print(f"Error in run_apis: {e}")
         return 0, "", "", "", "", ""
+
+    # Default return if no condition above matches
+    return 0, "", "", "", "", ""
+
     
     
 
