@@ -98,53 +98,35 @@ def lyrics():
     albumCover = request.args.get('albumCover')
     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
-
-def read_audio_from_filestorage(file_storage):
-    import base64
-    # Read the binary content from the FileStorage object
-    audio_data = file_storage.read()
-    
-    # Encode the binary data to base64
-    audio_base64 = base64.b64encode(audio_data).decode('utf-8')
-    return audio_base64
-
-
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if 'audio' not in request.files:
         return jsonify({"error": "No audio file uploaded"}), 400
     
     audio_file = request.files['audio']
-    
-    if audio_file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
-    
+    file_path = os.path.join('audio/', audio_file.filename)
+    code = 0
+    audio_file.save(file_path)
     try:
-        # Send the raw binary audio data to `run_apis`
-        code, song_name, song_artist, la, ret_val, coverart = run_apis(audio_file)
-
-        if code is None:
-            return jsonify({"error": "API processing error"}), 500
         
+        print(f"Audio file saved at {file_path}")  
+        
+        code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
         db_check(code, [song_name, song_artist, la, ret_val, coverart])
-
         if code != 0:
             print("Ending loop based on code from API response") 
-            return jsonify({
-                "message": "Upload successful", 
-                "endLoop": True,
-                "code": f"{code}",
-                "sn": f"{song_name}", 
-                "sa": f"{song_artist}", 
-                "la": f"{la}", 
-                "ly": f"{ret_val}", 
-                "ca": f"{coverart}"
-            }), 200
+            return jsonify({"message": "Upload successful", 
+                            "endLoop": True,
+                            "code":f"{code}",
+                            "sn":f"{song_name}", 
+                            "sa":f"{song_artist}", 
+                            "la":f"{la}", 
+                            "ly":f"{ret_val}", 
+                            "ca":f"{coverart}"}), 200
         else:
             return jsonify({"message": "Upload successful"}), 200
-
     except Exception as e:
-        print(f"Error saving or processing file: {e}")
+        print(f"Error saving or processing file: {e}")  
         return jsonify({"error": "Internal server error"}), 500
 
 
