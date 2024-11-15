@@ -33,7 +33,6 @@ numpy==1.26.4
 packaging==24.1
 pipwin==0.5.2
 pluggy==1.5.0
-PyAudio==0.2.14
 pydantic==1.10.18
 pydub==0.25.1
 pyjsparser==2.7.1
