@@ -55,9 +55,13 @@ def run_apis(bucket_name, object_key):
         # Sending the binary audio content as payload
         response = requests.post(url, data=file_binary, headers=headers, params=querystring, timeout=10)
         
-        # Check if response status is OK (200)
+        # Check for successful response
+        if response.status_code == 204:
+            print("Error: No content returned from Shazam (status code 204). This might indicate no song detected.")
+            return 0, "", "", "", "", ""
+
         if response.status_code != 200:
-            print(f"Error: Received status code {response.status_code}")
+            print(f"Error: Received unexpected status code {response.status_code}")
             print(f"Response Content: {response.text}")
             return 0, "", "", "", "", ""
 
@@ -71,7 +75,6 @@ def run_apis(bucket_name, object_key):
             print("Error: Failed to parse JSON from the response")
             return 0, "", "", "", "", ""
 
-        # If 'track' is found in the response, process it
         if "track" in ax:
             print("IN____________________ SONG FOUND")
             song_name = ax['track']['title']
@@ -98,7 +101,6 @@ def run_apis(bucket_name, object_key):
                 }
                 response = requests.get(url, headers=headers, params=querystring)
                 
-                # Check if response is successful
                 if response.status_code != 200:
                     print(f"Error: Received status code {response.status_code}")
                     print(f"Response Content: {response.text}")
