@@ -3,6 +3,7 @@ import base64
 import json
 from bs4 import BeautifulSoup
 import os
+import boto3
 
 key = os.getenv('SHAZ_API_KEY')
 akey = os.getenv('alt_key')
@@ -10,21 +11,38 @@ akey = os.getenv('alt_key')
 coverart = ""
 full_title = ""
 
-        
-def run_apis(full_title):
+s3_client = boto3.client('s3')
+
+
+def get_s3_file_binary(bucket_name, object_key):
+    """
+    Downloads a file from S3 and returns its binary content.
+    """
+    try:
+        response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
+        return response['Body'].read()  # Read the binary content
+    except Exception as e:
+        print(f"Error fetching file from S3: {e}")
+        return None
+
+def run_apis(bucket_name, object_key):
     genius_id = 0
+    
+    # Get binary content from S3
+    file_binary = get_s3_file_binary(bucket_name, object_key)
+    if file_binary is None:
+        return "Error: Unable to fetch or read file from S3."
+    
     url = "https://shazam.p.rapidapi.com/songs/v2/detect"
     querystring = {"timezone": "America/Chicago", "locale": "en-US"}
-    payload = full_title
-    # payload = read_audio_file(full_title)
-    payload = full_title
     headers = {
         "x-rapidapi-key": key,
         "x-rapidapi-host": "shazam.p.rapidapi.com",
-        "Content-Type": "text/plain"
+        "Content-Type": "application/octet-stream"
     }
 
-    response = requests.post(url, data=payload, headers=headers, params=querystring, timeout=10)
+    # Sending the binary audio content as payload
+    response = requests.post(url, data=file_binary, headers=headers, params=querystring, timeout=10)
     ax = json.loads(response.text)
 
     if response.status_code == 200 and "track" in ax:
@@ -100,6 +118,97 @@ def run_apis(full_title):
     elif response.status_code == 200:
         print('Error: cant find track___________________at all')
         return 0, "", "", "", "", ""
+
+        
+# def run_apis(full_title):
+#     genius_id = 0
+#     url = "https://shazam.p.rapidapi.com/songs/v2/detect"
+#     querystring = {"timezone": "America/Chicago", "locale": "en-US"}
+#     payload = full_title
+#     # payload = read_audio_file(full_title)
+#     payload = full_title
+#     headers = {
+#         "x-rapidapi-key": key,
+#         "x-rapidapi-host": "shazam.p.rapidapi.com",
+#         "Content-Type": "text/plain"
+#     }
+
+#     response = requests.post(url, data=payload, headers=headers, params=querystring, timeout=10)
+#     ax = json.loads(response.text)
+
+#     if response.status_code == 200 and "track" in ax:
+#         print("IN____________________ SONG FOUND")
+#         song_name = ax['track']['title']
+#         song_artist = ax['track']['subtitle']
+        
+#         print(f'Title Name: {song_name}')
+#         print(f'Artist: {song_artist}')
+#         full_title = song_name + " " + song_artist
+#         print(full_title)
+        
+#         if 'images' in ax['track']:
+#             coverart = ax['track']['images']['coverart']
+#         else:
+#             coverart = "fail"
+        
+#         ax = return_lyrics(song_name, song_artist)
+        
+#         if response.status_code == 200 and "hits" in ax:
+#             print("IN____________________ ID FOUND")
+#             genius_id = ax['hits'][0]['result']['id']
+#             print(f'Genius ID: {genius_id}')
+            
+#             if ax['hits'][0]['result']['instrumental']:
+#                 print("This song is a confirmed instrumental")
+#                 return 2, song_name, song_artist, "", "", coverart
+
+#             url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
+#             querystring = {"id": str(genius_id), "text_format": "html"}
+#             headers = {
+#                 "x-rapidapi-key": str(key),
+#                 "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
+#             }
+#             response = requests.get(url, headers=headers, params=querystring)
+#             ax = json.loads(response.text)
+
+#             if response.status_code == 200 and "lyrics" in ax:
+#                 print("IN____________________ LYRICS FOUND")
+#                 lyric_check = ax['lyrics']['lyrics']['body']['html']
+#                 if lyric_check:
+#                     if not isinstance(lyric_check, str):
+#                         lyric_check = str(lyric_check)
+#                     ret_val = lyric_check
+#                     soup = BeautifulSoup(lyric_check, features="html.parser")
+#                     ret_val = soup.get_text()
+#                     from trans import detect, translate
+#                     co, la = detect(ret_val[:130])
+#                     if co == "MUL":
+#                         return 4, song_name, song_artist, la, ret_val, coverart
+#                     return 3, song_name, song_artist, la, ret_val, coverart
+#                 return 1, song_name, song_artist, "", "", coverart
+#             elif response.status_code == 200:
+#                 print('Error: cant find track___________________lyrics')
+#                 return 1, song_name, song_artist, "", "", coverart
+
+#         ax = return_lyrics_MM(song_name, song_artist)
+#         if ax != 'fail':
+#             print("IN____________________ LYRICS FOUND")
+#             ret_val = str(ax)
+#             from trans import detect
+#             co, la = detect(ret_val[:130])
+#             if co == "MUL":
+#                 print(co)
+#                 return 4, song_name, song_artist, la, ret_val, coverart
+#             return 3, song_name, song_artist, la, ret_val, coverart
+
+#         elif response.status_code == 200:
+#             print('Error: cant find track___________________Id')
+#             print("Songs lyrics have not been located on the API/not recorded or song is likely an instrumental")
+#             return 1, song_name, song_artist, "", "", coverart
+    
+#     elif response.status_code == 200:
+#         print('Error: cant find track___________________at all')
+#         return 0, "", "", "", "", ""
 
 def return_lyrics(s_name, s_artist):
 	# Try s_name and one artist if possible only

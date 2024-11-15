@@ -8,6 +8,11 @@ from apis import run_apis
 # redis_url = os.getenv('REDIS_URL')
 #redis
 
+# Configure AWS S3
+AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
+S3_BUCKET = os.getenv('S3_BUCKET')
+
 db = []
 app = Flask(__name__)
 app.secret_key = os.getenv('sec_key')
@@ -98,36 +103,83 @@ def lyrics():
     albumCover = request.args.get('albumCover')
     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
+# Create S3 client
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_KEY
+)
+
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if 'audio' not in request.files:
         return jsonify({"error": "No audio file uploaded"}), 400
-    
+
     audio_file = request.files['audio']
-    file_path = os.path.join('audio/', audio_file.filename)
-    code = 0
-    audio_file.save(file_path)
+    file_name = audio_file.filename
+    s3_path = f"audio/{file_name}"
+
     try:
-        
-        print(f"Audio file saved at {file_path}")  
-        
-        code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
-        db_check(code, [song_name, song_artist, la, ret_val, coverart])
+        # Upload the audio file to S3
+        s3_client.upload_fileobj(audio_file, S3_BUCKET, s3_path)
+
+        # Generate S3 file URL
+        file_url = f"https://{S3_BUCKET}.s3.amazonaws.com/{s3_path}"
+        print(f"Audio file uploaded to S3: {file_url}")
+
+        # Pass the S3 URL to your API function
+        code, song_name, song_artist, la, ret_val, coverart = run_apis(file_url)
+
+        # Additional processing and response
         if code != 0:
-            print("Ending loop based on code from API response") 
-            return jsonify({"message": "Upload successful", 
-                            "endLoop": True,
-                            "code":f"{code}",
-                            "sn":f"{song_name}", 
-                            "sa":f"{song_artist}", 
-                            "la":f"{la}", 
-                            "ly":f"{ret_val}", 
-                            "ca":f"{coverart}"}), 200
+            return jsonify({
+                "message": "Upload successful",
+                "endLoop": True,
+                "code": f"{code}",
+                "sn": f"{song_name}",
+                "sa": f"{song_artist}",
+                "la": f"{la}",
+                "ly": f"{ret_val}",
+                "ca": f"{coverart}"
+            }), 200
         else:
             return jsonify({"message": "Upload successful"}), 200
+
     except Exception as e:
-        print(f"Error saving or processing file: {e}")  
+        print(f"Error uploading or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+# @app.route('/upload-audio', methods=['POST'])
+# def upload_audio():
+#     if 'audio' not in request.files:
+#         return jsonify({"error": "No audio file uploaded"}), 400
+    
+#     audio_file = request.files['audio']
+#     file_path = os.path.join('audio/', audio_file.filename)
+#     code = 0
+#     audio_file.save(file_path)
+#     try:
+        
+#         print(f"Audio file saved at {file_path}")  
+        
+#         code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
+#         db_check(code, [song_name, song_artist, la, ret_val, coverart])
+#         if code != 0:
+#             print("Ending loop based on code from API response") 
+#             return jsonify({"message": "Upload successful", 
+#                             "endLoop": True,
+#                             "code":f"{code}",
+#                             "sn":f"{song_name}", 
+#                             "sa":f"{song_artist}", 
+#                             "la":f"{la}", 
+#                             "ly":f"{ret_val}", 
+#                             "ca":f"{coverart}"}), 200
+#         else:
+#             return jsonify({"message": "Upload successful"}), 200
+#     except Exception as e:
+#         print(f"Error saving or processing file: {e}")  
+#         return jsonify({"error": "Internal server error"}), 500
 
 
 # @app.route('/run_listener', methods=['POST'])
