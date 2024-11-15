@@ -124,12 +124,8 @@ def upload_audio():
         # Upload the audio file to S3
         s3_client.upload_fileobj(audio_file, S3_BUCKET, s3_path)
 
-        # Generate S3 file URL
-        file_url = f"https://{S3_BUCKET}.s3.amazonaws.com/{s3_path}"
-        print(f"Audio file uploaded to S3: {file_url}")
-
-        # Pass the S3 URL to your API function
-        code, song_name, song_artist, la, ret_val, coverart = run_apis(file_url)
+        # Pass bucket name and object key to your API function
+        code, song_name, song_artist, la, ret_val, coverart = run_apis(S3_BUCKET, s3_path)
 
         # Additional processing and response
         if code != 0:
@@ -149,6 +145,7 @@ def upload_audio():
     except Exception as e:
         print(f"Error uploading or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
 
 
 # @app.route('/upload-audio', methods=['POST'])
