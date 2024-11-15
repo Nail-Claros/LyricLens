@@ -11,7 +11,16 @@ akey = os.getenv('alt_key')
 coverart = ""
 full_title = ""
 
-s3_client = boto3.client('s3')
+# Configure AWS S3
+AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
+S3_BUCKET = os.getenv('S3_BUCKET')
+
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_KEY
+)
 
 
 def get_s3_file_binary(bucket_name, object_key):
