@@ -88,13 +88,23 @@ function recordAudio() {
                     }
 
                     stream.getTracks().forEach(track => track.stop());
+                    if (currentRecord == 2){
+                        const baseUrl = "/detected"; 
 
+                        // Construct the URL with query parameters
+                        const redirectUrl = `${baseUrl}?code=${encodeURIComponent(responseData.code)}&name=${encodeURIComponent(responseData.sn)}&artist=${encodeURIComponent(responseData.sa)}&lang=${encodeURIComponent(responseData.la)}&lyric=${encodeURIComponent(responseData.ly)}&ca=${encodeURIComponent(responseData.ca)}`;
+
+                        // Redirect to the constructed URL
+                        window.location.href = redirectUrl;
+                    }
                     if (shouldContinue && currentRecord < maxIterations - 1) {
                         currentRecord++;
                         setTimeout(() => recordOne(), 1000);
                     } else {
                         console.log("Reached maximum iterations or loop stopped by server.");
+                        
                     }
+                    
                 };
 
                 mediaRecorder.start();

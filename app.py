@@ -126,7 +126,14 @@ def upload_audio():
                             "ly":f"{ret_val}", 
                             "ca":f"{coverart}"}), 200
         else:
-            return jsonify({"message": "Upload successful"}), 200
+            return jsonify({"message": "Upload successful", 
+                            "endLoop": False,
+                            "code":f"{code}",
+                            "sn":f"{song_name}", 
+                            "sa":f"{song_artist}", 
+                            "la":f"{la}", 
+                            "ly":f"{ret_val}", 
+                            "ca":f"{coverart}"}), 200
     except Exception as e:
         print(f"Error saving or processing file: {e}")  
         return jsonify({"error": "Internal server error"}), 500
