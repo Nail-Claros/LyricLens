@@ -34,6 +34,7 @@ def get_s3_file_binary(bucket_name, object_key):
         return None
 
 
+
 def run_apis(bucket_name, object_key):
     genius_id = 0
 
@@ -53,9 +54,25 @@ def run_apis(bucket_name, object_key):
     try:
         # Sending the binary audio content as payload
         response = requests.post(url, data=file_binary, headers=headers, params=querystring, timeout=10)
-        ax = json.loads(response.text)
+        
+        # Check if response status is OK (200)
+        if response.status_code != 200:
+            print(f"Error: Received status code {response.status_code}")
+            print(f"Response Content: {response.text}")
+            return 0, "", "", "", "", ""
 
-        if response.status_code == 200 and "track" in ax:
+        # Log the raw response for debugging
+        print(f"Response Content: {response.text}")
+
+        # Parse the response as JSON
+        try:
+            ax = json.loads(response.text)
+        except json.JSONDecodeError:
+            print("Error: Failed to parse JSON from the response")
+            return 0, "", "", "", "", ""
+
+        # If 'track' is found in the response, process it
+        if "track" in ax:
             print("IN____________________ SONG FOUND")
             song_name = ax['track']['title']
             song_artist = ax['track']['subtitle']
@@ -65,7 +82,7 @@ def run_apis(bucket_name, object_key):
             coverart = ax['track']['images'].get('coverart', "fail")
 
             ax = return_lyrics(song_name, song_artist)
-            if response.status_code == 200 and "hits" in ax:
+            if "hits" in ax:
                 print("IN____________________ ID FOUND")
                 genius_id = ax['hits'][0]['result']['id']
 
@@ -80,9 +97,16 @@ def run_apis(bucket_name, object_key):
                     "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
                 }
                 response = requests.get(url, headers=headers, params=querystring)
+                
+                # Check if response is successful
+                if response.status_code != 200:
+                    print(f"Error: Received status code {response.status_code}")
+                    print(f"Response Content: {response.text}")
+                    return 0, "", "", "", "", ""
+
                 ax = json.loads(response.text)
 
-                if response.status_code == 200 and "lyrics" in ax:
+                if "lyrics" in ax:
                     print("IN____________________ LYRICS FOUND")
                     lyric_check = ax['lyrics']['lyrics']['body']['html']
                     if lyric_check:
@@ -115,8 +139,9 @@ def run_apis(bucket_name, object_key):
             print("Songs lyrics have not been located on the API/not recorded or song is likely an instrumental")
             return 1, song_name, song_artist, "", "", coverart
 
-        print('Error: cant find track___________________at all')
-        return 0, "", "", "", "", ""
+        else:
+            print('Error: cant find track___________________at all')
+            return 0, "", "", "", "", ""
 
     except Exception as e:
         print(f"Error in run_apis: {e}")
@@ -124,7 +149,6 @@ def run_apis(bucket_name, object_key):
 
     # Default return if no condition above matches
     return 0, "", "", "", "", ""
-
     
     
 
