@@ -127,6 +127,9 @@ def upload_audio():
         # Pass bucket name and object key to your API function
         code, song_name, song_artist, la, ret_val, coverart = run_apis(S3_BUCKET, s3_path)
 
+        if code == 0:
+            return jsonify({"message": "Unable to process audio file"}), 400
+
         # Additional processing and response
         if code != 0:
             return jsonify({

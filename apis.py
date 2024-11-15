@@ -50,83 +50,90 @@ def run_apis(bucket_name, object_key):
         "Content-Type": "application/octet-stream"
     }
 
-    # Sending the binary audio content as payload
-    response = requests.post(url, data=file_binary, headers=headers, params=querystring, timeout=10)
-    ax = json.loads(response.text)
+    try:
+        # Sending the binary audio content as payload
+        response = requests.post(url, data=file_binary, headers=headers, params=querystring, timeout=10)
+        ax = json.loads(response.text)
 
-    if response.status_code == 200 and "track" in ax:
-        print("IN____________________ SONG FOUND")
-        song_name = ax['track']['title']
-        song_artist = ax['track']['subtitle']
-        
-        print(f'Title Name: {song_name}')
-        print(f'Artist: {song_artist}')
-        full_title = song_name + " " + song_artist
-        print(full_title)
-        
-        if 'images' in ax['track']:
-            coverart = ax['track']['images']['coverart']
-        else:
-            coverart = "fail"
-        
-        ax = return_lyrics(song_name, song_artist)
-        
-        if response.status_code == 200 and "hits" in ax:
-            print("IN____________________ ID FOUND")
-            genius_id = ax['hits'][0]['result']['id']
-            print(f'Genius ID: {genius_id}')
+        if response.status_code == 200 and "track" in ax:
+            print("IN____________________ SONG FOUND")
+            song_name = ax['track']['title']
+            song_artist = ax['track']['subtitle']
             
-            if ax['hits'][0]['result']['instrumental']:
-                print("This song is a confirmed instrumental")
-                return 2, song_name, song_artist, "", "", coverart
+            print(f'Title Name: {song_name}')
+            print(f'Artist: {song_artist}')
+            full_title = song_name + " " + song_artist
+            print(full_title)
+            
+            if 'images' in ax['track']:
+                coverart = ax['track']['images']['coverart']
+            else:
+                coverart = "fail"
+            
+            ax = return_lyrics(song_name, song_artist)
+            
+            if response.status_code == 200 and "hits" in ax:
+                print("IN____________________ ID FOUND")
+                genius_id = ax['hits'][0]['result']['id']
+                print(f'Genius ID: {genius_id}')
+                
+                if ax['hits'][0]['result']['instrumental']:
+                    print("This song is a confirmed instrumental")
+                    return 2, song_name, song_artist, "", "", coverart
 
-            url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
-            querystring = {"id": str(genius_id), "text_format": "html"}
-            headers = {
-                "x-rapidapi-key": str(key),
-                "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
-            }
-            response = requests.get(url, headers=headers, params=querystring)
-            ax = json.loads(response.text)
+                url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
+                querystring = {"id": str(genius_id), "text_format": "html"}
+                headers = {
+                    "x-rapidapi-key": str(key),
+                    "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
+                }
+                response = requests.get(url, headers=headers, params=querystring)
+                ax = json.loads(response.text)
 
-            if response.status_code == 200 and "lyrics" in ax:
+                if response.status_code == 200 and "lyrics" in ax:
+                    print("IN____________________ LYRICS FOUND")
+                    lyric_check = ax['lyrics']['lyrics']['body']['html']
+                    if lyric_check:
+                        if not isinstance(lyric_check, str):
+                            lyric_check = str(lyric_check)
+                        ret_val = lyric_check
+                        soup = BeautifulSoup(lyric_check, features="html.parser")
+                        ret_val = soup.get_text()
+                        from trans import detect, translate
+                        co, la = detect(ret_val[:130])
+                        if co == "MUL":
+                            return 4, song_name, song_artist, la, ret_val, coverart
+                        return 3, song_name, song_artist, la, ret_val, coverart
+                    return 1, song_name, song_artist, "", "", coverart
+                elif response.status_code == 200:
+                    print('Error: cant find track___________________lyrics')
+                    return 1, song_name, song_artist, "", "", coverart
+
+            ax = return_lyrics_MM(song_name, song_artist)
+            if ax != 'fail':
                 print("IN____________________ LYRICS FOUND")
-                lyric_check = ax['lyrics']['lyrics']['body']['html']
-                if lyric_check:
-                    if not isinstance(lyric_check, str):
-                        lyric_check = str(lyric_check)
-                    ret_val = lyric_check
-                    soup = BeautifulSoup(lyric_check, features="html.parser")
-                    ret_val = soup.get_text()
-                    from trans import detect, translate
-                    co, la = detect(ret_val[:130])
-                    if co == "MUL":
-                        return 4, song_name, song_artist, la, ret_val, coverart
-                    return 3, song_name, song_artist, la, ret_val, coverart
-                return 1, song_name, song_artist, "", "", coverart
+                ret_val = str(ax)
+                from trans import detect
+                co, la = detect(ret_val[:130])
+                if co == "MUL":
+                    print(co)
+                    return 4, song_name, song_artist, la, ret_val, coverart
+                return 3, song_name, song_artist, la, ret_val, coverart
+
             elif response.status_code == 200:
-                print('Error: cant find track___________________lyrics')
+                print('Error: cant find track___________________Id')
+                print("Songs lyrics have not been located on the API/not recorded or song is likely an instrumental")
                 return 1, song_name, song_artist, "", "", coverart
-
-        ax = return_lyrics_MM(song_name, song_artist)
-        if ax != 'fail':
-            print("IN____________________ LYRICS FOUND")
-            ret_val = str(ax)
-            from trans import detect
-            co, la = detect(ret_val[:130])
-            if co == "MUL":
-                print(co)
-                return 4, song_name, song_artist, la, ret_val, coverart
-            return 3, song_name, song_artist, la, ret_val, coverart
-
+        
         elif response.status_code == 200:
-            print('Error: cant find track___________________Id')
-            print("Songs lyrics have not been located on the API/not recorded or song is likely an instrumental")
-            return 1, song_name, song_artist, "", "", coverart
-    
-    elif response.status_code == 200:
-        print('Error: cant find track___________________at all')
+            print('Error: cant find track___________________at all')
+            return 0, "", "", "", "", ""
+        
+    except Exception as e:
+        print(f"Error in run_apis: {e}")
         return 0, "", "", "", "", ""
+    
+    
 
         
 # def run_apis(full_title):
