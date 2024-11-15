@@ -11,20 +11,19 @@ coverart = ""
 full_title = ""
 
         
-def run_apis(full_title):
+def run_apis(audio_file):
     genius_id = 0
     url = "https://shazam.p.rapidapi.com/songs/v2/detect"
     querystring = {"timezone": "America/Chicago", "locale": "en-US"}
-    payload = full_title
-    # payload = read_audio_file(full_title)
-    payload = full_title
+
     headers = {
         "x-rapidapi-key": key,
         "x-rapidapi-host": "shazam.p.rapidapi.com",
-        "Content-Type": "text/plain"
+        "Content-Type": "application/octet-stream"  # Content type for binary data
     }
 
-    response = requests.post(url, data=payload, headers=headers, params=querystring, timeout=10)
+    # Send the raw binary audio data as part of the request
+    response = requests.post(url, files={"file": audio_file}, headers=headers, params=querystring, timeout=10)
     ax = json.loads(response.text)
 
     if response.status_code == 200 and "track" in ax:

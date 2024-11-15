@@ -115,31 +115,36 @@ def upload_audio():
         return jsonify({"error": "No audio file uploaded"}), 400
     
     audio_file = request.files['audio']
-    # file_path = os.path.join('audio/', audio_file.filename)
-    # code = 0
-    # audio_file.save(file_path)
-    x = read_audio_from_filestorage(audio_file)
+    
+    if audio_file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    
     try:
+        # Send the raw binary audio data to `run_apis`
+        code, song_name, song_artist, la, ret_val, coverart = run_apis(audio_file)
+
+        if code is None:
+            return jsonify({"error": "API processing error"}), 500
         
-        # print(f"Audio file saved at {file_path}")  
-        
-        # code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
-        code, song_name, song_artist, la, ret_val, coverart = run_apis(x)
         db_check(code, [song_name, song_artist, la, ret_val, coverart])
+
         if code != 0:
             print("Ending loop based on code from API response") 
-            return jsonify({"message": "Upload successful", 
-                            "endLoop": True,
-                            "code":f"{code}",
-                            "sn":f"{song_name}", 
-                            "sa":f"{song_artist}", 
-                            "la":f"{la}", 
-                            "ly":f"{ret_val}", 
-                            "ca":f"{coverart}"}), 200
+            return jsonify({
+                "message": "Upload successful", 
+                "endLoop": True,
+                "code": f"{code}",
+                "sn": f"{song_name}", 
+                "sa": f"{song_artist}", 
+                "la": f"{la}", 
+                "ly": f"{ret_val}", 
+                "ca": f"{coverart}"
+            }), 200
         else:
             return jsonify({"message": "Upload successful"}), 200
+
     except Exception as e:
-        print(f"Error saving or processing file: {e}")  
+        print(f"Error saving or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
 
