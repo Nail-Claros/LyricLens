@@ -98,17 +98,6 @@ def lyrics():
     albumCover = request.args.get('albumCover')
     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
-
-def read_audio_from_filestorage(file_storage):
-    import base64
-    # Read the binary content from the FileStorage object
-    audio_data = file_storage.read()
-    
-    # Encode the binary data to base64
-    audio_base64 = base64.b64encode(audio_data).decode('utf-8')
-    return audio_base64
-
-
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if 'audio' not in request.files:
