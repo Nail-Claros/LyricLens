@@ -115,16 +115,16 @@ def upload_audio():
         return jsonify({"error": "No audio file uploaded"}), 400
     
     audio_file = request.files['audio']
-    # file_path = os.path.join('audio/', audio_file.filename)
-    # code = 0
-    # audio_file.save(file_path)
-    x = read_audio_from_filestorage(audio_file)
+    file_path = os.path.join('audio/', audio_file.filename)
+    code = 0
+    audio_file.save(file_path)
+    # x = read_audio_from_filestorage(audio_file)
     try:
         
-        # print(f"Audio file saved at {file_path}")  
+        print(f"Audio file saved at {file_path}")  
         
-        # code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
-        code, song_name, song_artist, la, ret_val, coverart = run_apis(x)
+        code, song_name, song_artist, la, ret_val, coverart = run_apis('audio/recording.wav')
+        # code, song_name, song_artist, la, ret_val, coverart = run_apis(x)
         db_check(code, [song_name, song_artist, la, ret_val, coverart])
         if code != 0:
             print("Ending loop based on code from API response") 

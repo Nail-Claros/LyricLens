@@ -10,14 +10,17 @@ akey = os.getenv('alt_key')
 coverart = ""
 full_title = ""
 
+def read_audio_file(file_path):
+        with open(file_path, 'rb') as audio_file:
+            return base64.b64encode(audio_file.read()).decode('utf-8')
         
 def run_apis(full_title):
     genius_id = 0
     url = "https://shazam.p.rapidapi.com/songs/v2/detect"
     querystring = {"timezone": "America/Chicago", "locale": "en-US"}
     payload = full_title
-    # payload = read_audio_file(full_title)
-    payload = full_title
+    payload = read_audio_file(full_title)
+    # payload = full_title
     headers = {
         "x-rapidapi-key": key,
         "x-rapidapi-host": "shazam.p.rapidapi.com",
