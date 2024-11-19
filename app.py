@@ -128,7 +128,7 @@ def upload_audio():
         result = run_apis(S3_BUCKET, s3_path)
         print(f"run_apis returned: {result}")
 
-        lyrics = result[2]
+        lyrics = result[4]
         fixed_lyrics = lyrics.encode('utf-8', errors='replace').decode('utf-8')
         print(f"######fixed lyrics######: {fixed_lyrics}")
 
