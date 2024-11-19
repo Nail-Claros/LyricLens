@@ -128,6 +128,12 @@ def upload_audio():
         result = run_apis(S3_BUCKET, s3_path)
         print(f"run_apis returned: {result}")
 
+        lyrics = result[2]
+        fixed_lyrics = lyrics.encode('utf-8', errors='replace').decode('utf-8')
+        print(f"######fixed lyrics######: {fixed_lyrics}")
+
+
+
         if result is None:
             return jsonify({"error": "run_apis returned None"}), 500
 
