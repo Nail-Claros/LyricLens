@@ -5,6 +5,7 @@ import redis
 import os
 from apis import run_apis
 import boto3
+import unicodedata
 
 # redis_url = os.getenv('REDIS_URL')
 #redis
@@ -129,7 +130,7 @@ def upload_audio():
         print(f"run_apis returned: {result}")
 
         lyrics = result[4]
-        fixed_lyrics = lyrics.encode('utf-8', errors='replace').decode('utf-8')
+        fixed_lyrics = unicodedata.normalize('NFC', lyrics)
         print(f"######fixed lyrics######: {fixed_lyrics}")
 
         print("#################################### LANG VARS")
