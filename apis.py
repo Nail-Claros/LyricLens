@@ -24,14 +24,17 @@ s3_client = boto3.client(
 
 
 def get_s3_file_binary(bucket_name, object_key):
-    print(f"Fetching file from S3: Bucket={bucket_name}, Key={object_key}")
     try:
+        # Fetch binary content from S3
         response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
-        print("File fetched successfully from S3.")
-        return response['Body'].read()
+        file_binary = response['Body'].read()
+        
+        # Encode binary data to base64
+        return base64.b64encode(file_binary).decode('utf-8')
     except Exception as e:
-        print(f"Error fetching file from S3: {e}")
+        print(f"Error reading audio file from S3: {e}")
         return None
+
 
 
 
@@ -54,6 +57,9 @@ def run_apis(bucket_name, object_key):
     try:
         # Sending the binary audio content as payload
         response = requests.post(url, data=file_binary, headers=headers, params=querystring, timeout=10)
+
+        # Log the raw response for debugging
+        print(f"Response Content: {response.text}")
         
         # Check for successful response
         if response.status_code == 204:
