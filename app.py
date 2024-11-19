@@ -132,6 +132,9 @@ def upload_audio():
         fixed_lyrics = lyrics.encode('utf-8', errors='replace').decode('utf-8')
         print(f"######fixed lyrics######: {fixed_lyrics}")
 
+        print("#################################### LANG VARS")
+        print(os.environ.get("LANG"))
+        print(os.environ.get("LC_ALL"))
 
 
         if result is None:
