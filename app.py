@@ -7,9 +7,16 @@ from apis import run_apis
 import boto3
 import unicodedata
 import re
+from urllib.parse import urlparse
 
-redis_url = os.getenv('REDIS_URL')
-redis_client = redis.Redis.from_url(redis_url)
+redis_url = urlparse(os.getenv("REDIS_URL"))
+
+redis_client = redis.Redis(host=redis_url.hostname, port=redis_url.port, password=redis_url.password, ssl=(redis_url.scheme == "rediss"), ssl_cert_reqs=None)
+
+#redis_client = redis.from_url(redis_url)
+
+#redis_client = redis.Redis.from_url(redis_url)
+
 
 # Configure AWS S3
 AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
@@ -44,9 +51,20 @@ def store_message():
     return "Message stored in Redis!"
 
 
+try:
+    redis_client.ping()
+    print("Redis connection is healthy!")
+except redis.exceptions.ConnectionError as e:
+    print(f"Error connecting to Redis: {e}")
 
 @app.route('/')
 def index():
+    try:
+        redis_client.ping()
+        print("Redis connection is healthy!")
+    except redis.exceptions.ConnectionError as e:
+        print(f"Error connecting to Redis: {e}")
+    
     return render_template('index.html')
     
 @app.route('/detected')
