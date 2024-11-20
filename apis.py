@@ -76,7 +76,7 @@ def run_apis(bucket_name, object_key):
 
         # Parse the response as JSON
         try:
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
         except json.JSONDecodeError:
             print("Error: Failed to parse JSON from the response")
             return 0, "", "", "", "", ""
@@ -115,7 +115,7 @@ def run_apis(bucket_name, object_key):
                     print(f"Response Content: {response.text}")
                     return 0, "", "", "", "", ""
 
-                ax = json.loads(response.text)
+                ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
                 if "lyrics" in ax:
                     print("IN____________________ LYRICS FOUND")
@@ -178,7 +178,7 @@ def run_apis(bucket_name, object_key):
 #     }
 
 #     response = requests.post(url, data=payload, headers=headers, params=querystring, timeout=10)
-#     ax = json.loads(response.text)
+#     ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
 #     if response.status_code == 200 and "track" in ax:
 #         print("IN____________________ SONG FOUND")
@@ -213,7 +213,7 @@ def run_apis(bucket_name, object_key):
 #                 "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
 #             }
 #             response = requests.get(url, headers=headers, params=querystring)
-#             ax = json.loads(response.text)
+#             ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
 #             if response.status_code == 200 and "lyrics" in ax:
 #                 print("IN____________________ LYRICS FOUND")
@@ -268,7 +268,7 @@ def return_lyrics(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and ax["hits"] and \
                 (ax['hits'][0]['result']['artist_names'] in s_artist.split(",")[0].strip() or 
@@ -286,7 +286,7 @@ def return_lyrics(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and ax["hits"] and \
                 (ax['hits'][0]['result']['artist_names'] in s_artist.split(",")[0].strip() or 
@@ -304,7 +304,7 @@ def return_lyrics(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
 			# print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and ax["hits"] and \
                 (ax['hits'][0]['result']['artist_names'] in s_artist.split(",")[0].strip() or 
@@ -322,7 +322,7 @@ def return_lyrics(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and ax["hits"] and \
                 (ax['hits'][0]['result']['artist_names'] in s_artist.split("&")[0].strip() or
@@ -340,7 +340,7 @@ def return_lyrics(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and ax["hits"] and \
             (ax['hits'][0]['result']['artist_names'] in s_artist.split("&")[0].strip() or 
@@ -358,7 +358,7 @@ def return_lyrics(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and ax["hits"] and \
                 (ax['hits'][0]['result']['artist_names'] in s_artist.split("&")[0].strip() or 
@@ -383,7 +383,7 @@ def return_lyrics(s_name, s_artist):
     response = requests.get(url, headers=headers, params=querystring)
     print(response.json())
     # print(response.text)
-    ax = json.loads(response.text)
+    ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
     if response.status_code == 200 and ax["hits"] and \
         (ax['hits'][0]['result']['artist_names'].casefold() in s_artist.casefold() or 
          s_artist.casefold() in ax['hits'][0]['result']['artist_names'].casefold() or
@@ -406,7 +406,7 @@ def return_lyrics(s_name, s_artist):
     response = requests.get(url, headers=headers, params=querystring)
     print(response.json())
     # print(response.text)
-    ax = json.loads(response.text)
+    ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
     if response.status_code == 200 and ax["hits"] and \
         (ax['hits'][0]['result']['artist_names'].casefold() in s_artist.casefold() or 
@@ -427,7 +427,7 @@ def return_lyrics(s_name, s_artist):
     response = requests.get(url, headers=headers, params=querystring)
     print(response.json())
     # print(response.text)
-    ax = json.loads(response.text)
+    ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
     if response.status_code == 200 and ax["hits"] and \
         (ax['hits'][0]['result']['artist_names'].casefold() in s_artist.casefold() or 
@@ -454,7 +454,7 @@ def return_lyrics_MM(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and 'error' not in ax and ax:
                 print("NO ,: " + s_name.split("(")[0].strip() + " " + s_artist.split(",")[0].strip())
@@ -469,7 +469,7 @@ def return_lyrics_MM(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and 'error' not in ax and ax:
 
@@ -486,7 +486,7 @@ def return_lyrics_MM(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
 			# print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and 'error' not in ax and ax:
                 print("NO , and clean s_name: " + s_name + " " + s_artist.split(",")[0].strip())
@@ -502,7 +502,7 @@ def return_lyrics_MM(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and 'error' not in ax and ax:
                 print("NO &: " + s_name.split("-")[0].strip() + " " + s_artist.split("&")[0].strip())
@@ -517,7 +517,7 @@ def return_lyrics_MM(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and 'error' not in ax and ax:  
                 print("NO &: " + s_name.split("(")[0].strip() + " " + s_artist.split("&")[0].strip())
@@ -532,7 +532,7 @@ def return_lyrics_MM(s_name, s_artist):
             response = requests.get(url, headers=headers, params=querystring)
             print(response.json())
             # print(response.text)
-            ax = json.loads(response.text)
+            ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
             if response.status_code == 200 and 'error' not in ax and ax:
                 print("NO & and clean s_name: " + s_name + " " + s_artist.split("&")[0].strip())
