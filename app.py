@@ -71,40 +71,43 @@ def index():
 
 @app.route('/detected')
 def detected():
-    # Get the key from the query parameters
     song_key = request.args.get('key')
+    print(f"Received song key: {song_key}")
     
     if not song_key:
         return jsonify({"error": "Missing or invalid key"}), 400
 
 
     try:
-        # Fetch song data from Redis
         song_data_json = redis_client.get(song_key)
+        print(f"Song data retrieved: {song_data_json}")
 
 
         if not song_data_json:
             return jsonify({"error": "No data found for the provided key"}), 404
 
 
-        # Parse the JSON string to a Python dictionary
         song_data = json.loads(song_data_json)
 
 
-        # Render the detected.html template with song data
         return render_template(
             'detected.html',
+            code=song_data['code'],
             songName=song_data['songName'],
             artistName=song_data['artistName'],
             songLang=song_data['songLang'],
             songLyric=song_data['songLyric'],
             albumCover=song_data['albumCover']
         )
-
-
     except Exception as e:
         print(f"Error retrieving or rendering song data: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+
+
+
+
 
     
 # @app.route('/detected')
@@ -219,6 +222,7 @@ def upload_audio():
 
         # Prepare song data for Redis
         song_data = {
+            'code': code,
             'songName': song_name,
             'artistName': song_artist,
             'songLang': la,
