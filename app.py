@@ -8,8 +8,8 @@ import boto3
 import unicodedata
 import re
 
-# redis_url = os.getenv('REDIS_URL')
-#redis
+redis_url = os.getenv('REDIS_URL')
+redis_client = redis.Redis.from_url(redis_url)
 
 # Configure AWS S3
 AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
@@ -27,9 +27,6 @@ def db_check(code, val):
     else:
         if code != 0:
             db.append(val)
-# redis db
-# r = redis.Redis(host='redis', port=6379)
-# r = redis.from_url(redis_url)
 
 
 @app.route('/')
