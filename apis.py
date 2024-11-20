@@ -88,7 +88,10 @@ def run_apis(bucket_name, object_key):
             full_title = song_name + " " + song_artist
             print(full_title)
 
-            coverart = ax['track']['images'].get('coverart', "fail")
+            if 'images' in ax['track']:
+                coverart = ax['track']['images']['coverart']
+            else:
+                coverart = "fail"
 
             ax = return_lyrics(song_name, song_artist)
             if "hits" in ax:
