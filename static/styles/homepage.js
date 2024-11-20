@@ -1,24 +1,20 @@
-const toggleButton =  document.getElementById("btn-toggle");
+const toggleButton = document.getElementById("btn-toggle");
 let isListening = false;
 
-toggleButton.addEventListener('click', () => 
-    {
-        isListening = !isListening;
 
-        if(isListening)
-        {
-            toggleButton.classList.add('active');
-        }
-        else
-        {
-            toggleButton.classList.remove('active');
-        }
-    });
+toggleButton.addEventListener('click', () => {
+    isListening = !isListening;
+
+
+    if (isListening) {
+        toggleButton.classList.add('active');
+    } else {
+        toggleButton.classList.remove('active');
+    }
+});
 
 
 function disableButton(event) {
-    
-
     const button = document.getElementById('btn-toggle');
     button.disabled = true;  // Disable the button
 
@@ -29,10 +25,12 @@ function disableButton(event) {
     }, 17000);
 }
 
+
 function recordAudio() {
     const maxIterations = 3;  // Maximum number of iterations (audio recordings)
     let currentRecord = 0;  // Keep track of the current recording attempt
     let shouldContinue = true; // Flag to control loop continuation
+
 
     // Function to record audio
     const recordOne = async () => {
@@ -41,17 +39,21 @@ function recordAudio() {
             return;
         }
 
+
         const audioContext = new AudioContext({ sampleRate: 44100 });
         const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1 } });
         const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
         const audioChunks = [];
 
+
         mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+
 
         mediaRecorder.onstop = async () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
             const arrayBuffer = await audioBlob.arrayBuffer();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
 
             // Convert audio buffer to WAV (44100Hz, 1 channel, 16-bit PCM)
             const wavBlob = encodeWAV(audioBuffer, 44100, 1); // Ensure it is Mono, 44100Hz
@@ -60,50 +62,74 @@ function recordAudio() {
             // Add the WAV blob to the form data
             formData.append("audio", wavBlob, `recording.wav`);
 
-            // Send the WAV file to Flask server
+
+            // Send the WAV file to Flask server via POST
             const response = await fetch("/upload-audio", {
                 method: "POST",
                 body: formData
             });
 
+
             const responseData = await response.json();
 
+
             if (response.ok) {
-            console.log(`Audio ${currentRecord + 1} uploaded successfully!`);
-            
-            // Check if the server response indicates to end the loop and redirect
-            if (responseData.endLoop === true) {
-                        console.log("Loop broken by server. Redirecting...");
-                        const baseUrl = "/detected"; 
+                console.log(`Audio ${currentRecord + 1} uploaded successfully!`);
+                
+                // Check if the server response indicates to end the loop and redirect
+                if (responseData.endLoop === true) {
+                    console.log("Loop broken by server. Redirecting...");
+                    const baseUrl = "/detected"; 
 
-                        // Construct the URL with query parameters
-                        const redirectUrl = `${baseUrl}?code=${encodeURIComponent(responseData.code)}&name=${encodeURIComponent(responseData.sn)}&artist=${encodeURIComponent(responseData.sa)}&lang=${encodeURIComponent(responseData.la)}&lyric=${encodeURIComponent(responseData.ly)}&ca=${encodeURIComponent(responseData.ca)}`;
 
-                        // Redirect to the constructed URL
-                        window.location.href = redirectUrl;
-                        return; // Stop further code execution
-                    }
-                    } else {
-                        console.error(`Error uploading audio ${currentRecord + 1}:`, responseData.error);
-                    }
+                    // Construct the URL with query parameters
+                    const redirectUrl = `${baseUrl}?code=${encodeURIComponent(responseData.code)}&name=${encodeURIComponent(responseData.sn)}&artist=${encodeURIComponent(responseData.sa)}&lang=${encodeURIComponent(responseData.la)}&lyric=${encodeURIComponent(responseData.ly)}&ca=${encodeURIComponent(responseData.ca)}`;
 
-                    stream.getTracks().forEach(track => track.stop());
 
-                    if (shouldContinue && currentRecord < maxIterations - 1) {
-                        currentRecord++;
-                        setTimeout(() => recordOne(), 1000);
-                    } else {
-                        console.log("Reached maximum iterations or loop stopped by server.");
-                    }
-                };
+                    // Redirect to the constructed URL (GET request)
+                    window.location.href = redirectUrl;
+                    return; // Stop further code execution
+                }
+            } else {
+                console.error(`Error uploading audio ${currentRecord + 1}:`, responseData.error);
+            }
 
-                mediaRecorder.start();
-                setTimeout(() => mediaRecorder.stop(), 3500);  // Each recording lasts 2 seconds
+
+            stream.getTracks().forEach(track => track.stop());
+
+
+            // If max iterations reached, stop the loop, otherwise continue
+            if (currentRecord == 2) {
+                const baseUrl = "/detected"; 
+
+
+                // Construct the URL with query parameters
+                const redirectUrl = `${baseUrl}?code=${encodeURIComponent(responseData.code)}&name=${encodeURIComponent(responseData.sn)}&artist=${encodeURIComponent(responseData.sa)}&lang=${encodeURIComponent(responseData.la)}&lyric=${encodeURIComponent(responseData.ly)}&ca=${encodeURIComponent(responseData.ca)}`;
+
+
+                // Redirect to the constructed URL (GET request)
+                window.location.href = redirectUrl;
+            }
+
+
+            if (shouldContinue && currentRecord < maxIterations - 1) {
+                currentRecord++;
+                setTimeout(() => recordOne(), 1000);  // Retry after 1 second
+            } else {
+                console.log("Reached maximum iterations or loop stopped by server.");
+            }
         };
+
+
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 3500);  // Each recording lasts 3.5 seconds
+    };
+
 
     // Start the first recording
     recordOne();
 }
+
 
 function encodeWAV(audioBuffer, sampleRate, numChannels) {
     const bitDepth = 16;
@@ -112,11 +138,12 @@ function encodeWAV(audioBuffer, sampleRate, numChannels) {
     const resultBuffer = new ArrayBuffer(44 + audioBuffer.length * numChannels * (bitDepth / 8));
     const view = new DataView(resultBuffer);
 
+
     // Write WAV file header
     writeString(view, 0, 'RIFF');
     view.setUint32(4, 36 + audioBuffer.length * numChannels * (bitDepth / 8), true);
     writeString(view, 8, 'WAVE');
-    writeString(view, 12, 'fmt ');
+    writeString(view, 12, 'fmt '); 
     view.setUint32(16, 16, true); // Subchunk1Size (16 for PCM)
     view.setUint16(20, format, true); // AudioFormat (1 for PCM)
     view.setUint16(22, numChannels, true); // NumChannels (1 for Mono)
@@ -127,6 +154,7 @@ function encodeWAV(audioBuffer, sampleRate, numChannels) {
     writeString(view, 36, 'data');
     view.setUint32(40, audioBuffer.length * numChannels * (bitDepth / 8), true); // Subchunk2Size
 
+
     // Write audio samples (Mono channel data)
     let offset = 44;
     for (let i = 0; i < audioBuffer.length; i++) {
@@ -135,8 +163,10 @@ function encodeWAV(audioBuffer, sampleRate, numChannels) {
         offset += 2;
     }
 
+
     return new Blob([view], { type: 'audio/wav' });
 }
+
 
 function writeString(view, offset, string) {
     for (let i = 0; i < string.length; i++) {
