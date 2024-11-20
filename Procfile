@@ -1,1 +1,1 @@
-web: gunicorn --limit-request-line 30000 app:app
+web: gunicorn app:app --limit-request-line 32768 --limit-request-field_size 32768
