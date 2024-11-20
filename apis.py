@@ -124,11 +124,14 @@ def run_apis(bucket_name, object_key):
                         if not isinstance(lyric_check, str):
                             lyric_check = str(lyric_check)
                         ret_val = lyric_check
-                        soup = BeautifulSoup(lyric_check, features="html.parser")
+                        soup = BeautifulSoup(lyric_check, features="html.parser", from_encoding='utf-8')
                         ret_val = soup.get_text()
                         ret_val = ret_val.encode('utf-8') 
+                        ret_val = ret_val.decode('utf-8')
+                        ret_val = ret_val.replace('�', '')
                         print(f"###################RET_VAL********************** ====", {ret_val.decode('utf-8')})
-
+                        print(f"################################LYRIC_CHECK", {lyric_check})
+                        
                         from trans import detect
                         co, la = detect(ret_val[:130])
                         if co == "MUL":
