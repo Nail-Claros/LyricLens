@@ -131,7 +131,7 @@ def upload_audio():
 
         lyrics = result[4]
         fixed_lyrics = unicodedata.normalize('NFKD', lyrics).encode('ascii', 'ignore').decode('utf-8')
-        fixed_lyrics = fixed_lyrics.replace('�',' ')
+        #fixed_lyrics = fixed_lyrics.replace('�',' ')
         print(f"######fixed lyrics######: {fixed_lyrics}")
 
         print("#################################### LANG VARS")
