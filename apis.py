@@ -115,7 +115,7 @@ def run_apis(bucket_name, object_key):
                     print(f"Response Content: {response.text}")
                     return 0, "", "", "", "", ""
 
-                ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
+                ax = json.loads(response.text.encode('utf-8', 'ignore').decode('utf-8'))
 
                 if "lyrics" in ax:
                     print("IN____________________ LYRICS FOUND")
@@ -123,10 +123,13 @@ def run_apis(bucket_name, object_key):
                     if lyric_check:
                         if not isinstance(lyric_check, str):
                             lyric_check = str(lyric_check)
+                            lyric_check = lyric_check.encode('utf-8', 'ignore')
+                            lyric_check = lyric_check.decode('utf-8')
+                            lyric_check = lyric_check.replace('�','')
                         ret_val = lyric_check
                         soup = BeautifulSoup(lyric_check, features="html.parser", from_encoding='utf-8')
                         ret_val = soup.get_text()
-                        ret_val = ret_val.encode('utf-8') 
+                        ret_val = ret_val.encode('utf-8', 'ignore') 
                         ret_val = ret_val.decode('utf-8')
                         ret_val = ret_val.replace('�', '')
                         print(f"###################RET_VAL********************** ====", {ret_val})
