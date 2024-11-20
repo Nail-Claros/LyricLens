@@ -126,6 +126,9 @@ def run_apis(bucket_name, object_key):
                         ret_val = lyric_check
                         soup = BeautifulSoup(lyric_check, features="html.parser")
                         ret_val = soup.get_text()
+                        ret_val = ret_val.encode('utf-8') 
+                        ret_val = ret_val.decode('utf-8')
+
                         from trans import detect
                         co, la = detect(ret_val[:130])
                         if co == "MUL":
