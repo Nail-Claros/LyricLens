@@ -28,6 +28,22 @@ def db_check(code, val):
         if code != 0:
             db.append(val)
 
+@app.route('/redistest')
+def redis_test():
+    message = redis_client.get('my_message')
+    message = message.decode('utf-8') if message else "No message found."
+    return render_template('redistest.html', message=message)
+
+
+#store a message for testing purposes
+@app.route('/store_message')
+def store_message():
+    redis_client.flushall()
+    message = "Hello, this is a CAM!"
+    redis_client.set('my_message', message)
+    return "Message stored in Redis!"
+
+
 
 @app.route('/')
 def index():
