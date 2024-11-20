@@ -130,8 +130,8 @@ def upload_audio():
         print(f"run_apis returned: {result}")
 
         lyrics = result[4]
-        fixed_lyrics = unicodedata.normalize('NFC', lyrics)
-        print(f"######fixed lyrics######: {fixed_lyrics}")
+        # fixed_lyrics = unicodedata.normalize('NFC', lyrics)
+        # print(f"######fixed lyrics######: {fixed_lyrics}")
 
         print("#################################### LANG VARS")
         print(os.environ.get("LANG"))
