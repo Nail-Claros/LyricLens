@@ -36,49 +36,21 @@ def db_check(code, val):
 def index():
     return render_template('index.html')
     
-@app.route('/detected', methods=['GET', 'POST'])
+@app.route('/detected')
 def detected():
-    if request.method == 'GET':
-        # For GET requests (this will be the case after the audio upload and redirect)
-        # Extract data from query parameters
-        code = request.args.get('code')
-        songName = request.args.get('name')
-        artistName = request.args.get('artist')
-        songLang = request.args.get('lang')
-        songLyric = request.args.get('lyric')
-        albumCover = request.args.get('ca')
-        
-        # Store the extracted data in session variables (optional, depending on your use case)
-        session['songName'] = songName
-        session['artistName'] = artistName
-        session['songLyric'] = songLyric
-        session['songLang'] = songLang
-        session['albumCover'] = albumCover
-        
-        # Return the appropriate response (rendering the detected.html template)
-        return render_template('detected.html', code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
-
-
-    else:
-        # For POST requests (if needed, fallback logic for direct POST requests)
-        data = request.get_json()  # If you decide to handle any potential JSON body in POST
-        code = data.get('code')
-        songName = data.get('name')
-        artistName = data.get('artist')
-        songLang = data.get('lang')
-        songLyric = data.get('lyric')
-        albumCover = data.get('ca')
-        
-        # Store the extracted data in session variables (if needed)
-        session['songName'] = songName
-        session['artistName'] = artistName
-        session['songLyric'] = songLyric
-        session['songLang'] = songLang
-        session['albumCover'] = albumCover
-        
-        # Return the appropriate response (rendering the detected.html template)
-        return render_template('detected.html', code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
-
+    code = int(request.args.get('code'))
+    songName = request.args.get('name')
+    artistName = request.args.get('artist')
+    songLang = request.args.get('lang')
+    songLyric = request.args.get('lyric')
+    albumCover = request.args.get('ca')
+    
+    session['songName'] = songName
+    session['artistName'] = artistName
+    session['songLyric'] = songLyric
+    session['songLang'] = songLang
+    session['albumCover'] = albumCover
+    return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
 @app.route('/translation')
 def translations():
