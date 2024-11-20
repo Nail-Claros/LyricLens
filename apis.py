@@ -98,6 +98,8 @@ def run_apis(bucket_name, object_key):
                 print("IN____________________ ID FOUND")
                 genius_id = ax['hits'][0]['result']['id']
 
+                print(f"******************    GENIUS_ID     ****************", {genius_id})
+
                 if ax['hits'][0]['result']['instrumental']:
                     print("This song is a confirmed instrumental")
                     return 2, song_name, song_artist, "", "", coverart
