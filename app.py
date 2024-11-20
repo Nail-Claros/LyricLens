@@ -8,6 +8,8 @@ import boto3
 import unicodedata
 import re
 from urllib.parse import urlparse
+import uuid
+import json
 
 redis_url = urlparse(os.getenv("REDIS_URL"))
 
@@ -66,22 +68,60 @@ def index():
         print(f"Error connecting to Redis: {e}")
     
     return render_template('index.html')
-    
+
 @app.route('/detected')
 def detected():
-    code = int(request.args.get('code'))
-    songName = request.args.get('name')
-    artistName = request.args.get('artist')
-    songLang = request.args.get('lang')
-    songLyric = request.args.get('lyric')
-    albumCover = request.args.get('ca')
+    # Get the key from the query parameters
+    song_key = request.args.get('key')
     
-    session['songName'] = songName
-    session['artistName'] = artistName
-    session['songLyric'] = songLyric
-    session['songLang'] = songLang
-    session['albumCover'] = albumCover
-    return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+    if not song_key:
+        return jsonify({"error": "Missing or invalid key"}), 400
+
+
+    try:
+        # Fetch song data from Redis
+        song_data_json = redis_client.get(song_key)
+
+
+        if not song_data_json:
+            return jsonify({"error": "No data found for the provided key"}), 404
+
+
+        # Parse the JSON string to a Python dictionary
+        song_data = json.loads(song_data_json)
+
+
+        # Render the detected.html template with song data
+        return render_template(
+            'detected.html',
+            songName=song_data['songName'],
+            artistName=song_data['artistName'],
+            songLang=song_data['songLang'],
+            songLyric=song_data['songLyric'],
+            albumCover=song_data['albumCover']
+        )
+
+
+    except Exception as e:
+        print(f"Error retrieving or rendering song data: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
+    
+# @app.route('/detected')
+# def detected():
+#     code = int(request.args.get('code'))
+#     songName = request.args.get('name')
+#     artistName = request.args.get('artist')
+#     songLang = request.args.get('lang')
+#     songLyric = request.args.get('lyric')
+#     albumCover = request.args.get('ca')
+    
+#     session['songName'] = songName
+#     session['artistName'] = artistName
+#     session['songLyric'] = songLyric
+#     session['songLang'] = songLang
+#     session['albumCover'] = albumCover
+#     return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
 @app.route('/translation')
 def translations():
@@ -149,55 +189,115 @@ def upload_audio():
     if 'audio' not in request.files:
         return jsonify({"error": "No audio file uploaded"}), 400
 
+
     audio_file = request.files['audio']
     file_name = audio_file.filename
     s3_path = f"audio/{file_name}"
 
+
     try:
-        # Upload the audio file to S3
+        # Upload the audio file to S3 (your existing logic)
         s3_client.upload_fileobj(audio_file, S3_BUCKET, s3_path)
         print(f"Audio file uploaded to S3: {s3_path}")
 
+
+        # Process the audio file and retrieve song metadata
         result = run_apis(S3_BUCKET, s3_path)
         print(f"run_apis returned: {result}")
-
-        lyrics = result[4]
-        fixed_lyrics = re.sub(r'[^\u0A00-\u0A7F\s]', '', lyrics)
-        fixed_lyrics = unicodedata.normalize('NFKC', lyrics)
-        #fixed_lyrics = fixed_lyrics.replace('�',' ')
-        print(f"######fixed lyrics######: {fixed_lyrics}")
-
-        print("#################################### LANG VARS")
-        print(os.environ.get("LANG"))
-        print(os.environ.get("LC_ALL"))
 
 
         if result is None:
             return jsonify({"error": "run_apis returned None"}), 500
 
+
         code, song_name, song_artist, la, ret_val, coverart = result
+
 
         if code == 0:
             return jsonify({"message": "Unable to process audio file"}), 400
 
-        # Additional processing and response
-        if code != 0:
-            return jsonify({
-                "message": "Upload successful",
-                "endLoop": True,
-                "code": f"{code}",
-                "sn": f"{song_name}",
-                "sa": f"{song_artist}",
-                "la": f"{la}",
-                "ly": f"{ret_val}",
-                "ca": f"{coverart}"
-            }), 200
-        else:
-            return jsonify({"message": "Upload successful"}), 200
+
+        # Prepare song data for Redis
+        song_data = {
+            'songName': song_name,
+            'artistName': song_artist,
+            'songLang': la,
+            'songLyric': ret_val,
+            'albumCover': coverart
+        }
+
+
+        # Generate a unique key for storing the song data in Redis
+        song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+
+
+        # Store the song data in Redis
+        redis_client.set(song_key, json.dumps(song_data))
+
+
+        # Redirect to the detected page with the key
+        return redirect(url_for('detected', key=song_key))
+
 
     except Exception as e:
         print(f"Error uploading or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+# @app.route('/upload-audio', methods=['POST'])
+# def upload_audio():
+#     if 'audio' not in request.files:
+#         return jsonify({"error": "No audio file uploaded"}), 400
+
+#     audio_file = request.files['audio']
+#     file_name = audio_file.filename
+#     s3_path = f"audio/{file_name}"
+
+#     try:
+#         # Upload the audio file to S3
+#         s3_client.upload_fileobj(audio_file, S3_BUCKET, s3_path)
+#         print(f"Audio file uploaded to S3: {s3_path}")
+
+#         result = run_apis(S3_BUCKET, s3_path)
+#         print(f"run_apis returned: {result}")
+
+#         lyrics = result[4]
+#         fixed_lyrics = re.sub(r'[^\u0A00-\u0A7F\s]', '', lyrics)
+#         fixed_lyrics = unicodedata.normalize('NFKC', lyrics)
+#         #fixed_lyrics = fixed_lyrics.replace('�',' ')
+#         print(f"######fixed lyrics######: {fixed_lyrics}")
+
+#         print("#################################### LANG VARS")
+#         print(os.environ.get("LANG"))
+#         print(os.environ.get("LC_ALL"))
+
+
+#         if result is None:
+#             return jsonify({"error": "run_apis returned None"}), 500
+
+#         code, song_name, song_artist, la, ret_val, coverart = result
+
+#         if code == 0:
+#             return jsonify({"message": "Unable to process audio file"}), 400
+
+#         # Additional processing and response
+#         if code != 0:
+#             return jsonify({
+#                 "message": "Upload successful",
+#                 "endLoop": True,
+#                 "code": f"{code}",
+#                 "sn": f"{song_name}",
+#                 "sa": f"{song_artist}",
+#                 "la": f"{la}",
+#                 "ly": f"{ret_val}",
+#                 "ca": f"{coverart}"
+#             }), 200
+#         else:
+#             return jsonify({"message": "Upload successful"}), 200
+
+#     except Exception as e:
+#         print(f"Error uploading or processing file: {e}")
+#         return jsonify({"error": "Internal server error"}), 500
 
 
 
