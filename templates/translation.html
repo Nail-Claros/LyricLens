@@ -40,7 +40,7 @@
             <div class="original-lang">
                 <h4>Original Language:</h4>
                 <h5>{{lang | capitalize }}</h5>
-                <textarea readonly class="text" placeholder="{{ lyric }}">{{ lyric }}</textarea>
+                <textarea readonly class="text" id="originalText" placeholder="{{ lyric }}">{{ lyric }}</textarea>
             </div>
             
             
@@ -62,33 +62,62 @@
     </div>
     
     <script>
-        $(document).ready(function() {
-            $('#myDropdown').change(function() {
+        $(document).ready(function () {
+            // Dropdown change handler for AJAX requests
+            $('#myDropdown').change(function () {
                 updateTranslation($(this).val());
             });
-        });
-
-        function updateTranslation(selectedLang) {
-            const textToTranslate = `{{ lyric }}`;
-
-            if (selectedLang) {
-                $.ajax({
-                    url: '/translate',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ text: textToTranslate, lang: selectedLang }),
-                    success: function(response) {
-                        $('#translation').val(response.translatedText);
-                    },
-                    error: function() {
-                        alert('Error translating text');
-                    }
-                });
-            } else {
-                $('#translation').val('');
+    
+            // Update the translation text via AJAX
+            function updateTranslation(selectedLang) {
+                const textToTranslate = `{{ lyric }}`;
+    
+                if (selectedLang) {
+                    $.ajax({
+                        url: '/translate',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ text: textToTranslate, lang: selectedLang }),
+                        success: function (response) {
+                            $('#translation').val(response.translatedText + "\n");
+                        },
+                        error: function () {
+                            alert('Error translating text');
+                        }
+                    });
+                } else {
+                    $('#translation').val('');
+                }
             }
-        }
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+                const originalText = document.getElementById("originalText");
+                const translatedText = document.getElementById("translation");
+
+                let isSyncing = false; // Single flag to prevent recursive syncing
+
+                function syncScroll(source, target) {
+                    if (isSyncing) return; // Skip if already syncing
+                    isSyncing = true;
+
+                    // Calculate the relative scroll position as a percentage
+                    const scrollPercentage = source.scrollTop / (source.scrollHeight - source.clientHeight);
+                    const targetScrollTop = scrollPercentage * (target.scrollHeight - target.clientHeight);
+
+                    // Update the target only if necessary
+                    if (Math.abs(target.scrollTop - targetScrollTop) > 1) {
+                        target.scrollTop = targetScrollTop;
+                    }
+
+                    isSyncing = false; // Reset flag after syncing
+                }
+
+                // Add scroll event listeners
+                originalText.addEventListener("scroll", () => syncScroll(originalText, translatedText));
+                translatedText.addEventListener("scroll", () => syncScroll(translatedText, originalText));
+            });
     </script>
+    
     
 </body>
 {% endblock %}

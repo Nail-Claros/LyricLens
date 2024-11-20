@@ -18,9 +18,7 @@ def run_apis(full_title):
     genius_id = 0
     url = "https://shazam.p.rapidapi.com/songs/v2/detect"
     querystring = {"timezone": "America/Chicago", "locale": "en-US"}
-    payload = full_title
     payload = read_audio_file(full_title)
-    # payload = full_title
     headers = {
         "x-rapidapi-key": key,
         "x-rapidapi-host": "shazam.p.rapidapi.com",
@@ -63,23 +61,29 @@ def run_apis(full_title):
                 "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
             }
             response = requests.get(url, headers=headers, params=querystring)
+            print(response.json())
             ax = json.loads(response.text)
 
             if response.status_code == 200 and "lyrics" in ax:
                 print("IN____________________ LYRICS FOUND")
                 lyric_check = ax['lyrics']['lyrics']['body']['html']
+                print("LYRIC CHECK")
                 if lyric_check:
+                    print("LYRIC CHECK str inst")
                     if not isinstance(lyric_check, str):
                         lyric_check = str(lyric_check)
                     ret_val = lyric_check
                     soup = BeautifulSoup(lyric_check, features="html.parser")
                     ret_val = soup.get_text()
-                    from trans import detect, translate
+                    print("LYRIC CHECK lyrics accquired")
+
+                    from trans import detect
                     co, la = detect(ret_val[:130])
                     if co == "MUL":
                         return 4, song_name, song_artist, la, ret_val, coverart
                     return 3, song_name, song_artist, la, ret_val, coverart
                 return 1, song_name, song_artist, "", "", coverart
+                
             elif response.status_code == 200:
                 print('Error: cant find track___________________lyrics')
                 return 1, song_name, song_artist, "", "", coverart
@@ -103,6 +107,7 @@ def run_apis(full_title):
     elif response.status_code == 200:
         print('Error: cant find track___________________at all')
         return 0, "", "", "", "", ""
+    return 0, "", "", "", "", ""
 
 def return_lyrics(s_name, s_artist):
 	# Try s_name and one artist if possible only
