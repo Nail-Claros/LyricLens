@@ -134,25 +134,25 @@ def detected():
 #     session['albumCover'] = albumCover
 #     return render_template('detected.html',code=code, songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
-@app.route('/translation')
-def translations():
-    name = session.get('songName')
-    art = session.get('artistName')
-    lyric = session.get('songLyric')
-    lang = session.get('songLang')
-    ca = session.get('albumCover')
-    # name = request.args.get('songName')
-    # art =  request.args.get('artistName')
-    # lyric =  request.args.get('songLyric')
-    # lang =  request.args.get('songLang')
-    # ca =  request.args.get('albumCover')
-    if lyric != "" and lyric != None and lang != "Made up Language/gibberish" and lang != "" and lang != None:
-        return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
-    else:
-        return redirect('/')
+# @app.route('/translation') #NOTEEEEEEEEEEEEEE
+# def translations():
+#     name = session.get('songName')
+#     art = session.get('artistName')
+#     lyric = session.get('songLyric')
+#     lang = session.get('songLang')
+#     ca = session.get('albumCover')
+#     # name = request.args.get('songName')
+#     # art =  request.args.get('artistName')
+#     # lyric =  request.args.get('songLyric')
+#     # lang =  request.args.get('songLang')
+#     # ca =  request.args.get('albumCover')
+#     if lyric != "" and lyric != None and lang != "Made up Language/gibberish" and lang != "" and lang != None:
+#         return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
+#     else:
+#         return redirect('/')
     
 @app.route('/translations', methods=['GET'])
-def from_history():
+def translations():
     song_key = request.args.get('key')
     print(f"Received song key: {song_key}")
     
