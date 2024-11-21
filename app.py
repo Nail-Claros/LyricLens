@@ -155,7 +155,7 @@ def translations():
 def from_history():
     song_key = request.args.get('key')
     print(f"Received song key: {song_key}")
-  
+    
     if not song_key:
         return jsonify({"error": "Missing or invalid key"}), 400
 
@@ -171,6 +171,7 @@ def from_history():
 
 
         song_data = json.loads(song_data_json)
+        print(f"Song data: {song_data}")
 
 
         # Pass the retrieved data to the template
@@ -186,6 +187,11 @@ def from_history():
     except Exception as e:
         print(f"Error retrieving or rendering song data: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+
+
+
 
 
 
