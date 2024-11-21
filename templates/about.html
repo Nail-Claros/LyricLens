@@ -5,6 +5,15 @@
 
 {% block body %}
 <body>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{url_for('index')}}">HOME</a></li>
+            <li><a href="{{url_for('about')}}">ABOUT</a></li>
+            <li><a href="{{url_for('history')}}">HISTORY</a></li>
+        </ul>
+    </nav>
+
     <div class="about-us-section">
         <div class="about-title">
             <h1>About LyricLens</h1>
@@ -14,9 +23,9 @@
         <div class="how-it-works">
             <h2>How it works:</h2>
             <ul>
-                <li><strong>Audio Capture:</strong> Record your audio through the app.</li>
-                <li><strong>Song Recognition:</strong> Our system recognizes the song based on your recording.</li>
-                <li><strong>Lyric Fetching:</strong> We fetch the lyrics for the recognized song.</li>
+                <li><strong>Audio Capture:</strong> Record your audio through the app. Simply click the large circular button on the home page!</li>
+                <li><strong>Song Recognition:</strong> Our system recognizes the song based on the specific audio data of your recording.</li>
+                <li><strong>Lyric Fetching:</strong> We fetch the lyrics for the recognized song from a variety of open source APIs.</li>
                 <li><strong>Translations:</strong> Translations of the lyrics are displayed in your preferred language.</li>
             </ul>
         </div>
@@ -26,8 +35,5 @@
         </div>
     </div>
     
-    <div class="home-btn-container">
-        <button class="home-btn"><a class="btn-text" href="{{url_for('index')}}">Home</a></button>
-    </div>
 </body>
 {% endblock %}
