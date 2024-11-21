@@ -73,7 +73,7 @@ def index():
 def detected():
     song_key = request.args.get('key')
     print(f"Received song key: {song_key}")
-    
+  
     if not song_key:
         return jsonify({"error": "Missing or invalid key"}), 400
 
@@ -90,6 +90,7 @@ def detected():
         song_data = json.loads(song_data_json)
 
 
+        # Pass the song data and song_key to the template
         return render_template(
             'detected.html',
             code=song_data['code'],
@@ -97,11 +98,18 @@ def detected():
             artistName=song_data['artistName'],
             songLang=song_data['songLang'],
             songLyric=song_data['songLyric'],
-            albumCover=song_data['albumCover']
+            albumCover=song_data['albumCover'],
+            song_key=song_key  # Pass the song_key to the template
         )
     except Exception as e:
         print(f"Error retrieving or rendering song data: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+
+
+
+
 
 
 
