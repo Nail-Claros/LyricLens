@@ -380,14 +380,14 @@ textarea::-webkit-scrollbar-thumb {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #FFBC60;
+    background-color: transparent;
     margin: 80px;
     padding: 20px;
     color: #DF5353;
     font-size: 30px;
     border-radius: 30px;
     font-weight: bolder;
-    font-family: sans-serif;
+    font-family: 'Albert Sans';
 }
 
 .about-title
@@ -421,6 +421,7 @@ textarea::-webkit-scrollbar-thumb {
     background-color: #FFBC60;
     padding: 15px;
     margin: 10px;
+    margin-top:-35px;
     border-radius: 10px;
 }
 

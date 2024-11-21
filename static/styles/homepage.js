@@ -34,6 +34,7 @@ function recordAudio() {
     let currentRecord = 0;  // Keep track of the current recording attempt
     let shouldContinue = true; // Flag to control loop continuation
 
+
     // Function to record audio
     const recordOne = async () => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -41,17 +42,21 @@ function recordAudio() {
             return;
         }
 
+
         const audioContext = new AudioContext({ sampleRate: 44100 });
         const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1 } });
         const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
         const audioChunks = [];
 
+
         mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+
 
         mediaRecorder.onstop = async () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
             const arrayBuffer = await audioBlob.arrayBuffer();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
 
             // Convert audio buffer to WAV (44100Hz, 1 channel, 16-bit PCM)
             const wavBlob = encodeWAV(audioBuffer, 44100, 1); // Ensure it is Mono, 44100Hz
@@ -60,56 +65,54 @@ function recordAudio() {
             // Add the WAV blob to the form data
             formData.append("audio", wavBlob, `recording.wav`);
 
+
             // Send the WAV file to Flask server
             const response = await fetch("/upload-audio", {
                 method: "POST",
                 body: formData
             });
 
+
             const responseData = await response.json();
 
+
             if (response.ok) {
-            console.log(`Audio ${currentRecord + 1} uploaded successfully!`);
-            
-            // Check if the server response indicates to end the loop and redirect
-            if (responseData.endLoop === true) {
-                        console.log("Loop broken by server. Redirecting...");
-                        const baseUrl = "/detected"; 
+                console.log(`Audio ${currentRecord + 1} uploaded successfully!`);
+                
+                // Check if the server response indicates to end the loop and redirect
+                if (responseData.endLoop === true) {
+                    console.log("Loop broken by server. Redirecting...");
 
-                        // Construct the URL with query parameters
-                        const redirectUrl = `${baseUrl}?code=${encodeURIComponent(responseData.code)}&name=${encodeURIComponent(responseData.sn)}&artist=${encodeURIComponent(responseData.sa)}&lang=${encodeURIComponent(responseData.la)}&lyric=${encodeURIComponent(responseData.ly)}&ca=${encodeURIComponent(responseData.ca)}`;
 
-                        // Redirect to the constructed URL
-                        window.location.href = redirectUrl;
-                        return; // Stop further code execution
-                    }
-                    } else {
-                        console.error(`Error uploading audio ${currentRecord + 1}:`, responseData.error);
-                    }
+                    // Construct the redirect URL with the returned song_key
+                    const redirectUrl = `/detected?key=${responseData.key}`;
 
-                    stream.getTracks().forEach(track => track.stop());
-                    if (currentRecord == 2){
-                        const baseUrl = "/detected"; 
 
-                        // Construct the URL with query parameters
-                        const redirectUrl = `${baseUrl}?code=${encodeURIComponent(responseData.code)}&name=${encodeURIComponent(responseData.sn)}&artist=${encodeURIComponent(responseData.sa)}&lang=${encodeURIComponent(responseData.la)}&lyric=${encodeURIComponent(responseData.ly)}&ca=${encodeURIComponent(responseData.ca)}`;
+                    // Redirect to the constructed URL
+                    window.location.href = redirectUrl;
+                    return; // Stop further code execution
+                }
+            } else {
+                console.error(`Error uploading audio ${currentRecord + 1}:`, responseData.error);
+            }
 
-                        // Redirect to the constructed URL
-                        window.location.href = redirectUrl;
-                    }
-                    if (shouldContinue && currentRecord < maxIterations - 1) {
-                        currentRecord++;
-                        setTimeout(() => recordOne(), 1000);
-                    } else {
-                        console.log("Reached maximum iterations or loop stopped by server.");
-                        
-                    }
-                    
-                };
 
-                mediaRecorder.start();
-                setTimeout(() => mediaRecorder.stop(), 3500);  // Each recording lasts 2 seconds
+            stream.getTracks().forEach(track => track.stop());
+
+
+            if (shouldContinue && currentRecord < maxIterations - 1) {
+                currentRecord++;
+                setTimeout(() => recordOne(), 1000);
+            } else {
+                console.log("Reached maximum iterations or loop stopped by server.");
+            }
         };
+
+
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 3500);  // Each recording lasts 3.5 seconds
+    };
+
 
     // Start the first recording
     recordOne();
