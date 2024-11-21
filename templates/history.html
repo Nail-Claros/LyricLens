@@ -20,35 +20,70 @@
         {% if red %}
             {% for x in red|reverse %}
             <div class="song-item">
-                {% if x[4] != "fail" %}
-                    <img class="album-placeholder" src="{{ x[4] }}" alt="Album Placeholder">
-                {% else %}
-                    <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Placeholder" style="width: 100px; height: 100px;">
-                {% endif %}
-                
+                <img class="album-placeholder" src="{{ x[4] }}" alt="Album Placeholder">
                 <div class="song-info">
                     <div class="song-name">{{ x[0][:67] }}{% if x[0]|length > 67 %}...{% endif %}</div>
                     <div class="song-artist">{{ x[1][:67] }}{% if x[1]|length > 67 %}...{% endif %}</div>
-                    {% if x[3] != "" and x[2] != "Made up Language/gibberish" %}
-                        <a href="{{ url_for('from_history', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Head to translations</a>
-                        <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Head to Lyrics</a>  
-                    {% endif %}    
-                    {% if x[2] == "Made up Language/gibberish" %}
-                    <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Head to Lyrics</a>  
-                    {% elif x[3] == "" %}
-                        <p>No Lyrics</p>
-                    {% endif %}
-                    </div>        
+
+                </div>
+
+                {% if x[3] == "" %}
+                    <!-- Show music image for instrumentals -->
+                    <img src="/static/images/music_note.png" alt="Music Placeholder" class="music_note">
+                {% else %}
+                    <!-- Show more options image -->
+                    <img src="/static/images/more_horiz.png" alt="more_horz" class="more_horz">
+                {% endif %}
+
+                    <!--<img src="/static/images/more_horiz.png" alt="more_horz" class="more_horz"> -->
+                    <div class="overlay">
+                        <div class="popup-content">
+                            {% if x[3] != "" and x[2] != "Made up Language/gibberish" %}
+                                <a href="{{ url_for('from_history', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Translations</a>
+                                <br>
+                                <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Lyrics</a>  
+                            {% endif %}    
+                            {% if x[2] == "Made up Language/gibberish" %}
+                                <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Lyrics</a>  
+                            {% elif x[3] == "" %}
+                                <p>No Lyrics</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                          
             </div>
             {% endfor %}
         {% else %}
         <div class="song-item">
-            <h1 style="color: rgb(245, 195, 59);">Nothing in here for now!</h1>
+            <h1>Nothing in here for now!</h1>
         </div>
-        {% endif %}
-
-        
+        {% endif%}
     </div> 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const moreHorzImages = document.querySelectorAll(".more_horz");
+            const overlays = document.querySelectorAll(".overlay");
+
+            moreHorzImages.forEach((img, index) => {
+                img.addEventListener("click", function(event) {
+                    event.stopPropagation(); // Prevent event bubbling
+                    const overlay = overlays[index];
+                    
+                    // Set position above the image
+                    overlay.style.display = "block";
+                    overlay.style.top = img.offsetTop - overlay.offsetHeight - 10 + "px";
+                    overlay.style.left = img.offsetLeft + "px";
+                });
+            });
+
+            // Close the popup when clicking anywhere else
+            document.addEventListener("click", function() {
+                overlays.forEach((overlay) => {
+                    overlay.style.display = "none";
+                });
+            });
+        });
+    </script>
+        
 </body>
 {% endblock %}
-

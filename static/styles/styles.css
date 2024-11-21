@@ -1,25 +1,31 @@
-
 body {
+    background-image: url('../images/Lyric Lens (Background Image).png');
+    background-repeat: no-repeat;
+    background-size: cover;
     margin: 0;
-    font-family: Arial, sans-serif;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: url('../images/Lyric Lens (Background Image).png');
-    background-repeat: no-repeat;
-    background-size: cover;
+    color: rgb(240, 197, 80);
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+.h1 {
+    text-align: center;
 }
 
 .navbar {
     position: absolute;
-    top: 1px;
+    top: 10px;
     right: 40px;
 }
 
-.navbar-img{
+.navbar-img {
     position: absolute;
-    top: 1px;
+    top: 10px;
     left: 10px;
 }
 
@@ -41,77 +47,121 @@ body {
     color: #ff7700;
 }
 
-a
-{
-    text-decoration: none;
-    color: #DF5353;
-    
-}
-
 .container {
-    text-decoration: none;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 80%;
+    height: 80%;
+    overflow-y: auto;
+    padding: 10px;
+    padding-top: 5%;
 }
 
 .song-item {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    width: 90%;
+    padding: 10px;
+    border-radius: 12px;
+    background-color: hsla(0, 100%, 50%, 0.1);
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+
 }
 
-/* Album placeholder styling */
 .album-placeholder {
-    width: 100px;
-    height: 100px;
-    margin-right: 10px;
-    background-color: #e0e0e0;
+    width: 80px;
+    height: 80px;
+    margin-right: 15px;
+    border-radius: 8px;
     object-fit: cover;
-    border-radius: 5px;
 }
 
-/* Song info container */
 .song-info {
     display: flex;
-    flex-direction: column; /* Stack song name and artist vertically */
-    background-color: #ffa500;
+    flex-direction: column;
     padding: 10px 20px;
     border-radius: 10px;
     font-size: 16px;
-    color: black;
+    color: white;
 }
 
-/* Song name and artist styling */
 .song-name {
-    font-weight: bold; /* Make the song name stand out */
-    margin-bottom: 5px; /* Space between song name and artist */
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 18px;
 }
 
 .song-artist {
-    font-style: italic; /* Different style for artist name */
+    font-style: italic;
+    font-size: 14px;
+}
+.more_horz {
+    width: 50px;
+    height: auto;
+    margin-left: auto; 
+    margin-right: 30px;
 }
 
-.home-btn-container
-{
+.music_note {
+    width: 50px;
+    height: auto;
+    margin-left: auto; 
+    margin-right: 30px;
+}
+
+.link-buttons {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FFBC60;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 10px;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-.home-btn
-{
-    background-color: #FFBC60;
-    border: none;
-    font-size: 30px;
-    font-weight: bolder;
+.link-buttons a {
+    text-decoration: none;
+    color: #ffa500;
+    font-weight: bold;
+    border: 1px solid #ffa500;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.home-btn-container:hover
-{
-    transform: scale(1.1);
+.link-buttons a:hover {
+    background-color: #ffa500;
+    color: black;
+}
+.overlay {
+    display: none; 
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 130px;
+    height: 55px;
+    background-color: hsla(0, 100%, 50%, 0.1);
+    font-family: 'Albert Sans'; 
+    font-size: 18px;
+    background-color: #ff770050;
+}
+
+.popup-content {
+    text-align: left;
+    text-decoration: none;
+}
+
+.popup-content a {
+    text-align: left;
+    text-decoration: none;
+    color: white;
+    margin-left: 12px;
+    margin-top: 50px;
+}
+
+.popup-content a:hover {
+    color: #ff7700;
 }
