@@ -153,7 +153,6 @@ def upload_audio():
         # Upload the audio file to S3
         s3_client.upload_fileobj(audio_file, S3_BUCKET, s3_path)
         print(f"Audio file uploaded to S3: {s3_path}")
-
         # Process the audio file and retrieve song metadata
         result = run_apis(S3_BUCKET, s3_path)
         print(f"run_apis returned: {result}")

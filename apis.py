@@ -28,7 +28,7 @@ def get_s3_file_binary(bucket_name, object_key):
         # Fetch binary content from S3
         response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
         file_binary = response['Body'].read()
-        
+                
         # Encode binary data to base64
         return base64.b64encode(file_binary).decode('utf-8')
     except Exception as e:
@@ -142,11 +142,9 @@ def run_apis(bucket_name, object_key):
                         if co == "MUL":
                             return 4, song_name, song_artist, la, ret_val, coverart
                         return 3, song_name, song_artist, la, ret_val, coverart
+                    print('Error: cant find track___________________lyrics')
                     return 1, song_name, song_artist, "", "", coverart
-
-                print('Error: cant find track___________________lyrics')
-                return 1, song_name, song_artist, "", "", coverart
-
+             
             ax = return_lyrics_MM(song_name, song_artist)
             if ax != 'fail':
                 print("IN____________________ LYRICS FOUND")
@@ -168,6 +166,7 @@ def run_apis(bucket_name, object_key):
     except Exception as e:
         print(f"Error in run_apis: {e}")
         return 0, "", "", "", "", ""
+    return 0, "", "", "", "", ""
 
     # Default return if no condition above matches
     return 0, "", "", "", "", ""
