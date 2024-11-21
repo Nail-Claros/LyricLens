@@ -173,6 +173,8 @@ def from_history():
         song_data = json.loads(song_data_json)
         print(f"Song data: {song_data}")
 
+        print(f"###################  S   E   S   S  I  O  N   ###################", {session})
+
 
         # Pass the retrieved data to the template
         return render_template(
