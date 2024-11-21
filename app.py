@@ -239,13 +239,77 @@ def upload_audio():
         redis_client.set(song_key, json.dumps(song_data))
 
 
-        # Redirect to the detected page with the key
-        return redirect(url_for('detected', key=song_key))
+        # Respond with the song key and endLoop flag
+        return jsonify({
+            "endLoop": True,  # This will signal the front-end to stop the loop
+            "key": song_key   # Return the song key so the client can use it in the redirect
+        })
 
 
     except Exception as e:
         print(f"Error uploading or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+# @app.route('/upload-audio', methods=['POST'])
+# def upload_audio():
+#     if 'audio' not in request.files:
+#         return jsonify({"error": "No audio file uploaded"}), 400
+
+
+#     audio_file = request.files['audio']
+#     file_name = audio_file.filename
+#     s3_path = f"audio/{file_name}"
+
+
+#     try:
+#         # Upload the audio file to S3 (your existing logic)
+#         s3_client.upload_fileobj(audio_file, S3_BUCKET, s3_path)
+#         print(f"Audio file uploaded to S3: {s3_path}")
+
+
+#         # Process the audio file and retrieve song metadata
+#         result = run_apis(S3_BUCKET, s3_path)
+#         print(f"run_apis returned: {result}")
+
+
+#         if result is None:
+#             return jsonify({"error": "run_apis returned None"}), 500
+
+
+#         code, song_name, song_artist, la, ret_val, coverart = result
+
+
+#         if code == 0:
+#             return jsonify({"message": "Unable to process audio file"}), 400
+
+
+#         # Prepare song data for Redis
+#         song_data = {
+#             'code': code,
+#             'songName': song_name,
+#             'artistName': song_artist,
+#             'songLang': la,
+#             'songLyric': ret_val,
+#             'albumCover': coverart
+#         }
+
+
+#         # Generate a unique key for storing the song data in Redis
+#         song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+
+
+#         # Store the song data in Redis
+#         redis_client.set(song_key, json.dumps(song_data))
+
+
+#         # Redirect to the detected page with the key
+#         return redirect(url_for('detected', key=song_key))
+
+
+#     except Exception as e:
+#         print(f"Error uploading or processing file: {e}")
+#         return jsonify({"error": "Internal server error"}), 500
 
 
 # @app.route('/upload-audio', methods=['POST'])
