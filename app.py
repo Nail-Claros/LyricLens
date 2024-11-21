@@ -145,12 +145,54 @@ def translations():
     
 @app.route('/translations', methods=['GET'])
 def from_history():
-    name = request.args.get('songName')
-    art =  request.args.get('artistName')
-    lyric =  request.args.get('songLyric')
-    lang =  request.args.get('songLang')
-    ca =  request.args.get('albumCover')
-    return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
+    song_key = request.args.get('key')
+    print(f"Received song key: {song_key}")
+  
+    if not song_key:
+        return jsonify({"error": "Missing or invalid key"}), 400
+
+
+    try:
+        # Retrieve song data from Redis
+        song_data_json = redis_client.get(song_key)
+        print(f"Song data retrieved: {song_data_json}")
+
+
+        if not song_data_json:
+            return jsonify({"error": "No data found for the provided key"}), 404
+
+
+        song_data = json.loads(song_data_json)
+
+
+        # Pass the retrieved data to the template
+        return render_template(
+            'translation.html',
+            name=song_data['songName'],
+            art=song_data['artistName'],
+            lang=song_data['songLang'],
+            lyric=song_data['songLyric'],
+            ca=song_data['albumCover'],
+            ldict=trans.languages_dict  # assuming this is a dictionary for translations
+        )
+    except Exception as e:
+        print(f"Error retrieving or rendering song data: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
+
+
+
+
+    
+# @app.route('/translations', methods=['GET'])
+# def from_history():
+#     name = request.args.get('songName')
+#     art =  request.args.get('artistName')
+#     lyric =  request.args.get('songLyric')
+#     lang =  request.args.get('songLang')
+#     ca =  request.args.get('albumCover')
+#     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
 
 
 @app.route('/translate', methods=['POST'])
