@@ -1,19 +1,28 @@
 const toggleButton =  document.getElementById("btn-toggle");
 let isListening = false;
 
-toggleButton.addEventListener('click', () => 
-    {
-        isListening = !isListening;
+// Assuming 'toggleButton' is your button element
+toggleButton.addEventListener('click', () => {
+    isListening = !isListening;
 
-        if(isListening)
-        {
-            toggleButton.classList.add('active');
-        }
-        else
-        {
-            toggleButton.classList.remove('active');
-        }
-    });
+    if (isListening) {
+        toggleButton.classList.add('active');
+    } else {
+        toggleButton.classList.remove('active');
+    }
+});
+
+// Add touchstart event listener for better mobile responsiveness
+toggleButton.addEventListener('touchstart', (event) => {
+    isListening = !isListening;
+
+    if (isListening) {
+        toggleButton.classList.add('active');
+    } else {
+        toggleButton.classList.remove('active');
+    }
+});
+
 
 
 function disableButton(event) {
