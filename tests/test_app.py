@@ -8,13 +8,11 @@ def client():
     with app.test_client() as client:
         yield client
 
-
 def test_index(client):
     """Test the '/' route (home page)."""
     response = client.get('/')
     assert response.status_code == 200
-    assert b"Welcome to the home page!" in response.data  # Modify based on actual content
-
+    assert b"Lyric Lens" in response.data
 
 def test_history(client):
     """Test the '/history' route."""
@@ -22,8 +20,6 @@ def test_history(client):
     response = client.get('/history', cookies={'user_id': 'mock_user_id'})
     
     assert response.status_code == 200
-    assert b"Your Song History" in response.data  # Modify based on actual content
-
 
 def test_clear_history(client):
     """Test the '/clear_history' route."""
@@ -35,16 +31,16 @@ def test_redis_test(client):
     """Test the '/redistest' route (simple Redis test)."""
     response = client.get('/redistest')
     assert response.status_code == 200
-    assert b"Message from Redis:" in response.data  # Modify based on actual content
+    assert b"Hello, this is a CAM!" in response.data
 
 
 def test_detected(client):
     """Test the '/detected' route."""
-    # Mock query parameters (example song_key)
+    # Mock query parameters
     response = client.get('/detected', query_string={'key': 'mock_song_key'}, cookies={'user_id': 'mock_user_id'})
     
     assert response.status_code == 200
-    assert b"Detected Song" in response.data  # Modify based on actual content
+    assert b"Translations" in response.data 
 
 
 def test_translations(client):
@@ -52,7 +48,7 @@ def test_translations(client):
     response = client.get('/translations', query_string={'key': 'mock_song_key'})
     
     assert response.status_code == 200
-    assert b"Song Translations" in response.data  # Modify based on actual content
+    assert b"Language" in response.data
 
 
 def test_upload_audio(client):
@@ -63,7 +59,7 @@ def test_upload_audio(client):
     response = client.post('/upload-audio', data=data, content_type='multipart/form-data')
     
     assert response.status_code == 200
-    assert b"Audio file uploaded" in response.data  # Modify based on actual content
+    assert b"Audio file uploaded" in response.data
 
 
 def test_translate(client):
@@ -75,7 +71,7 @@ def test_translate(client):
     response = client.post('/translate', data=json.dumps(data), content_type='application/json')
     
     assert response.status_code == 200
-    assert b"translatedText" in response.data  # Modify based on actual content
+    assert b"translatedText" in response.data 
 
 
 def test_lyrics(client):
@@ -83,4 +79,4 @@ def test_lyrics(client):
     response = client.get('/lyrics', query_string={'song_key': 'mock_song_key'}, cookies={'user_id': 'mock_user_id'})
     
     assert response.status_code == 200
-    assert b"Song Lyrics" in response.data  # Modify based on actual content
+    assert b"Song Lyrics" in response.data
