@@ -31,18 +31,18 @@
                {% for song in song_history|reverse %}
                <li class="song-item">
                    <!-- Album Cover -->
-                   <img class="album-placeholder" src="{{ song['album_cover'] }}" alt="Album Cover">
+                   <img class="album-placeholder" src="{{ song['albumCover'] }}" alt="Album Cover">
 
                    <!-- Song Info -->
                    <div class="song-info">
-                       <div class="song-name">{{ song['song_name'][:67] }}{% if song['song_name']|length > 67 %}...{% endif %}</div>
-                       <div class="song-artist">{{ song['artist'][:67] }}{% if song['artist']|length > 67 %}...{% endif %}</div>
+                       <div class="song-name">{{ song['songName'][:67] }}{% if song['songName']|length > 67 %}...{% endif %}</div>
+                       <div class="song-artist">{{ song['artistName']][:67] }}{% if song['artistName']]|length > 67 %}...{% endif %}</div>
                    </div>
 
                    <!-- Options Popup -->
                    <div class="overlay">
                        <div class="popup-content">
-                           <a href="{{ url_for('lyrics', songName=song['song_name'], artistName=song['artist'], albumCover=song['album_cover']) }}">View Lyrics</a>
+                           <a href="{{ url_for('lyrics', songName=song['songName'], artistName=song['artistName']], albumCover=song['albumCover']) }}">View Lyrics</a>
                        </div>
                    </div>
                </li>
