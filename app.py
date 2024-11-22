@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, url_for, redirect, request, session
+from flask import Flask, jsonify, render_template, url_for, redirect, request, session, make_response
 import requests
 import trans
 import redis
@@ -31,21 +31,57 @@ db = []
 app = Flask(__name__)
 app.secret_key = os.getenv('sec_key')
 
-def db_check(code, val):
-    if db.__contains__(val):
-        x = db.pop(db.index(val))
-        db.append(x)
+@app.before_request
+def set_user_identifier():
+    user_id = request.cookies.get('user_id')  # Check if 'user_id' exists in cookies
+    if not user_id:  # If no 'user_id', generate one
+        user_id = str(uuid.uuid4())
+        resp = make_response()
+        resp.set_cookie('user_id', user_id)
+        print(f"New user ID generated: {user_id}")
+        return resp
     else:
-        if code != 0:
-            db.append(val)
+        print(f"Existing user ID: {user_id}")
 
-@app.route('/redistest')
+def add_to_history(user_id, song_data, song_key):
+    key = f"user:{user_id}"  # Key for Redis
+    existing_history = redis_client.get(key)  # Get existing history
+    
+    # Parse existing history or initialize an empty list if not found
+    history = json.loads(existing_history) if existing_history else [] 
+    
+    # Include the song_key along with the song_data
+    song_data_with_key = song_data.copy()  # Create a copy of song_data
+    song_data_with_key['song_key'] = song_key  # Add the song_key to the data
+    
+    # Append the song data (now with the song_key) to the history
+    history.append(song_data_with_key)
+    
+    # Save updated history back to Redis
+    redis_client.set(key, json.dumps(history))
+    
+    print(f"History updated for user {user_id}: {history}")
+
+@app.route('/history')
+def history():
+    user_id = request.cookies.get('user_id')
+    history = redis_client.get(f"user:{user_id}")
+    song_history = json.loads(history) if history else []
+    return render_template('history.html', song_history=song_history)
+
+@app.route('/clear_history', methods=['POST'])
+def clear_history():
+    user_id = request.cookies.get('user_id')
+    redis_client.delete(f"user:{user_id}")
+    return redirect(url_for('history'))
+
+@app.get('/redistest')
 def redis_test():
     message = redis_client.get('my_message')
     message = message.decode('utf-8') if message else "No message found."
     return render_template('redistest.html', message=message)
 
-@app.route('/')
+@app.get('/')
 def index():
     try:
         redis_client.ping()
@@ -55,17 +91,16 @@ def index():
     
     return render_template('index.html')
 
-@app.route('/history', methods=['get'])
-def history():
-    return render_template('history.html', red=db)
-
 @app.get('/about')
 def about():
     return render_template('about.html')
 
-
 @app.route('/detected')
 def detected():
+    user_id = request.cookies.get('user_id')  # Retrieve user_id from cookies
+    if not user_id:
+        return "User ID not found!", 400  # Handle missing user ID
+    
     song_key = request.args.get('key')
     print(f"Received song key: {song_key}")
   
@@ -80,6 +115,8 @@ def detected():
             return jsonify({"error": "No data found for the provided key"}), 404
 
         song_data = json.loads(song_data_json)
+
+        add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
 
 
         # Pass the song data and song_key to the template
@@ -142,6 +179,7 @@ def translate():
 
 @app.post('/upload-audio')
 def upload_audio():
+
     if 'audio' not in request.files:
         return jsonify({"error": "No audio file uploaded"}), 400
 
@@ -175,7 +213,7 @@ def upload_audio():
             'songLang': la,
             'songLyric': ret_val,
             'albumCover': coverart
-        }
+        } 
 
         # Generate a unique key for storing the song data in Redis
         song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
@@ -192,23 +230,37 @@ def upload_audio():
     except Exception as e:
         print(f"Error uploading or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
-    
-#unused code
-# @app.route('/translations', methods=['GET'])
-# def from_history():
-#     name = request.args.get('songName')
-#     art =  request.args.get('artistName')
-#     lyric =  request.args.get('songLyric')
-#     lang =  request.args.get('songLang')
-#     ca =  request.args.get('albumCover')
-#     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
 
-# @app.route('/lyrics')
-# def lyrics():
-#     songName = request.args.get('songName')
-#     artistName = request.args.get('artistName')
-#     songLang = request.args.get('songLang')
-#     songLyric = request.args.get('songLyric')
-#     albumCover = request.args.get('albumCover')
-#     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+@app.route('/lyrics')
+def lyrics():
+    song_key = request.args.get('song_key')  # Retrieve the song_key from the URL
+    user_id = request.cookies.get('user_id')  # Get the user_id from cookies
+    
+    # Get the user's song history from Redis
+    history = redis_client.get(f"user:{user_id}")
+    song_history = json.loads(history) if history else []
+    
+    # Find the song data based on the song_key
+    song_data = next((song for song in song_history if song['song_key'] == song_key), None)
+    
+    if song_data:
+        # Extract the song data
+        songName = song_data['songName']
+        artistName = song_data['artistName']
+        songLang = song_data['songLang']
+        songLyric = song_data['songLyric']
+        albumCover = song_data['albumCover']
+        
+        # Render the template with the unpacked song data
+        return render_template('lyrics.html', songName=songName, artistName=artistName, 
+                               songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+    else:
+        # If no song is found with the given song_key, you can handle it accordingly
+        return "Song not found", 404
+
+
+
+
+
+
 
