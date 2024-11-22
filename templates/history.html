@@ -47,9 +47,9 @@
                         <!-- Conditional Links -->
                         {% if song['songLyric'] and song['songLang'] != "Made up songLang/gibberish" %}
                             <a href="{{ url_for('translations', key=song['song_key']) }}">Head to Translations</a>
-                            <a href="{{ url_for('lyrics', songName=song['songName'], artistName=song['artistName'], songLyric=song['songLyric'], songLang=song['songLang'], albumCover=song['albumCover']) }}">Head to Lyrics</a>
+                            <a href="{{ url_for('lyrics', song_key=song['song_key']) }}">Head to Lyrics</a>
                         {% elif song['songLang'] == "Made up Language/gibberish" %}
-                            <a href="{{ url_for('lyrics', songName=song['songName'], artistName=song['artistName'], songLyric=song['songLyric'], songLang=song['songLang'], albumCover=song['albumCover']) }}">Head to Lyrics</a>
+                            <a href="{{ url_for('lyrics', song_key=song['song_key']) }}">Head to Lyrics</a>
                         {% elif not song['songLyric'] %}
                             <p>No Lyrics</p>
                         {% endif %}

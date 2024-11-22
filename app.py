@@ -257,12 +257,45 @@ def upload_audio():
 #     ca =  request.args.get('albumCover')
 #     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
 
+# @app.route('/lyrics')
+# def lyrics():
+#     songName = request.args.get('songName')
+#     artistName = request.args.get('artistName')
+#     songLang = request.args.get('songLang')
+#     songLyric = request.args.get('songLyric')
+#     albumCover = request.args.get('albumCover')
+#     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+
 @app.route('/lyrics')
 def lyrics():
-    songName = request.args.get('songName')
-    artistName = request.args.get('artistName')
-    songLang = request.args.get('songLang')
-    songLyric = request.args.get('songLyric')
-    albumCover = request.args.get('albumCover')
-    return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+    song_key = request.args.get('song_key')  # Retrieve the song_key from the URL
+    user_id = request.cookies.get('user_id')  # Get the user_id from cookies (optional, if needed for Redis)
+    
+    # Get the user's song history from Redis
+    history = redis_client.get(f"user:{user_id}")
+    song_history = json.loads(history) if history else []
+    
+    # Find the song data based on the song_key
+    song_data = next((song for song in song_history if song['song_key'] == song_key), None)
+    
+    if song_data:
+        # Extract the song data
+        songName = song_data['songName']
+        artistName = song_data['artistName']
+        songLang = song_data['songLang']
+        songLyric = song_data['songLyric']
+        albumCover = song_data['albumCover']
+        
+        # Render the template with the unpacked song data
+        return render_template('lyrics.html', songName=songName, artistName=artistName, 
+                               songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+    else:
+        # If no song is found with the given song_key, you can handle it accordingly
+        return "Song not found", 404
+
+
+
+
+
+
 
