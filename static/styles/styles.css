@@ -165,3 +165,57 @@ body {
 .popup-content a:hover {
     color: #ff7700;
 }
+
+/* General button styles */
+button {
+    background-color: transparent;
+    border: 1px solid rgb(237, 179, 20);
+    color: rgb(237, 179, 20);
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Albert Sans';
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    width: 200px;
+    margin: 10px 0;
+}
+
+
+/* Hover effect */
+button:hover {
+    background-color: rgb(237, 179, 20);
+    color: black;
+}
+
+
+/* Specific styles for translations button */
+.btn-translations {
+    background-color: transparent;
+    border: 1px solid rgb(237, 179, 20);
+    color: rgb(237, 179, 20);
+}
+
+
+/* Specific styles for lyrics button */
+.btn-lyrics {
+    background-color: transparent;
+    border: 1px solid rgb(237, 179, 20);
+    color: rgb(237, 179, 20);
+}
+
+
+/* Hover effect for translation button */
+.btn-translations:hover {
+    background-color: rgb(237, 179, 20);
+    color: black;
+}
+
+
+/* Hover effect for lyrics button */
+.btn-lyrics:hover {
+    background-color: rgb(237, 179, 20);
+    color: black;
+}
+
