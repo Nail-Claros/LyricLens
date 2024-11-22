@@ -43,14 +43,34 @@ def set_user_identifier():
     else:
         print(f"Existing user ID: {user_id}")
 
-    
-def add_to_history(user_id, song_data):
+def add_to_history(user_id, song_data, song_key):
     key = f"user:{user_id}"  # Key for Redis
     existing_history = redis_client.get(key)  # Get existing history
-    history = json.loads(existing_history) if existing_history else []  # Parse JSON or initialize empty list
-    history.append(song_data)  # Append new song data
-    redis_client.set(key, json.dumps(history))  # Save updated history back to Redis
+    
+    # Parse existing history or initialize an empty list if not found
+    history = json.loads(existing_history) if existing_history else []  
+    
+    # Include the song_key along with the song_data
+    song_data_with_key = {
+        "song_data": song_data,
+        "song_key": song_key
+    }
+    
+    # Append the song data (now with the song_key) to the history
+    history.append(song_data_with_key)
+    
+    # Save updated history back to Redis
+    redis_client.set(key, json.dumps(history))
+    
     print(f"History updated for user {user_id}: {history}")
+
+# def add_to_history(user_id, song_data):
+#     key = f"user:{user_id}"  # Key for Redis
+#     existing_history = redis_client.get(key)  # Get existing history
+#     history = json.loads(existing_history) if existing_history else []  # Parse JSON or initialize empty list
+#     history.append(song_data)  # Append new song data
+#     redis_client.set(key, json.dumps(history))  # Save updated history back to Redis
+#     print(f"History updated for user {user_id}: {history}")
 
 
 @app.route('/history')
@@ -108,7 +128,7 @@ def detected():
 
         song_data = json.loads(song_data_json)
 
-        add_to_history(user_id=user_id, song_data=song_data)
+        add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
 
 
         # Pass the song data and song_key to the template
