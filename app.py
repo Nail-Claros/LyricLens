@@ -33,15 +33,24 @@ app.secret_key = os.getenv('sec_key')
 
 @app.before_request
 def set_user_identifier():
-    user_id = request.cookies.get('user_id')  # Check if 'user_id' exists in cookies
-    if not user_id:  # If no 'user_id', generate one
+    user_id = request.cookies.get('user_id')
+    if not user_id:
         user_id = str(uuid.uuid4())
-        resp = make_response()
-        resp.set_cookie('user_id', user_id)
+        request.environ['new_user_cookie'] = user_id  # Pass the user_id in the request object
         print(f"New user ID generated: {user_id}")
-        return resp
     else:
         print(f"Existing user ID: {user_id}")
+
+@app.get('/')
+def index():
+    # Check if a new cookie needs to be set
+    new_user_id = request.environ.get('new_user_cookie')
+    if new_user_id:
+        resp = make_response(render_template('index.html'))
+        resp.set_cookie('user_id', new_user_id)
+        return resp
+
+    return render_template('index.html')
 
 def add_to_history(user_id, song_data, song_key):
     key = f"user:{user_id}"  # Key for Redis
@@ -80,16 +89,6 @@ def redis_test():
     message = redis_client.get('my_message')
     message = message.decode('utf-8') if message else "No message found."
     return render_template('redistest.html', message=message)
-
-@app.get('/')
-def index():
-    try:
-        redis_client.ping()
-        print("Redis connection is healthy!")
-    except redis.exceptions.ConnectionError as e:
-        print(f"Error connecting to Redis: {e}")
-    
-    return render_template('index.html')
 
 @app.get('/about')
 def about():
