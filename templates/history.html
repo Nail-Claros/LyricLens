@@ -46,10 +46,10 @@
 
                         <!-- Conditional Links -->
                         {% if song['songLyric'] and song['songLang'] != "Made up songLang/gibberish" %}
-                        <form action="{{ url_for('translations', key='song:' + song['song_key']) }}" method="get">
+                        <form action="{{ url_for('translations') }}" method="get">
+                            <input type="hidden" name="song_key" value="{{ song['song_key'] }}">
                             <button type="submit" class="btn btn-translations">Head to Translations</button>
                         </form>
-                    {% endif %}                    
                         
                             <form action="{{ url_for('lyrics') }}" method="get">
                                 <input type="hidden" name="song_key" value="{{ song['song_key'] }}">
