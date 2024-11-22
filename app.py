@@ -233,12 +233,12 @@ def upload_audio():
 #     ca =  request.args.get('albumCover')
 #     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
 
-# @app.route('/lyrics')
-# def lyrics():
-#     songName = request.args.get('songName')
-#     artistName = request.args.get('artistName')
-#     songLang = request.args.get('songLang')
-#     songLyric = request.args.get('songLyric')
-#     albumCover = request.args.get('albumCover')
-#     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
+@app.route('/lyrics')
+def lyrics():
+    songName = request.args.get('songName')
+    artistName = request.args.get('artistName')
+    songLang = request.args.get('songLang')
+    songLyric = request.args.get('songLyric')
+    albumCover = request.args.get('albumCover')
+    return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
