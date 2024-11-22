@@ -2,95 +2,67 @@
 
 
 {% block styles %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
 {% endblock %}
 
 
 {% block body %}
 <body>
-  <!-- Navbar with logo -->
-  <nav class="navbar-img">
-      <a href="{{ url_for('index') }}">
-          <img src="{{ url_for('static', filename='images/Lyric Lens (Text Logo and Icon) - Horizontal.png') }}"
-               style="height: 100px; width: 300px;">
-      </a>
-  </nav>
+    <nav class="navbar-img">
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/Lyric Lens (Text Logo and Icon) - Horizontal.png') }}" style="height: 100px; width: 300px;">
+        </a>
+    </nav>
 
 
-  <!-- Navbar with navigation links -->
-  <nav class="navbar">
-      <ul class="nav-links">
-          <li><a href="{{ url_for('index') }}">HOME</a></li>
-          <li><a href="{{ url_for('about') }}">ABOUT</a></li>
-          <li><a href="{{ url_for('history') }}">HISTORY</a></li>
-      </ul>
-  </nav>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">HOME</a></li>
+            <li><a href="{{ url_for('about') }}">ABOUT</a></li>
+            <li><a href="{{ url_for('history') }}">HISTORY</a></li>
+        </ul>
+    </nav>
 
 
-  <div class="container">
-      <!-- Song History -->
-      {% if song_history %}
-          <h1>Your Recent Songs</h1>
-          <ul class="song-list">
-              {% for song in song_history|reverse %}
-              <li class="song-item">
-                  <!-- Album Cover -->
-                  <img class="album-placeholder" src="{{ song['albumCover'] }}" alt="Album Cover">
+    <div class="container">
+        {% if song_history %}
+            <h1>Your Recent Songs</h1>
+            <ul class="song-list">
+                {% for song in song_history|reverse %}
+                <li class="song-item">
+                    <!-- Album Cover -->
+                    {% if song['albumCover'] != "fail" %}
+                        <img class="album-placeholder" src="{{ song['albumCover'] }}" alt="Album Cover" style="width: 100px; height: 100px;">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Placeholder" style="width: 100px; height: 100px;">
+                    {% endif %}
 
 
-                  <!-- Song Info -->
-                  <div class="song-info">
-                      <div class="song-name">{{ song['songName'][:67] }}{% if song['songName']|length > 67 %}...{% endif %}</div>
-                      <div class="song-artist">{{ song['artistName'][:67] }}{% if song['artistName']|length > 67 %}...{% endif %}</div>
-                  </div>
+                    <!-- Song Info -->
+                    <div class="song-info">
+                        <div class="song-name">{{ song['songName'][:67] }}{% if song['songName']|length > 67 %}...{% endif %}</div>
+                        <div class="song-artist">{{ song['artistName'][:67] }}{% if song['artistName']|length > 67 %}...{% endif %}</div>
 
 
-                  <!-- Options Popup -->
-                  <div class="overlay">
-                      <div class="popup-content">
-                          <a href="{{ url_for('lyrics', songName=song['songName'], artistName=song['artistName'], albumCover=song['albumCover']) }}">View Lyrics</a>
-                      </div>
-                  </div>
-              </li>
-              {% endfor %}
-          </ul>
-         
-          <!-- Clear History Button -->
-          <form method="POST" action="{{ url_for('clear_history') }}">
-              <button class="clear-history-btn" type="submit">Clear History</button>
-          </form>
-      {% else %}
-          <div class="song-item">
-              <h1>No History Found!</h1>
-          </div>
-      {% endif %}
-  </div>
-
-
-  <!-- JavaScript for Overlay -->
-  <script>
-      document.addEventListener("DOMContentLoaded", function() {
-          const moreHorzImages = document.querySelectorAll(".more_horz");
-          const overlays = document.querySelectorAll(".overlay");
-
-
-          moreHorzImages.forEach((img, index) => {
-              img.addEventListener("click", function(event) {
-                  event.stopPropagation(); // Prevent event bubbling
-                  const overlay = overlays[index];
-                  overlay.style.display = "block";
-              });
-          });
-
-
-          // Close the popup when clicking elsewhere
-          document.addEventListener("click", function() {
-              overlays.forEach((overlay) => {
-                  overlay.style.display = "none";
-              });
-          });
-      });
-  </script>
+                        <!-- Conditional Links -->
+                        {% if song['lyrics'] and song['language'] != "Made up Language/gibberish" %}
+                            <a href="{{ url_for('from_history', songName=song['songName'], artistName=song['artistName'], songLyric=song['lyrics'], songLang=song['language'], albumCover=song['albumCover']) }}">Head to translations</a>
+                            <a href="{{ url_for('lyrics', songName=song['songName'], artistName=song['artistName'], songLyric=song['lyrics'], songLang=song['language'], albumCover=song['albumCover']) }}">Head to Lyrics</a>
+                        {% elif song['language'] == "Made up Language/gibberish" %}
+                            <a href="{{ url_for('lyrics', songName=song['songName'], artistName=song['artistName'], songLyric=song['lyrics'], songLang=song['language'], albumCover=song['albumCover']) }}">Head to Lyrics</a>
+                        {% elif not song['lyrics'] %}
+                            <p>No Lyrics</p>
+                        {% endif %}
+                    </div>        
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+        <div class="song-item">
+            <h1 style="color: rgb(245, 195, 59);">Nothing in here for now!</h1>
+        </div>
+        {% endif %}
+    </div> 
 </body>
 {% endblock %}
 
