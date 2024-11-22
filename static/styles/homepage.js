@@ -12,18 +12,6 @@ toggleButton.addEventListener('click', () => {
     }
 });
 
-// Add touchstart event listener for better mobile responsiveness
-toggleButton.addEventListener('touchstart', (event) => {
-    isListening = !isListening;
-
-    if (isListening) {
-        toggleButton.classList.add('active');
-    } else {
-        toggleButton.classList.remove('active');
-    }
-});
-
-
 
 function disableButton(event) {
     
