@@ -2,8 +2,8 @@ import requests
 import json
 import os
 
-key = os.getenv('SHAZ_API_KEY')
-
+nkey = os.getenv('key_n')
+hkey = os.getenv('key_h')
 
 def detect(text):
     url = "https://google-translate-api8.p.rapidapi.com/google-translate/detect/"
@@ -15,7 +15,7 @@ def detect(text):
         "key2": "value"
     }
     headers = {
-        "x-rapidapi-key": str(key),
+        "x-rapidapi-key": str(hkey),
         "x-rapidapi-host": "google-translate-api8.p.rapidapi.com",
         "Content-Type": "application/json"
     }
@@ -49,7 +49,7 @@ def translate(text, lang):
             "target": str(lang)
         }
         headers = {
-            "x-rapidapi-key": key,
+            "x-rapidapi-key": nkey,
             "x-rapidapi-host": "deep-translate1.p.rapidapi.com",
             "Content-Type": "application/json"
         }

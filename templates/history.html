@@ -45,21 +45,21 @@
 
 
                         <!-- Conditional Links -->
-                        {% if song['songLyric'] and song['songLang'] != "Made up songLang/gibberish" %}
+                        {% if song['songLyric'] and (song['songLang'] != "Made up Language/gibberish") %}
                         <form action="{{ url_for('translations') }}" method="get"> <input type="hidden" name="key" value="{{ song['song_key'] }}"> <button type="submit" class="btn btn-translations">Head to Translations</button> </form>
-                        
+                            <form action="{{ url_for('lyrics') }}" method="get">
+                                <input type="hidden" name="song_key" value="{{ song['song_key'] }}">
+                                <button type="submit" class="btn btn-lyrics">Head to Lyrics</button>
+                            </form>
+                        {% endif %}
+                        {% if song['songLang'] == "Made up Language/gibberish"%}
                             <form action="{{ url_for('lyrics') }}" method="get">
                                 <input type="hidden" name="song_key" value="{{ song['song_key'] }}">
                                 <button type="submit" class="btn btn-lyrics">Head to Lyrics</button>
                         </form>
+                        {% endif %}
 
-                        {% elif song['songLang'] == "Made up Language/gibberish" %}
-                            <form action="{{ url_for('lyrics') }}" method="get">
-                                <input type="hidden" name="song_key" value="{{ song['song_key'] }}">
-                                <button type="submit" class="btn btn-lyrics">Head to Lyrics</button>
-                        </form>
-
-                        {% elif not song['songLyric'] %}
+                        {% if not song['songLyric'] %}
                             <p>No Lyrics</p>
                         {% endif %}
                     </div>        
