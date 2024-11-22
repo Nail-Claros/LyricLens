@@ -62,21 +62,6 @@ def add_to_history(user_id, song_data, song_key):
     
     print(f"History updated for user {user_id}: {history}")
 
-
-
-
-
-
-
-# def add_to_history(user_id, song_data):
-#     key = f"user:{user_id}"  # Key for Redis
-#     existing_history = redis_client.get(key)  # Get existing history
-#     history = json.loads(existing_history) if existing_history else []  # Parse JSON or initialize empty list
-#     history.append(song_data)  # Append new song data
-#     redis_client.set(key, json.dumps(history))  # Save updated history back to Redis
-#     print(f"History updated for user {user_id}: {history}")
-
-
 @app.route('/history')
 def history():
     user_id = request.cookies.get('user_id')
@@ -89,7 +74,6 @@ def clear_history():
     user_id = request.cookies.get('user_id')
     redis_client.delete(f"user:{user_id}")
     return redirect(url_for('history'))
-
 
 @app.get('/redistest')
 def redis_test():
@@ -246,30 +230,11 @@ def upload_audio():
     except Exception as e:
         print(f"Error uploading or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
-    
-#unused code
-# @app.route('/translations', methods=['GET'])
-# def from_history():
-#     name = request.args.get('songName')
-#     art =  request.args.get('artistName')
-#     lyric =  request.args.get('songLyric')
-#     lang =  request.args.get('songLang')
-#     ca =  request.args.get('albumCover')
-#     return render_template('translation.html', name=name, art=art, lang=lang, lyric=lyric, ca=ca, ldict=trans.languages_dict)
-
-# @app.route('/lyrics')
-# def lyrics():
-#     songName = request.args.get('songName')
-#     artistName = request.args.get('artistName')
-#     songLang = request.args.get('songLang')
-#     songLyric = request.args.get('songLyric')
-#     albumCover = request.args.get('albumCover')
-#     return render_template('lyrics.html', songName=songName, artistName=artistName, songLang=songLang, songLyric=songLyric, albumCover=albumCover)
 
 @app.route('/lyrics')
 def lyrics():
     song_key = request.args.get('song_key')  # Retrieve the song_key from the URL
-    user_id = request.cookies.get('user_id')  # Get the user_id from cookies (optional, if needed for Redis)
+    user_id = request.cookies.get('user_id')  # Get the user_id from cookies
     
     # Get the user's song history from Redis
     history = redis_client.get(f"user:{user_id}")
