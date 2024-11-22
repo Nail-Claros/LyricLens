@@ -13,7 +13,11 @@ Welcome to LyricLens, a project designed to capture your audio recording, recogn
 
 # How it works:
 Audio Capture: Record your audio through the app. Simply click the large circular button on the home page!
+
 Song Recognition: Our system recognizes the song based on the specific audio data of your recording.
+
 Lyric Fetching: We fetch the lyrics for the recognized song from a variety of open source APIs.
+
 Translations: Translations of the lyrics are displayed in your preferred language.
+
 LyricLens makes it easy to enjoy your favorite music with lyrics in any language!
