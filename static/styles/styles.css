@@ -58,6 +58,10 @@ body {
     padding-top: 5%;
 }
 
+.container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari: Hides scrollbar */
+}
+
 .song-item {
     display: flex;
     align-items: center;
