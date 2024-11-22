@@ -1,89 +1,89 @@
-{% extends '_template.html' %}
+,{% extends '_template.html' %}
 
 {% block styles %}
-    <link rel="stylesheet" href="static/styles/styles.css">
+   <link rel="stylesheet" href="static/styles/styles.css">
 {% endblock %}
+
 {% block body %}
 <body>
-    <nav class="navbar-img">
-        <a href="{{url_for('index')}}">
-            <img src="{{ url_for('static', filename='images/Lyric Lens (Text Logo and Icon) - Horizontal.png')}}" style="height: 100px; width: 300px;">
-        </a>    </nav>
-    <nav class="navbar">
-        <ul class="nav-links">
-            <li><a href="{{url_for('index')}}">HOME</a></li>
-            <li><a href="{{url_for('about')}}">ABOUT</a></li>
-            <li><a href="{{url_for('history')}}">HISTORY</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        {% if red %}
-            {% for x in red|reverse %}
-            <div class="song-item">
-                <img class="album-placeholder" src="{{ x[4] }}" alt="Album Placeholder">
-                <div class="song-info">
-                    <div class="song-name">{{ x[0][:67] }}{% if x[0]|length > 67 %}...{% endif %}</div>
-                    <div class="song-artist">{{ x[1][:67] }}{% if x[1]|length > 67 %}...{% endif %}</div>
+   <!-- Navbar with logo -->
+   <nav class="navbar-img">
+       <a href="{{ url_for('index') }}">
+           <img src="{{ url_for('static', filename='images/Lyric Lens (Text Logo and Icon) - Horizontal.png') }}" 
+                style="height: 100px; width: 300px;">
+       </a>
+   </nav>
 
-                </div>
+   <!-- Navbar with navigation links -->
+   <nav class="navbar">
+       <ul class="nav-links">
+           <li><a href="{{ url_for('index') }}">HOME</a></li>
+           <li><a href="{{ url_for('about') }}">ABOUT</a></li>
+           <li><a href="{{ url_for('history') }}">HISTORY</a></li>
+       </ul>
+   </nav>
 
-                {% if x[3] == "" %}
-                    <!-- Show music image for instrumentals -->
-                    <img src="/static/images/music_note.png" alt="Music Placeholder" class="music_note">
-                {% else %}
-                    <!-- Show more options image -->
-                    <img src="/static/images/more_horiz.png" alt="more_horz" class="more_horz">
-                {% endif %}
+   <div class="container">
+       <!-- Song History -->
+       {% if song_history %}
+           <h1>Your Recent Songs</h1>
+           <ul class="song-list">
+               {% for song in song_history|reverse %}
+               <li class="song-item">
+                   <!-- Album Cover -->
+                   <img class="album-placeholder" src="{{ song['album_cover'] }}" alt="Album Cover">
 
-                    <!--<img src="/static/images/more_horiz.png" alt="more_horz" class="more_horz"> -->
-                    <div class="overlay">
-                        <div class="popup-content">
-                            {% if x[3] != "" and x[2] != "Made up Language/gibberish" %}
-                                <a href="{{ url_for('from_history', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Translations</a>
-                                <br>
-                                <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Lyrics</a>  
-                            {% endif %}    
-                            {% if x[2] == "Made up Language/gibberish" %}
-                                <a href="{{ url_for('lyrics', songName=x[0], artistName=x[1], songLyric=x[3], songLang=x[2], albumCover=x[4]) }}">Lyrics</a>  
-                            {% elif x[3] == "" %}
-                                <p>No Lyrics</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                          
-            </div>
-            {% endfor %}
-        {% else %}
-        <div class="song-item">
-            <h1>Nothing in here for now!</h1>
-        </div>
-        {% endif%}
-    </div> 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const moreHorzImages = document.querySelectorAll(".more_horz");
-            const overlays = document.querySelectorAll(".overlay");
+                   <!-- Song Info -->
+                   <div class="song-info">
+                       <div class="song-name">{{ song['song_name'][:67] }}{% if song['song_name']|length > 67 %}...{% endif %}</div>
+                       <div class="song-artist">{{ song['artist'][:67] }}{% if song['artist']|length > 67 %}...{% endif %}</div>
+                   </div>
 
-            moreHorzImages.forEach((img, index) => {
-                img.addEventListener("click", function(event) {
-                    event.stopPropagation(); // Prevent event bubbling
-                    const overlay = overlays[index];
-                    
-                    // Set position above the image
-                    overlay.style.display = "block";
-                    overlay.style.top = img.offsetTop - overlay.offsetHeight - 10 + "px";
-                    overlay.style.left = img.offsetLeft + "px";
-                });
-            });
+                   <!-- Options Popup -->
+                   <div class="overlay">
+                       <div class="popup-content">
+                           <a href="{{ url_for('lyrics', songName=song['song_name'], artistName=song['artist'], albumCover=song['album_cover']) }}">View Lyrics</a>
+                       </div>
+                   </div>
+               </li>
+               {% endfor %}
+           </ul>
+           
+           <!-- Clear History Button -->
+           <form method="POST" action="{{ url_for('clear_history') }}">
+               <button class="clear-history-btn" type="submit">Clear History</button>
+           </form>
+       {% else %}
+           <div class="song-item">
+               <h1>No History Found!</h1>
+           </div>
+       {% endif %}
+   </div>
 
-            // Close the popup when clicking anywhere else
-            document.addEventListener("click", function() {
-                overlays.forEach((overlay) => {
-                    overlay.style.display = "none";
-                });
-            });
-        });
-    </script>
-        
+   <!-- JavaScript for Overlay -->
+   <script>
+       document.addEventListener("DOMContentLoaded", function() {
+           const moreHorzImages = document.querySelectorAll(".more_horz");
+           const overlays = document.querySelectorAll(".overlay");
+
+           moreHorzImages.forEach((img, index) => {
+               img.addEventListener("click", function(event) {
+                   event.stopPropagation(); // Prevent event bubbling
+                   const overlay = overlays[index];
+                   overlay.style.display = "block";
+               });
+           });
+
+           // Close the popup when clicking elsewhere
+           document.addEventListener("click", function() {
+               overlays.forEach((overlay) => {
+                   overlay.style.display = "none";
+               });
+           });
+       });
+   </script>
 </body>
 {% endblock %}
+
+
+

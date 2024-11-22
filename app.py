@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, url_for, redirect, request, session
+from flask import Flask, jsonify, render_template, url_for, redirect, request, session, make_response
 import requests
 import trans
 import redis
@@ -31,21 +31,42 @@ db = []
 app = Flask(__name__)
 app.secret_key = os.getenv('sec_key')
 
-def db_check(code, val):
-    if db.__contains__(val):
-        x = db.pop(db.index(val))
-        db.append(x)
-    else:
-        if code != 0:
-            db.append(val)
+@app.before_request
+def set_user_identifier():
+    if not request.cookies.get('user_id'):
+        user_id = str(uuid.uuid4())
+        resp = make_response()
+        resp.set_cookie('user_id', user_id)
+        return resp
+    
+def add_to_history(user_id, song_data):
+    key = f"user:{user_id}"
+    existing_history = redis_client.get(key)
+    history = json.loads(existing_history) if existing_history else []
+    history.append(song_data)
+    redis_client.set(key, json.dumps(history))
 
-@app.route('/redistest')
+@app.route('/history')
+def history():
+    user_id = request.cookies.get('user_id')
+    history = redis_client.get(f"user:{user_id}")
+    song_history = json.loads(history) if history else []
+    return render_template('history.html', song_history=song_history)
+
+@app.route('/clear_history', methods=['POST'])
+def clear_history():
+    user_id = request.cookies.get('user_id')
+    redis_client.delete(f"user:{user_id}")
+    return redirect(url_for('history'))
+
+
+@app.get('/redistest')
 def redis_test():
     message = redis_client.get('my_message')
     message = message.decode('utf-8') if message else "No message found."
     return render_template('redistest.html', message=message)
 
-@app.route('/')
+@app.get('/')
 def index():
     try:
         redis_client.ping()
@@ -55,14 +76,9 @@ def index():
     
     return render_template('index.html')
 
-@app.route('/history', methods=['get'])
-def history():
-    return render_template('history.html', red=db)
-
 @app.get('/about')
 def about():
     return render_template('about.html')
-
 
 @app.route('/detected')
 def detected():
