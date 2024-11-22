@@ -33,18 +33,25 @@ app.secret_key = os.getenv('sec_key')
 
 @app.before_request
 def set_user_identifier():
-    if not request.cookies.get('user_id'):
+    user_id = request.cookies.get('user_id')  # Check if 'user_id' exists in cookies
+    if not user_id:  # If no 'user_id', generate one
         user_id = str(uuid.uuid4())
         resp = make_response()
         resp.set_cookie('user_id', user_id)
+        print(f"New user ID generated: {user_id}")
         return resp
+    else:
+        print(f"Existing user ID: {user_id}")
+
     
 def add_to_history(user_id, song_data):
-    key = f"user:{user_id}"
-    existing_history = redis_client.get(key)
-    history = json.loads(existing_history) if existing_history else []
-    history.append(song_data)
-    redis_client.set(key, json.dumps(history))
+    key = f"user:{user_id}"  # Key for Redis
+    existing_history = redis_client.get(key)  # Get existing history
+    history = json.loads(existing_history) if existing_history else []  # Parse JSON or initialize empty list
+    history.append(song_data)  # Append new song data
+    redis_client.set(key, json.dumps(history))  # Save updated history back to Redis
+    print(f"History updated for user {user_id}: {history}")
+
 
 @app.route('/history')
 def history():
@@ -82,6 +89,10 @@ def about():
 
 @app.route('/detected')
 def detected():
+    user_id = request.cookies.get('user_id')  # Retrieve user_id from cookies
+    if not user_id:
+        return "User ID not found!", 400  # Handle missing user ID
+    
     song_key = request.args.get('key')
     print(f"Received song key: {song_key}")
   
@@ -96,6 +107,8 @@ def detected():
             return jsonify({"error": "No data found for the provided key"}), 404
 
         song_data = json.loads(song_data_json)
+
+        add_to_history(user_id=user_id, song_data=song_data)
 
 
         # Pass the song data and song_key to the template
@@ -158,6 +171,7 @@ def translate():
 
 @app.post('/upload-audio')
 def upload_audio():
+
     if 'audio' not in request.files:
         return jsonify({"error": "No audio file uploaded"}), 400
 
@@ -191,7 +205,7 @@ def upload_audio():
             'songLang': la,
             'songLyric': ret_val,
             'albumCover': coverart
-        }
+        } 
 
         # Generate a unique key for storing the song data in Redis
         song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
