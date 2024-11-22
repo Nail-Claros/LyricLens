@@ -62,14 +62,14 @@ def add_to_history(user_id, song_data, song_key):
     
     print(f"History updated for user {user_id}: {history}")
 
-@app.route('/history')
+@app.get('/history')
 def history():
     user_id = request.cookies.get('user_id')
     history = redis_client.get(f"user:{user_id}")
     song_history = json.loads(history) if history else []
     return render_template('history.html', song_history=song_history)
 
-@app.route('/clear_history', methods=['POST'])
+@app.post('/clear_history')
 def clear_history():
     user_id = request.cookies.get('user_id')
     redis_client.delete(f"user:{user_id}")
@@ -95,7 +95,7 @@ def index():
 def about():
     return render_template('about.html')
 
-@app.route('/detected')
+@app.get('/detected')
 def detected():
     user_id = request.cookies.get('user_id')  # Retrieve user_id from cookies
     if not user_id:
@@ -231,7 +231,7 @@ def upload_audio():
         print(f"Error uploading or processing file: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
-@app.route('/lyrics')
+@app.get('/lyrics')
 def lyrics():
     song_key = request.args.get('song_key')  # Retrieve the song_key from the URL
     user_id = request.cookies.get('user_id')  # Get the user_id from cookies
