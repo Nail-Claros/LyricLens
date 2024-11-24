@@ -274,7 +274,7 @@ def return_lyrics(s_name, s_artist):
             url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
             querystring = {"q": str(s_name.split("-")[0].strip() + " " + s_artist.split(",")[0].strip()), "per_page": "1", "page": "1", "text_format": "String"}
             headers = {
-				"x-rapidapi-key": str(bkey),
+				"x-rapidapi-key": str(nkey),
 				"x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
 			}
             response = requests.get(url, headers=headers, params=querystring)
@@ -292,7 +292,7 @@ def return_lyrics(s_name, s_artist):
             url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
             querystring = {"q": str(s_name.split("(")[0].strip() + " " + s_artist.split(",")[0].strip()), "per_page": "1", "page": "1", "text_format": "String"}
             headers = {
-				"x-rapidapi-key": str(bkey),
+				"x-rapidapi-key": str(nkey),
 				"x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
 			}
             response = requests.get(url, headers=headers, params=querystring)
@@ -310,7 +310,7 @@ def return_lyrics(s_name, s_artist):
             url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
             querystring = {"q": str(s_name.split("(")[0].strip() + " " + s_artist.split(",")[0].strip()), "per_page": "1", "page": "1", "text_format": "String"}
             headers = {
-				"x-rapidapi-key": str(bkey),
+				"x-rapidapi-key": str(nkey),
 				"x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
 			}
             response = requests.get(url, headers=headers, params=querystring)
@@ -328,7 +328,7 @@ def return_lyrics(s_name, s_artist):
             url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
             querystring = {"q": str(s_name.split("-")[0].strip() + " " + s_artist.split("&")[0].strip()), "per_page": "1", "page": "1", "text_format": "String"}
             headers = {
-				"x-rapidapi-key": str(bkey),
+				"x-rapidapi-key": str(nkey),
 				"x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
 			}
             response = requests.get(url, headers=headers, params=querystring)
@@ -346,7 +346,7 @@ def return_lyrics(s_name, s_artist):
             url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
             querystring = {"q": str(s_name.split("(")[0].strip() + " " + s_artist.split("&")[0].strip()), "per_page": "1", "page": "1", "text_format": "String"}
             headers = {
-				"x-rapidapi-key": str(bkey),
+				"x-rapidapi-key": str(nkey),
 				"x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
 			}
             response = requests.get(url, headers=headers, params=querystring)
@@ -364,7 +364,7 @@ def return_lyrics(s_name, s_artist):
             url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
             querystring = {"q": str(s_name + " " + s_artist.split("&")[0].strip()), "per_page": "1", "page": "1", "text_format": "String"}
             headers = {
-				"x-rapidapi-key": str(bkey),
+				"x-rapidapi-key": str(nkey),
 				"x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
 			}
             response = requests.get(url, headers=headers, params=querystring)
@@ -389,7 +389,7 @@ def return_lyrics(s_name, s_artist):
     url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
     querystring = {"q": str(s_name + " " + s_artist), "per_page": "1", "page": "1", "text_format": "String"}
     headers = {
-        "x-rapidapi-key": str(bkey),
+        "x-rapidapi-key": str(nkey),
         "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
     }
     response = requests.get(url, headers=headers, params=querystring)
@@ -412,7 +412,7 @@ def return_lyrics(s_name, s_artist):
     url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
     querystring = {"q": str(s_name.split("(")[0].strip() + " " + s_artist), "per_page": "1", "page": "1", "text_format": "String"}
     headers = {
-        "x-rapidapi-key": str(bkey),
+        "x-rapidapi-key": str(nkey),
         "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
     }
     response = requests.get(url, headers=headers, params=querystring)
@@ -433,7 +433,7 @@ def return_lyrics(s_name, s_artist):
     url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
     querystring = {"q": str(s_name.split("(")[0].strip()), "per_page": "1", "page": "1", "text_format": "String"}
     headers = {
-        "x-rapidapi-key": str(bkey),
+        "x-rapidapi-key": str(nkey),
         "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
     }
     response = requests.get(url, headers=headers, params=querystring)
