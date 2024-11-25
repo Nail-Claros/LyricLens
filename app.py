@@ -1,12 +1,9 @@
 from flask import Flask, jsonify, render_template, url_for, redirect, request, session, make_response
-import requests
 import trans
 import redis
 import os
 from apis import run_apis
 import boto3
-import unicodedata
-import re
 from urllib.parse import urlparse
 import uuid
 import json
@@ -101,6 +98,17 @@ def detected():
         return "User ID not found!", 400  # Handle missing user ID
     
     song_key = request.args.get('key')
+    if song_key == 0 or song_key == "0":
+        return render_template(
+            'detected.html',
+            code=0,
+            songName="",
+            artistName="",
+            songLang="",
+            songLyric="",
+            albumCover="",
+            song_key=""  # Pass the song_key to the template
+        )
     print(f"Received song key: {song_key}")
   
     if not song_key:
@@ -201,8 +209,7 @@ def upload_audio():
         code, song_name, song_artist, la, ret_val, coverart = result
 
 
-        if code == 0:
-            return jsonify({"message": "Unable to process audio file"}), 400
+        
 
         # Prepare song data for Redis
         song_data = {
@@ -213,6 +220,9 @@ def upload_audio():
             'songLyric': ret_val,
             'albumCover': coverart
         } 
+
+        if code == 0:
+            return jsonify({"endLoop": False, "code":code}), 400
 
         # Generate a unique key for storing the song data in Redis
         song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
