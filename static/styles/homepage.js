@@ -102,6 +102,8 @@ function recordAudio() {
                 setTimeout(() => recordOne(), 1000);
             } else {
                 console.log("Reached maximum iterations or loop stopped by server.");
+                const redirectUrl = `/detected?key=${responseData.code}`;
+                window.location.href = redirectUrl;
             }
         };
 
