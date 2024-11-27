@@ -246,7 +246,7 @@ def searched():
                 }
                 redis_client.set(song_key, json.dumps(complete))
                 add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
-                return render_template('translations.html', song=complete)
+                return render_template('translation.html', song=complete)
 
             # Code 1: Song has no lyrics or translation is not possible, send user to detected page
             complete = {
