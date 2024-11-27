@@ -20,4 +20,6 @@ Lyric Fetching: We fetch the lyrics for the recognized song from a variety of op
 
 Translations: Translations of the lyrics are displayed in your preferred language.
 
+History: See your recent songs in the history page! WARNING: CLOSING THE BROWSER WILL CLEAR YOUR HISOTRY
+
 LyricLens makes it easy to enjoy your favorite music with lyrics in any language!
