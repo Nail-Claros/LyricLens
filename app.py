@@ -142,12 +142,11 @@ def searched():
             'songLyric': "",
             'albumCover': song["header_image_url"]
         }
+        return render_template('song_details.html', song=complete)
         # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
 
         # # Store the song data in Redis
         # redis_client.set(song_key, json.dumps(song_data))
-
-        return render_template('song_details.html', song=complete)
     except json.JSONDecodeError:
         return "Error: Invalid song data", 400
 
