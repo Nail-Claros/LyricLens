@@ -95,14 +95,104 @@ def search():
 
 #currently, I am redirecting to a test page, that shows a proof of concept, you just
 #need to plug the redis logic in, Im rather le you do it as you know it better than I do.
+# @app.get('/searched')
+# def searched():
+#     song_data = request.args.get('song', '{}')  # Get the JSON string
+#     try:
+#         import requests
+#         from bs4 import BeautifulSoup
+#         song = json.loads(song_data)  # Parse JSON string to a dictionary
+
+#         url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
+#         querystring = {"id": str(song["id"]), "text_format": "html"}
+#         headers = {
+#             "x-rapidapi-key": str(nkey),
+#             "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
+#         }
+#         response = requests.get(url, headers=headers, params=querystring)
+#         ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
+
+#         if response.status_code == 200 and "lyrics" in ax:
+#             print("IN____________________ LYRICS FOUND")
+#             lyric_check = ax['lyrics']['lyrics']['body']['html']
+#             if lyric_check:
+#                 if not isinstance(lyric_check, str):
+#                     lyric_check = str(lyric_check)
+#                 ret_val = lyric_check
+#                 soup = BeautifulSoup(lyric_check, features="html.parser")
+#                 ret_val = soup.get_text()
+#                 ret_val = ret_val.encode('utf-8', 'ignore') 
+#                 ret_val = ret_val.decode('utf-8')
+#                 ret_val = ret_val.replace('�', '')
+#                 from trans import detect, translate
+#                 co, la = detect(ret_val[:130])
+#                 if co == "MUL":
+#                     complete = {
+#                                 'code': 4,
+#                                 'songName': song["song_name"],
+#                                 'artistName': song["artist_names"],
+#                                 'songLang': la,
+#                                 'songLyric': ret_val,
+#                                 'albumCover': song["header_image_url"]
+#                                 }
+#                     # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+#                     # # Store the song data in Redis
+#                     # redis_client.set(song_key, json.dumps(complete))
+#                     #add it to history 
+#                     #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
+#                     #since we have a code 4, send them to the view lyrics page
+#                     #return rdirect(url_for("lyrics"), song_key) ? i think
+#                     return render_template('song_details.html', song=complete)
+#                 complete = {
+#                 'code': 3,
+#                 'songName': song["song_name"],
+#                 'artistName': song["artist_names"],
+#                 'songLang': la,
+#                 'songLyric': ret_val,
+#                 'albumCover': song["header_image_url"]
+#                 }
+#                 # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+#                     # # Store the song data in Redis
+#                     # redis_client.set(song_key, json.dumps(complete))
+#                     #add it to history 
+#                     #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
+#                     #since we have a code 3, send them to the translations page
+#                     #return rdirect(url_for("translations"), song_key) ? i think
+#                 return render_template('song_details.html', song=complete)
+#             complete = {
+#             'code': 1,
+#             'songName': song["song_name"],
+#             'artistName': song["artist_names"],
+#             'songLang': "",
+#             'songLyric': "",
+#             'albumCover': song["header_image_url"]
+#         }
+#         # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+#         # # Store the song data in Redis
+#         # redis_client.set(song_key, json.dumps(complete))
+#         #add it to history 
+#         #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
+#         #since we have a code 1, send them to the detected page, where we cant do anything
+#         #return rdirect(url_for("detected"), song_key) ? i think
+#         return render_template('song_details.html', song=complete)
+        
+#     except json.JSONDecodeError:
+#         return "Error: Invalid song data", 400
+
 @app.get('/searched')
 def searched():
-    song_data = request.args.get('song', '{}')  # Get the JSON string
+    """
+    Handle the search functionality for songs.
+    Determine the appropriate response based on the song data and its associated conditions.
+    Store the song data in Redis and add it to the user's history.
+    """
+    song_data = request.args.get('song', '{}')  # Get the JSON string from query parameters
     try:
         import requests
         from bs4 import BeautifulSoup
-        song = json.loads(song_data)  # Parse JSON string to a dictionary
+        song = json.loads(song_data)  # Parse JSON string into a dictionary
 
+        # Genius API details for fetching song lyrics
         url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
         querystring = {"id": str(song["id"]), "text_format": "html"}
         headers = {
@@ -113,71 +203,76 @@ def searched():
         ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
 
         if response.status_code == 200 and "lyrics" in ax:
-            print("IN____________________ LYRICS FOUND")
             lyric_check = ax['lyrics']['lyrics']['body']['html']
+
+            # If lyrics are found
             if lyric_check:
                 if not isinstance(lyric_check, str):
                     lyric_check = str(lyric_check)
-                ret_val = lyric_check
+
+                # Process the lyrics to extract plain text
                 soup = BeautifulSoup(lyric_check, features="html.parser")
-                ret_val = soup.get_text()
-                ret_val = ret_val.encode('utf-8', 'ignore') 
-                ret_val = ret_val.decode('utf-8')
-                ret_val = ret_val.replace('�', '')
+                ret_val = soup.get_text().encode('utf-8', 'ignore').decode('utf-8').replace('�', '')
+
+                # Detect the language of the lyrics
                 from trans import detect, translate
-                co, la = detect(ret_val[:130])
+                co, la = detect(ret_val[:130])  # Detect based on the first 130 characters
+
+                # Redis logic: Generate a unique key and store song data
+                song_key = f"song:{uuid.uuid4().hex}"
+
+                # Code 4: Song is multilingual, send user to view lyrics page
                 if co == "MUL":
                     complete = {
-                                'code': 4,
-                                'songName': song["song_name"],
-                                'artistName': song["artist_names"],
-                                'songLang': la,
-                                'songLyric': ret_val,
-                                'albumCover': song["header_image_url"]
-                                }
-                    # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
-                    # # Store the song data in Redis
-                    # redis_client.set(song_key, json.dumps(complete))
-                    #add it to history 
-                    #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
-                    #since we have a code 4, send them to the view lyrics page
-                    #return rdirect(url_for("lyrics"), song_key) ? i think
-                    return render_template('song_details.html', song=complete)
+                        'code': 4,
+                        'songName': song["song_name"],
+                        'artistName': song["artist_names"],
+                        'songLang': la,
+                        'songLyric': ret_val,
+                        'albumCover': song["header_image_url"]
+                    }
+                    redis_client.set(song_key, json.dumps(complete))
+                    add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
+                    return render_template('lyrics.html', song=complete)
+
+                # Code 3: Song has lyrics that can be translated, send user to translations page
                 complete = {
-                'code': 3,
+                    'code': 3,
+                    'songName': song["song_name"],
+                    'artistName': song["artist_names"],
+                    'songLang': la,
+                    'songLyric': ret_val,
+                    'albumCover': song["header_image_url"]
+                }
+                redis_client.set(song_key, json.dumps(complete))
+                add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
+                return render_template('translations.html', song=complete)
+
+            # Code 1: Song has no lyrics or translation is not possible, send user to detected page
+            complete = {
+                'code': 1,
                 'songName': song["song_name"],
                 'artistName': song["artist_names"],
-                'songLang': la,
-                'songLyric': ret_val,
+                'songLang': "",
+                'songLyric': "",
                 'albumCover': song["header_image_url"]
-                }
-                # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
-                    # # Store the song data in Redis
-                    # redis_client.set(song_key, json.dumps(complete))
-                    #add it to history 
-                    #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
-                    #since we have a code 3, send them to the translations page
-                    #return rdirect(url_for("translations"), song_key) ? i think
-                return render_template('song_details.html', song=complete)
-            complete = {
-            'code': 1,
-            'songName': song["song_name"],
-            'artistName': song["artist_names"],
-            'songLang': "",
-            'songLyric': "",
-            'albumCover': song["header_image_url"]
-        }
-        # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
-        # # Store the song data in Redis
-        # redis_client.set(song_key, json.dumps(complete))
-        #add it to history 
-        #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
-        #since we have a code 1, send them to the detected page, where we cant do anything
-        #return rdirect(url_for("detected"), song_key) ? i think
-        return render_template('song_details.html', song=complete)
-        
+            }
+            redis_client.set(song_key, json.dumps(complete))
+            add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
+            return render_template('detected.html', song=complete)
+
+        # If response status or lyrics data is invalid
+        return "Error: Unable to fetch lyrics", 500
+
     except json.JSONDecodeError:
+        # Handle invalid JSON data
         return "Error: Invalid song data", 400
+    except Exception as e:
+        # Handle other unforeseen errors
+        return f"Error: {str(e)}", 500
+
+
+
 
 
 def add_to_history(user_id, song_data, song_key):
