@@ -27,6 +27,7 @@
     <div class="container">
         {% if song_history %}
             <h1>Your Recent Songs</h1>
+            <p style="color: red; font-size: 14px; font-style: italic;">WARNING: Your song history will be cleared when the browser is closed, as your data is stored in cookies.</p>
             <ul class="song-list">
                 {% for song in song_history|reverse %}
                 <li class="song-item">
