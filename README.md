@@ -12,9 +12,9 @@ https://github.com/NailClaros/test_audio
 Welcome to LyricLens, a project designed to capture your audio recording, recognize the song, fetch the lyrics, and display translations in real-time.
 
 # How it works:
-Audio Capture: Record your audio through the app. Simply click the large circular button on the home page!
+Audio Capture and Song Searching: Record your audio or search for a song. Simply click the large circular button to start recording or enter a song name in the search bar on the home page!
 
-Song Recognition: Our system recognizes the song based on the specific audio data of your recording.
+Song Recognition: Our system recognizes the song based on the specific audio data of your recording or the song name you searched for.
 
 Lyric Fetching: We fetch the lyrics for the recognized song from a variety of open source APIs.
 
