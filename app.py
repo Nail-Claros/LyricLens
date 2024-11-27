@@ -274,27 +274,55 @@ def searched():
         return f"Error: {str(e)}", 500
 
 
-
-
-
 def add_to_history(user_id, song_data, song_key):
+    """
+    Add a song to the user's history, ensuring no duplicate entries
+    (same song name and artist name).
+    """
     key = f"user:{user_id}"  # Key for Redis
     existing_history = redis_client.get(key)  # Get existing history
-    
+
     # Parse existing history or initialize an empty list if not found
-    history = json.loads(existing_history) if existing_history else [] 
+    history = json.loads(existing_history) if existing_history else []
+
+    # Check for duplicates based on song name and artist name
+    is_duplicate = any(
+        song['songName'] == song_data['songName'] and song['artistName'] == song_data['artistName']
+        for song in history
+    )
+
+    # If not a duplicate, add the new song data with the song_key
+    if not is_duplicate:
+        song_data_with_key = song_data.copy()  # Create a copy of song_data
+        song_data_with_key['song_key'] = song_key  # Add the song_key to the data
+        history.append(song_data_with_key)  # Append the song to history
+
+        # Save the updated history back to Redis
+        redis_client.set(key, json.dumps(history))
+        print(f"History updated for user {user_id}: {history}")
+    else:
+        print(f"Duplicate song not added for user {user_id}: {song_data['songName']} by {song_data['artistName']}")
+
+
+
+# def add_to_history(user_id, song_data, song_key):
+#     key = f"user:{user_id}"  # Key for Redis
+#     existing_history = redis_client.get(key)  # Get existing history
     
-    # Include the song_key along with the song_data
-    song_data_with_key = song_data.copy()  # Create a copy of song_data
-    song_data_with_key['song_key'] = song_key  # Add the song_key to the data
+#     # Parse existing history or initialize an empty list if not found
+#     history = json.loads(existing_history) if existing_history else [] 
     
-    # Append the song data (now with the song_key) to the history
-    history.append(song_data_with_key)
+#     # Include the song_key along with the song_data
+#     song_data_with_key = song_data.copy()  # Create a copy of song_data
+#     song_data_with_key['song_key'] = song_key  # Add the song_key to the data
     
-    # Save updated history back to Redis
-    redis_client.set(key, json.dumps(history))
+#     # Append the song data (now with the song_key) to the history
+#     history.append(song_data_with_key)
     
-    print(f"History updated for user {user_id}: {history}")
+#     # Save updated history back to Redis
+#     redis_client.set(key, json.dumps(history))
+    
+#     print(f"History updated for user {user_id}: {history}")
 
 @app.get('/history')
 def history():
@@ -371,6 +399,10 @@ def detected():
     
 @app.get('/translations')
 def translations():
+    user_id = request.cookies.get('user_id')  # Retrieve user_id from cookies
+    if not user_id:
+        return "User ID not found!", 400  # Handle missing user ID
+
     song_key = request.args.get('key')
     print(f"Received song key: {song_key}")
     
@@ -387,6 +419,8 @@ def translations():
             return jsonify({"error": "No data found for the provided key"}), 404
         song_data = json.loads(song_data_json)
         print(f"Song data: {song_data}")
+
+        add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
 
         # Pass the retrieved data to the template
         return render_template(
