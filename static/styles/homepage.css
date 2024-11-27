@@ -59,6 +59,105 @@ body
     color: #ff7700; /* Hover color */
 }
 
+.navbar-search {
+    position: absolute;
+    top: 3%;
+    left: 20px;
+    color: #e59e1a;
+    border: 1px solid #e59e1a;
+    border-radius: 20px; /* Rounded corners */
+    overflow: hidden;
+    width: 25%;
+    height: 5%;
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically center the children */
+    gap: 10px;
+    z-index: 10;
+}
+
+.searcher {
+    margin-left: 5px;
+    color: #e59e1a;
+    outline: none;
+    border: none;
+    font-size: large;
+    max-width: 100%;
+    flex: 1; /* Allow input to take remaining space */
+}
+
+#searchBtn {
+    background: none; /* Remove default button styling */
+    border: none; /* Remove border */
+    padding: 0 15px; /* Add some padding for better spacing */
+    cursor: pointer;
+    display: flex; /* Flex for icon alignment */
+    align-items: center; /* Center icon vertically */
+    justify-content: center;
+}
+
+.material-symbols-outlined {
+    color: #e59e1a;
+    font-size: 20px; /* Adjust icon size */
+}
+
+
+#searchResults {
+    position: absolute;
+    top: 8%;
+    color: #e59e1a;
+    left: 20px;
+    width: 30%;
+    border: 1px solid #e59e1a;
+    border-radius: 10px;
+    overflow-y: auto; /* Scrollable if too many results */
+    max-height: 80%; /* Limit height */
+    z-index: 9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    background-color: hsla(0, 100%, 50%, 0.1)
+}
+
+#searchResults.hidden {
+    display: none;
+}
+
+.song-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.song-item:hover {
+    background: #651717;
+    opacity: 90%;
+}
+
+.song-item img {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+#searchResults::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+#searchResults::-webkit-scrollbar-track {
+    background: #ffa527;
+    border-radius: 20px;
+}
+
+#searchResults::-webkit-scrollbar-thumb {
+    background-color: #f4a263;
+    border-radius: 10px;
+    border: none solid #ffa527;
+}
+
+#searchResults {
+    scrollbar-width: none; /* Hides scrollbar in Firefox, why not ya know*/
+}
 
 .title-container img
 {

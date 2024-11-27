@@ -122,20 +122,32 @@ def searched():
                 ret_val = lyric_check
                 soup = BeautifulSoup(lyric_check, features="html.parser")
                 ret_val = soup.get_text()
+                ret_val = ret_val.encode('utf-8', 'ignore') 
+                ret_val = ret_val.decode('utf-8')
+                ret_val = ret_val.replace('�', '')
                 from trans import detect, translate
                 co, la = detect(ret_val[:130])
                 if co == "MUL":
                     complete = {
-                                'code': "",
+                                'code': 4,
                                 'songName': song["song_name"],
                                 'artistName': song["artist_names"],
-                                'songLang': "",
-                                'songLyric': "",
+                                'songLang': la,
+                                'songLyric': ret_val,
                                 'albumCover': song["header_image_url"]
                                 }
                     return render_template('song_details.html', song=complete)
-        complete = {
-            'code': "",
+                complete = {
+                'code': 3,
+                'songName': song["song_name"],
+                'artistName': song["artist_names"],
+                'songLang': la,
+                'songLyric': ret_val,
+                'albumCover': song["header_image_url"]
+                }
+                return render_template('song_details.html', song=complete)
+            complete = {
+            'code': 1,
             'songName': song["song_name"],
             'artistName': song["artist_names"],
             'songLang': "",

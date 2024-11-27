@@ -7,7 +7,23 @@
 
 {% block body %}
 <body>
+    <nav class="navbar-search" id="navbar-search">
+        <input 
+            type="text" 
+            class="searcher" 
+            id="searchInput" 
+            placeholder="Search songs!"
+        >
+        <button id="searchBtn">
+            <span class="material-symbols-outlined">search</span>
+        </button>
+        
+    </nav>
 
+    <div id="searchResults" class="hidden">
+        <div id="songResults"></div>
+    </div>
+    
     <nav class="navbar">
         <ul class="nav-links">
             <li><a href="{{url_for('index')}}">HOME</a></li>
