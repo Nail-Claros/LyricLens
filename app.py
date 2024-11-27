@@ -186,6 +186,7 @@ def searched():
     Determine the appropriate response based on the song data and its associated conditions.
     Store the song data in Redis and add it to the user's history.
     """
+    
     song_data = request.args.get('song', '{}')  # Get the JSON string from query parameters
     try:
         import requests
@@ -221,7 +222,7 @@ def searched():
                 # Redis logic: Generate a unique key and store song data
                 song_key = f"song:{uuid.uuid4().hex}"
 
-                # Code 4: Song is multilingual, send user to view lyrics page
+                # Code 4: Song is multilingual, redirect to lyrics page
                 if co == "MUL":
                     complete = {
                         'code': 4,
@@ -233,9 +234,9 @@ def searched():
                     }
                     redis_client.set(song_key, json.dumps(complete))
                     add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
-                    return render_template('lyrics.html', song=complete)
+                    return redirect(url_for('lyrics', key=song_key))  # Pass song_key to lyrics page
 
-                # Code 3: Song has lyrics that can be translated, send user to translations page
+                # Code 3: Translatable lyrics, redirect to translations page
                 complete = {
                     'code': 3,
                     'songName': song["song_name"],
@@ -246,9 +247,10 @@ def searched():
                 }
                 redis_client.set(song_key, json.dumps(complete))
                 add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
-                return render_template('translation.html', song=complete)
+                return redirect(url_for('translations', key=song_key))  # Pass song_key to translations page
 
-            # Code 1: Song has no lyrics or translation is not possible, send user to detected page
+            # Code 1: No lyrics or untranslatable, redirect to detected page
+            song_key = f"song:{uuid.uuid4().hex}"
             complete = {
                 'code': 1,
                 'songName': song["song_name"],
@@ -259,7 +261,7 @@ def searched():
             }
             redis_client.set(song_key, json.dumps(complete))
             add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
-            return render_template('detected.html', song=complete)
+            return redirect(url_for('detected', key=song_key))  # Pass song_key to detected page
 
         # If response status or lyrics data is invalid
         return "Error: Unable to fetch lyrics", 500
