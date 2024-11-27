@@ -24,9 +24,9 @@ s3_client = boto3.client(
     aws_secret_access_key=AWS_SECRET_KEY
 )
 
-db = []
 app = Flask(__name__)
 app.secret_key = os.getenv('sec_key')
+nkey = os.getenv('key_n')
 
 @app.before_request
 def set_user_identifier():
@@ -49,24 +49,172 @@ def index():
 
     return render_template('index.html')
 
+@app.get('/search')
+def search():
+    query = request.args.get('query', '')  # Get query parameter from the request
+    try:
+        import requests
+        url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
+        querystring = {"q":f"{query}","per_page":"15","page":"1"}
+        headers = {
+            "x-rapidapi-key": f"{nkey}",
+            "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
+        }
+        response = requests.get(url, headers=headers, params=querystring)
+
+        data = json.loads(response.text)  # Replace this with your actual data source
+        hits = data.get("hits", [])
+        
+        filtered_songs = []
+        for hit in hits:
+            result = hit.get("result", {})
+            #no point displaying songs that have no lyrics
+            if result.get("lyrics_state") == "complete" and not result.get("instrumental", True):
+                full_title = result.get("full_title", "")
+                if "by" in full_title:
+                    song_name, artist_names = full_title.split("by", 1)
+                    song_name = song_name.strip()
+                    artist_names = artist_names.strip()
+                    
+                    # Filter based on the search query, ensure we show relevant sonds
+                    if query.lower() in song_name.lower() or query.lower() in artist_names.lower():
+                        filtered_songs.append({
+                            "song_name": song_name,
+                            "artist_names": artist_names,
+                            "full_title": full_title,
+                            "header_image_url": result.get("header_image_url"),
+                            "id": result.get("id"),
+                        })
+        for song in filtered_songs:
+            print(song)
+        return jsonify(filtered_songs) 
+    
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        return jsonify({"error": f"Error processing JSON data: {e}"}), 500
+
+@app.get('/searched')
+def searched():
+    """
+    Handle the search functionality for songs.
+    Determine the appropriate response based on the song data and its associated conditions.
+    Store the song data in Redis and add it to the user's history.
+    """
+    
+    song_data = request.args.get('song', '{}')  # Get the JSON string from query parameters
+    try:
+        import requests
+        from bs4 import BeautifulSoup
+        song = json.loads(song_data)  # Parse JSON string into a dictionary
+
+        # Genius API details for fetching song lyrics
+        url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
+        querystring = {"id": str(song["id"]), "text_format": "html"}
+        headers = {
+            "x-rapidapi-key": str(nkey),
+            "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
+        }
+        response = requests.get(url, headers=headers, params=querystring)
+        ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
+
+        if response.status_code == 200 and "lyrics" in ax:
+            lyric_check = ax['lyrics']['lyrics']['body']['html']
+
+            # If lyrics are found
+            if lyric_check:
+                if not isinstance(lyric_check, str):
+                    lyric_check = str(lyric_check)
+
+                # Process the lyrics to extract plain text
+                soup = BeautifulSoup(lyric_check, features="html.parser")
+                ret_val = soup.get_text().encode('utf-8', 'ignore').decode('utf-8').replace('�', '')
+
+                # Detect the language of the lyrics
+                from trans import detect, translate
+                co, la = detect(ret_val[:130])  # Detect based on the first 130 characters
+
+                # Redis logic: Generate a unique key and store song data
+                song_key = f"song:{uuid.uuid4().hex}"
+
+                # Code 4: Song is multilingual, redirect to lyrics page
+                if co == "MUL":
+                    complete = {
+                        'code': 4,
+                        'songName': song["song_name"],
+                        'artistName': song["artist_names"],
+                        'songLang': la,
+                        'songLyric': ret_val,
+                        'albumCover': song["header_image_url"]
+                    }
+                    redis_client.set(song_key, json.dumps(complete))
+                    add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
+                    return redirect(url_for('lyrics', key=song_key))  # Pass song_key to lyrics page
+
+                # Code 3: Translatable lyrics, redirect to translations page
+                complete = {
+                    'code': 3,
+                    'songName': song["song_name"],
+                    'artistName': song["artist_names"],
+                    'songLang': la,
+                    'songLyric': ret_val,
+                    'albumCover': song["header_image_url"]
+                }
+                redis_client.set(song_key, json.dumps(complete))
+                add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
+                return redirect(url_for('translations', key=song_key))  # Pass song_key to translations page
+
+            # Code 1: No lyrics or untranslatable, redirect to detected page
+            song_key = f"song:{uuid.uuid4().hex}"
+            complete = {
+                'code': 1,
+                'songName': song["song_name"],
+                'artistName': song["artist_names"],
+                'songLang': "",
+                'songLyric': "",
+                'albumCover': song["header_image_url"]
+            }
+            redis_client.set(song_key, json.dumps(complete))
+            add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
+            return redirect(url_for('detected', key=song_key))  # Pass song_key to detected page
+
+        # If response status or lyrics data is invalid
+        return "Error: Unable to fetch lyrics", 500
+
+    except json.JSONDecodeError:
+        # Handle invalid JSON data
+        return "Error: Invalid song data", 400
+    except Exception as e:
+        # Handle other unforeseen errors
+        return f"Error: {str(e)}", 500
+
+
 def add_to_history(user_id, song_data, song_key):
+    """
+    Add a song to the user's history, ensuring no duplicate entries
+    (same song name and artist name).
+    """
     key = f"user:{user_id}"  # Key for Redis
     existing_history = redis_client.get(key)  # Get existing history
-    
+
     # Parse existing history or initialize an empty list if not found
-    history = json.loads(existing_history) if existing_history else [] 
-    
-    # Include the song_key along with the song_data
-    song_data_with_key = song_data.copy()  # Create a copy of song_data
-    song_data_with_key['song_key'] = song_key  # Add the song_key to the data
-    
-    # Append the song data (now with the song_key) to the history
-    history.append(song_data_with_key)
-    
-    # Save updated history back to Redis
-    redis_client.set(key, json.dumps(history))
-    
-    print(f"History updated for user {user_id}: {history}")
+    history = json.loads(existing_history) if existing_history else []
+
+    # Check for duplicates based on song name and artist name
+    is_duplicate = any(
+        song['songName'] == song_data['songName'] and song['artistName'] == song_data['artistName']
+        for song in history
+    )
+
+    # If not a duplicate, add the new song data with the song_key
+    if not is_duplicate:
+        song_data_with_key = song_data.copy()  # Create a copy of song_data
+        song_data_with_key['song_key'] = song_key  # Add the song_key to the data
+        history.append(song_data_with_key)  # Append the song to history
+
+        # Save the updated history back to Redis
+        redis_client.set(key, json.dumps(history))
+        print(f"History updated for user {user_id}: {history}")
+    else:
+        print(f"Duplicate song not added for user {user_id}: {song_data['songName']} by {song_data['artistName']}")
 
 @app.get('/history')
 def history():
@@ -75,11 +223,11 @@ def history():
     song_history = json.loads(history) if history else []
     return render_template('history.html', song_history=song_history)
 
-@app.post('/clear_history')
-def clear_history():
-    user_id = request.cookies.get('user_id')
-    redis_client.delete(f"user:{user_id}")
-    return redirect(url_for('history'))
+# @app.post('/clear_history')
+# def clear_history():
+#     user_id = request.cookies.get('user_id')
+#     redis_client.delete(f"user:{user_id}")
+#     return redirect(url_for('history'))
 
 @app.get('/redistest')
 def redis_test():
@@ -143,6 +291,10 @@ def detected():
     
 @app.get('/translations')
 def translations():
+    user_id = request.cookies.get('user_id')  # Retrieve user_id from cookies
+    if not user_id:
+        return "User ID not found!", 400  # Handle missing user ID
+
     song_key = request.args.get('key')
     print(f"Received song key: {song_key}")
     
@@ -159,6 +311,8 @@ def translations():
             return jsonify({"error": "No data found for the provided key"}), 404
         song_data = json.loads(song_data_json)
         print(f"Song data: {song_data}")
+
+        add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
 
         # Pass the retrieved data to the template
         return render_template(
@@ -208,8 +362,6 @@ def upload_audio():
 
         code, song_name, song_artist, la, ret_val, coverart = result
 
-
-        
 
         # Prepare song data for Redis
         song_data = {
