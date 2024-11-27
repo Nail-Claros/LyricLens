@@ -197,6 +197,8 @@ function renderSongs(songs) {
         return;
     }
 
+    let isLocked = false; // Track if a song has been clicked
+
     songs.forEach(song => {
         const songElement = document.createElement('div');
         songElement.className = 'song-item';
@@ -205,11 +207,30 @@ function renderSongs(songs) {
             <h5>${song.song_name}</h5>
             <p>${song.artist_names}</p>
         `;
+
+        // Add click event to handle selection
         songElement.addEventListener('click', () => {
+            if (isLocked) return; // Prevent further interactions if locked
+            isLocked = true;
+
+            // Highlight the selected song
+            songElement.classList.add('selected');
+
+            // Disable all other song items
+            const allSongs = document.querySelectorAll('.song-item');
+            allSongs.forEach(item => {
+                if (item !== songElement) {
+                    item.style.pointerEvents = 'none'; // Disable clicks
+                    item.style.opacity = '0.5'; // Dim other items for emphasis
+                }
+            });
+
+            // Redirect to the new route
             const songData = JSON.stringify(song);
             const encodedData = encodeURIComponent(songData);
             window.location.href = `/searched?song=${encodedData}`;
         });
+
         container.appendChild(songElement);
     });
 }

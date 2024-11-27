@@ -159,6 +159,12 @@ body
     scrollbar-width: none; /* Hides scrollbar in Firefox, why not ya know*/
 }
 
+.song-item.selected {
+    border: 2px solid #c9ef0a; /* Highlight border */
+    background-color: #d65627; /* Subtle background color change */
+    opacity: 1; /* Ensure full opacity for the selected item */
+}
+
 .title-container img
 {
     height: 40px;

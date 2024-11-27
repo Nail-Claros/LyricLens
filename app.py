@@ -93,7 +93,8 @@ def search():
     except (json.JSONDecodeError, KeyError, TypeError) as e:
         return jsonify({"error": f"Error processing JSON data: {e}"}), 500
 
-
+#currently, I am redirecting to a test page, that shows a proof of concept, you just
+#need to plug the redis logic in, Im rather le you do it as you know it better than I do.
 @app.get('/searched')
 def searched():
     song_data = request.args.get('song', '{}')  # Get the JSON string
@@ -102,8 +103,6 @@ def searched():
         from bs4 import BeautifulSoup
         song = json.loads(song_data)  # Parse JSON string to a dictionary
 
-
-        
         url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
         querystring = {"id": str(song["id"]), "text_format": "html"}
         headers = {
@@ -136,6 +135,13 @@ def searched():
                                 'songLyric': ret_val,
                                 'albumCover': song["header_image_url"]
                                 }
+                    # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+                    # # Store the song data in Redis
+                    # redis_client.set(song_key, json.dumps(complete))
+                    #add it to history 
+                    #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
+                    #since we have a code 4, send them to the view lyrics page
+                    #return rdirect(url_for("lyrics"), song_key) ? i think
                     return render_template('song_details.html', song=complete)
                 complete = {
                 'code': 3,
@@ -145,6 +151,13 @@ def searched():
                 'songLyric': ret_val,
                 'albumCover': song["header_image_url"]
                 }
+                # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+                    # # Store the song data in Redis
+                    # redis_client.set(song_key, json.dumps(complete))
+                    #add it to history 
+                    #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
+                    #since we have a code 3, send them to the translations page
+                    #return rdirect(url_for("translations"), song_key) ? i think
                 return render_template('song_details.html', song=complete)
             complete = {
             'code': 1,
@@ -154,11 +167,15 @@ def searched():
             'songLyric': "",
             'albumCover': song["header_image_url"]
         }
-        return render_template('song_details.html', song=complete)
         # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
-
         # # Store the song data in Redis
-        # redis_client.set(song_key, json.dumps(song_data))
+        # redis_client.set(song_key, json.dumps(complete))
+        #add it to history 
+        #add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
+        #since we have a code 1, send them to the detected page, where we cant do anything
+        #return rdirect(url_for("detected"), song_key) ? i think
+        return render_template('song_details.html', song=complete)
+        
     except json.JSONDecodeError:
         return "Error: Invalid song data", 400
 
