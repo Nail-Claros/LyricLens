@@ -26,7 +26,7 @@
     </div>
         {% if code == 3 %} <!-- Perfect run-->
             <div id="modal"  class="modal" style="display: block;">
-                <span class="close">X</span>
+                <span class="close" onclick="window.location.href='/'">X</span>
                 <div class="modal-content"> 
                     <div class="album-cover-container">
                         {% if albumCover != "fail" %}
@@ -48,7 +48,7 @@
         {% endif %}
         {% if code == 2 %} <!-- instrumental song-->
             <div id="modal" class="modal" style="display: block;">
-                <span class="close">X</span>
+                <span class="close" onclick="window.location.href='/'">X</span>
                 <div class="modal-content"> 
                     <div class="album-cover-container">
                         {% if albumCover != "fail" %}
@@ -68,7 +68,7 @@
         {% endif %}
         {% if code == 1 %} <!-- no lyrics or instructmental-->
             <div id="modal"  class="modal" style="display: block;">
-                <span class="close">X</span>
+                <span class="close" onclick="window.location.href='/'">X</span>
                 <div class="modal-content"> 
                     <div class="album-cover-container">
                         {% if albumCover != "fail" %}
@@ -88,7 +88,7 @@
         {% endif %}
         {% if code == 0 %} <!-- Can not find anything-->
             <div id="modal"  class="modal" style="display: block;">
-                <span class="close">X</span>
+                <span class="close" onclick="window.location.href='/'">X</span>
                 <div class="modal-content-zero"> 
                     <h2 class="h2-text">No song could be found please try again</h2>
                     <textarea id="lyrics" class="lyric-container" rows="2" readonly style="font-size: 30px;">...</textarea>
@@ -98,7 +98,7 @@
         {% endif %}
         {% if code == 4 %} <!-- Made up Langauge or Gibberish-->
             <div id="modal" class="modal" style="display: block;">
-                <span class="close">X</span>
+                <span class="close" onclick="window.location.href='/'">X</span>
                 <div class="modal-content-four"> 
                     <div class="album-cover-container">
                         {% if albumCover != "fail" %}
