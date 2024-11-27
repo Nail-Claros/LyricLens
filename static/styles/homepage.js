@@ -155,3 +155,107 @@ function writeString(view, offset, string) {
         view.setUint8(offset + i, string.charCodeAt(i));
     }
 }
+
+
+// Handle search button click
+document.getElementById('searchBtn').addEventListener('click', () => {
+    const searchQuery = document.getElementById('searchInput').value;
+
+    // Fetch search results from the backend
+    fetch(`/search?query=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+            renderSongs(data); // Render the songs
+            toggleSearchResults(true); // Show the results container
+        })
+        .catch(error => console.error('Error fetching search results:', error));
+});
+
+// Handle pressing Enter key for search
+document.getElementById('searchInput').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        const searchQuery = document.getElementById('searchInput').value;
+
+        // Fetch search results from the backend
+        fetch(`/search?query=${encodeURIComponent(searchQuery)}`)
+            .then(response => response.json())
+            .then(data => {
+                renderSongs(data); // Render the songs
+                toggleSearchResults(true); // Show the results container
+            })
+            .catch(error => console.error('Error fetching search results:', error));
+    }
+});
+
+// Function to render songs in the UI
+function renderSongs(songs) {
+    const container = document.getElementById('songResults');
+    container.innerHTML = ''; // Clear previous results
+
+    if (songs.length === 0) {
+        container.innerHTML = '<p>No songs found.</p>';
+        return;
+    }
+
+    songs.forEach(song => {
+        const songElement = document.createElement('div');
+        songElement.className = 'song-item';
+        songElement.innerHTML = `
+            <img src="${song.header_image_url}" alt="Album cover"/>
+            <h5>${song.song_name}</h5>
+            <p>${song.artist_names}</p>
+        `;
+        songElement.addEventListener('click', () => {
+            const songData = JSON.stringify(song);
+            const encodedData = encodeURIComponent(songData);
+            window.location.href = `/searched?song=${encodedData}`;
+        });
+        container.appendChild(songElement);
+    });
+}
+
+function toggleSearchResults(show) {
+    const resultsContainer = document.getElementById('searchResults');
+    if (show) {
+        resultsContainer.classList.remove('hidden');
+    } else {
+        resultsContainer.classList.add('hidden');
+    }
+}
+
+// Close search results when clicking outside
+document.addEventListener('click', (event) => {
+    const searchResults = document.getElementById('searchResults');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const isClickInside = searchResults.contains(event.target) || 
+                          searchInput.contains(event.target) || 
+                          searchBtn.contains(event.target);
+
+    if (!isClickInside) {
+        toggleSearchResults(false); // Close results if clicked outside
+    }
+});
+
+// Prevent closing when clicking on the search input itself
+document.getElementById('navbar-search').addEventListener('click', (event) => {
+    event.stopPropagation(); // Prevent the click from propagating to the document
+});
+
+// Show search results when clicking on the search input (if there's a query)
+document.getElementById('searchInput').addEventListener('focus', () => {
+    const searchQuery = document.getElementById('searchInput').value;
+    if (searchQuery.trim() !== "") {
+        toggleSearchResults(true); // Reopen results if query is non-empty
+    }
+});
+
+// Show search results when typing in the search input
+document.getElementById('searchInput').addEventListener('input', () => {
+    const searchQuery = document.getElementById('searchInput').value;
+    if (searchQuery.trim() !== "") {
+        toggleSearchResults(true); // Show results if query is non-empty
+    } else {
+        toggleSearchResults(false); // Hide results if query is empty
+    }
+});

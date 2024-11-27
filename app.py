@@ -27,6 +27,7 @@ s3_client = boto3.client(
 db = []
 app = Flask(__name__)
 app.secret_key = os.getenv('sec_key')
+nkey = os.getenv('key_n')
 
 @app.before_request
 def set_user_identifier():
@@ -48,6 +49,108 @@ def index():
         return resp
 
     return render_template('index.html')
+
+@app.get('/search')
+def search():
+    query = request.args.get('query', '')  # Get query parameter from the request
+    try:
+        import requests
+        url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
+        querystring = {"q":f"{query}","per_page":"15","page":"1"}
+        headers = {
+            "x-rapidapi-key": f"{nkey}",
+            "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
+        }
+        response = requests.get(url, headers=headers, params=querystring)
+
+        data = json.loads(response.text)  # Replace this with your actual data source
+        hits = data.get("hits", [])
+        
+        filtered_songs = []
+        for hit in hits:
+            result = hit.get("result", {})
+            #no point displaying songs that have no lyrics
+            if result.get("lyrics_state") == "complete" and not result.get("instrumental", True):
+                full_title = result.get("full_title", "")
+                if "by" in full_title:
+                    song_name, artist_names = full_title.split("by", 1)
+                    song_name = song_name.strip()
+                    artist_names = artist_names.strip()
+                    
+                    # Filter based on the search query, ensure we show relevant sonds
+                    if query.lower() in song_name.lower() or query.lower() in artist_names.lower():
+                        filtered_songs.append({
+                            "song_name": song_name,
+                            "artist_names": artist_names,
+                            "full_title": full_title,
+                            "header_image_url": result.get("header_image_url"),
+                            "id": result.get("id"),
+                        })
+        for song in filtered_songs:
+            print(song)
+        return jsonify(filtered_songs) 
+    
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        return jsonify({"error": f"Error processing JSON data: {e}"}), 500
+
+
+@app.get('/searched')
+def searched():
+    song_data = request.args.get('song', '{}')  # Get the JSON string
+    try:
+        import requests
+        from bs4 import BeautifulSoup
+        song = json.loads(song_data)  # Parse JSON string to a dictionary
+
+
+        
+        url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
+        querystring = {"id": str(song["id"]), "text_format": "html"}
+        headers = {
+            "x-rapidapi-key": str(nkey),
+            "x-rapidapi-host": "genius-song-lyrics1.p.rapidapi.com"
+        }
+        response = requests.get(url, headers=headers, params=querystring)
+        ax = json.loads(response.text.encode('utf-8').decode('utf-8'))
+
+        if response.status_code == 200 and "lyrics" in ax:
+            print("IN____________________ LYRICS FOUND")
+            lyric_check = ax['lyrics']['lyrics']['body']['html']
+            if lyric_check:
+                if not isinstance(lyric_check, str):
+                    lyric_check = str(lyric_check)
+                ret_val = lyric_check
+                soup = BeautifulSoup(lyric_check, features="html.parser")
+                ret_val = soup.get_text()
+                from trans import detect, translate
+                co, la = detect(ret_val[:130])
+                if co == "MUL":
+                    complete = {
+                                'code': "",
+                                'songName': song["song_name"],
+                                'artistName': song["artist_names"],
+                                'songLang': "",
+                                'songLyric': "",
+                                'albumCover': song["header_image_url"]
+                                }
+                    return render_template('song_details.html', song=complete)
+        complete = {
+            'code': "",
+            'songName': song["song_name"],
+            'artistName': song["artist_names"],
+            'songLang': "",
+            'songLyric': "",
+            'albumCover': song["header_image_url"]
+        }
+        # song_key = f"song:{uuid.uuid4().hex}"  # Unique identifier for the song
+
+        # # Store the song data in Redis
+        # redis_client.set(song_key, json.dumps(song_data))
+
+        return render_template('song_details.html', song=complete)
+    except json.JSONDecodeError:
+        return "Error: Invalid song data", 400
+
 
 def add_to_history(user_id, song_data, song_key):
     key = f"user:{user_id}"  # Key for Redis
