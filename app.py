@@ -147,7 +147,7 @@ def searched():
                     }
                     redis_client.set(song_key, json.dumps(complete))
                     add_to_history(user_id=session.get("user_id"), song_data=complete, song_key=song_key)
-                    return redirect(url_for('lyrics', key=song_key))  # Pass song_key to lyrics page
+                    return redirect(url_for('lyrics', song_key=song_key))  # Pass song_key to lyrics page
 
                 # Code 3: Translatable lyrics, redirect to translations page
                 complete = {
@@ -400,10 +400,17 @@ def lyrics():
     # Get the user's song history from Redis
     history = redis_client.get(f"user:{user_id}")
     song_history = json.loads(history) if history else []
+
+    if not song_key:
+        return f"No song key exists: {song_key}", 500
     
     # Find the song data based on the song_key
     song_data = next((song for song in song_history if song['song_key'] == song_key), None)
-    
+    if not song_data:
+        song_data_json = redis_client.get(song_key)  # Fetch directly from Redis using song_key
+        song_data = json.loads(song_data_json) if song_data_json else None
+        add_to_history(user_id=user_id, song_data=song_data, song_key=song_key)
+
     if song_data:
         # Extract the song data
         songName = song_data['songName']
@@ -417,7 +424,7 @@ def lyrics():
                                songLang=songLang, songLyric=songLyric, albumCover=albumCover)
     else:
         # If no song is found with the given song_key, you can handle it accordingly
-        return "Song not found", 404
+        return f"Song not found\nsong key={song_key}\nuser_id={user_id}", 404
 
 
 
