@@ -1,41 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lyric Lens</title>
-    <link rel="stylesheet" href="static/homepage.css">
-    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png')}}">
-    <script defer src="static/homepage.js"></script>
-</head>
+
+{% extends '_template.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="static/styles/homepage.css">
+    <script defer src="static/styles/homepage.js"></script>
+{% endblock %}
+
+{% block body %}
 <body>
+    <nav class="navbar-search" id="navbar-search">
+        <input 
+            type="text" 
+            class="searcher" 
+            id="searchInput" 
+            placeholder="Search songs!"
+        >
+        <button id="searchBtn">
+            <span class="material-symbols-outlined">search</span>
+        </button>
+        
+    </nav>
 
-
+    <div id="searchResults" class="hidden">
+        <div id="songResults"></div>
+    </div>
+    
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{url_for('index')}}">HOME</a></li>
+            <li><a href="{{url_for('about')}}">ABOUT</a></li>
+            <li><a href="{{url_for('history')}}">HISTORY</a></li>
+        </ul>
+    </nav>
+    
     <div class="title-container">
-    <h1>LyricLens</h1>
+        <button><a href="{{url_for('about')}}"><img src="{{ url_for('static', filename='images/Lyric Lens (Text logo).png')}}" alt=""></a></button>
     </div>
     <div class="circle-container">
-        <button id="btn-toggle" class="circle">
-            <img src="{{ url_for('static', filename='images/LL20.png')}}" alt="logo" class="logo">
-        </button>
-    </div>
-    <div class="history-container">
-        <button class="btn-history"><a href="history.html">Histroy</a></button>
-    </div>
-    <div id="modal" class="modal">
-        <span class="close">X</span>
-        <div class="modal-content"> 
-            <div class="album-cover-container">
-            <img src="" alt="Album Cover" class="album-cover" id="album-cover">
-            </div> 
-            <div class="song-info">
-                <h2 id="song-name">Song Name</h2>
-                <p id="artist-name">Artist Name</p>
-            </div>
-            <textarea id="lyrics" rows="2" readonly>Native Lyrics</textarea>
-            <button class="translation-btn"><a href="translation.html">Translations</a></button>
-        </div>
+ 
+            <button id="btn-toggle" class="circle" onclick="recordAudio(); disableButton(event);">
+                <img src="{{ url_for('static', filename='images/Lyric Lens (Icon).png')}}" alt="logo" class="logo">
+            </button>
+
     </div>
 </body>
-</html>
-
+{% endblock %}

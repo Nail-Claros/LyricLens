@@ -1,0 +1,266 @@
+
+body {
+    background-image: url('../images/Lyric Lens (Background Image).png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: rgb(240, 197, 80);
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 1200px;
+    width: 150%;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+
+.album-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+.album-cover {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    background-color: #e0e0e0;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.song-details {
+    display: flex;
+    max-width: 550px;
+    flex-direction: column;
+    text-align: left;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+.song-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffa527;
+    margin: 0;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+.song-artist {
+    font-size: 16px;
+    font-style: italic;
+    color: #d3d3d3;
+    margin: 5px 0 0 0;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+
+.translation-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 20px;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+.original-lang, .translated-lang {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+h3 {
+    margin: 5px 0;
+    font-size: 18px;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+h5 {
+    margin: 0px 0;
+    margin-bottom: 25px;
+    font-size: 18px;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+h4 {
+    margin: 5px 0;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+textarea {
+    width: 100%;
+    height: 400px;
+    background-color: #ffa527;
+    border: none;
+    border-radius: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    font-size: 16px;
+    line-height: 1.5;
+    resize: none;
+    color: rgb(240, 197, 80);
+    scrollbar-color: #f4a263;
+    border-color: yellow;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+    opacity: 90%;
+}
+textarea.text{
+    background-color: hsla(0, 100%, 50%, 0.1);
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+}
+
+textarea::-webkit-scrollbar {
+    width: 0px;
+}
+
+textarea::-webkit-scrollbar-track {
+    background: #ffa527;
+    border-radius: 20px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background-color: #f4a263;
+    border-radius: 10px;
+    border: 3px solid #ffa527;
+}
+
+
+.navbar {
+    position: absolute;
+    top: 1px;
+    right: 40px;
+}
+
+.navbar-img{
+    position: absolute;
+    top: 1px;
+    left: 10px;
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    gap: 20px
+}
+
+.nav-links li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: rgb(237, 179, 20);
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #ff7700;
+}
+
+select {
+    padding: 8px 12px;
+    border-radius: 50px;
+    background-color: #ffffff;
+    color:black;
+    border: none;
+    font-family: 'Albert Sans'; 
+    font-size: 22px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+
+.btn-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 300px;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #ffa52700;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    width: 130px;
+    transition: background-color 0.3s;
+}
+
+.btn a {
+    color: white;
+    text-decoration: none;
+}
+
+.btn:hover {
+    color: #ffb049;
+}
+
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .translation-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .original-lang, .translated-lang {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .arrow {
+        display: none;
+    }
+
+    textarea {
+        width: 100%;
+        height: 200px;
+    }
+
+    .album-info {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .album-cover {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 10px;
+    }
+}

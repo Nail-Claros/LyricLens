@@ -1,3 +1,14 @@
 venv/
 __pycache__/
 .env
+audio/*.wav
+
+import base64
+
+def read_audio_from_filestorage(file_storage):
+    # Read the binary content from the FileStorage object
+    audio_data = file_storage.read()
+    
+    # Encode the binary data to base64
+    audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+    return audio_base64

@@ -1,0 +1,9 @@
+Here are links to the Apis needed, make sur eyou have signed up for them and they are all from rapidapi.com
+
+1.Shazam (audio recognition) https://rapidapi.com/apidojo/api/shazam/pricing
+
+2.Genius Lyrics (searching for song lyrics) https://rapidapi.com/Glavier/api/genius-song-lyrics1/pricing
+3.Musixmatch (searching for song lyrics as a secondary backup search) https://rapidapi.com/Paxsenix0/api/musixmatch-lyrics-songs/pricing
+
+4.Deep Transalte (Does the actual translating) https://rapidapi.com/gatzuma/api/deep-translate1/pricing
+5.Google Translate (Using it for its detect language function and shares api call load) https://rapidapi.com/diyorbekkanal/api/google-translate-api8/pricing

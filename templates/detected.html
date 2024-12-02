@@ -1,0 +1,123 @@
+{% extends '_template.html' %}
+{% block styles %}
+    <link rel="stylesheet" href="static/styles/homepage.css">
+    <script defer src="static/styles/detected.js"></script>
+{% endblock %}
+
+{% block body %}
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="{{url_for('index')}}">HOME</a></li>
+            <li><a href="{{url_for('about')}}">ABOUT</a></li>
+            <li><a href="{{url_for('history')}}">HISTORY</a></li>
+        </ul>
+    </nav>
+    
+    <div class="title-container">
+        <button><a href="{{url_for('about')}}"><img src="{{ url_for('static', filename='images/Lyric Lens (Text logo).png')}}" alt=""></a></button>
+    </div>
+    <div class="circle-container">
+ 
+            <button id="btn-toggle" class="circle" onclick="recordAudio(); disableButton(event);">
+                <img src="{{ url_for('static', filename='images/Lyric Lens (Icon).png')}}" alt="logo" class="logo">
+            </button>
+
+    </div>
+        {% if code == 3 %} <!-- Perfect run-->
+            <div id="modal"  class="modal" style="display: block;">
+                <span class="close" onclick="window.location.href='/'">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}
+                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
+                        <p >Language: {{ songLang }}</p>
+                    </div>
+                    <textarea id="lyrics" class="lyric-container" rows="2" readonly>{{ songLyric }}</textarea>
+                    <button class="translation-btn"><a href="{{ url_for('translations', key=song_key) }}">Translations</a></button>                 
+                 </div>
+            </div>
+        {% endif %}
+        {% if code == 2 %} <!-- instrumental song-->
+            <div id="modal" class="modal" style="display: block;">
+                <span class="close" onclick="window.location.href='/'">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
+                    </div>
+                    <textarea id="lyrics" class="lyric-container" rows="2" readonly style="font-size: 20px;" >Your song is an instrumental so there is no lyrics to translate.</textarea>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+        {% if code == 1 %} <!-- no lyrics or instructmental-->
+            <div id="modal"  class="modal" style="display: block;">
+                <span class="close" onclick="window.location.href='/'">X</span>
+                <div class="modal-content"> 
+                    <div class="album-cover-container">
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
+                    </div>
+                    <textarea id="lyrics" class="lyric-container" rows="2" readonly style="font-size: 20px;">Lyrics are likely not recorded and could not be found or the attempted to song be found is an instrumental.</textarea>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+        {% if code == 0 %} <!-- Can not find anything-->
+            <div id="modal"  class="modal" style="display: block;">
+                <span class="close" onclick="window.location.href='/'">X</span>
+                <div class="modal-content-zero"> 
+                    <h2 class="h2-text">No song could be found please try again</h2>
+                    <textarea id="lyrics" class="lyric-container" rows="2" readonly style="font-size: 30px;">...</textarea>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+        {% if code == 4 %} <!-- Made up Langauge or Gibberish-->
+            <div id="modal" class="modal" style="display: block;">
+                <span class="close" onclick="window.location.href='/'">X</span>
+                <div class="modal-content-four"> 
+                    <div class="album-cover-container">
+                        {% if albumCover != "fail" %}
+                           <img src="{{ albumCover }}" alt="Album Cover" class="album-cover" id="album-cover">
+
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/failimg.webp') }}" alt="Album Cover" class="album-cover" id="album-cover">
+                        {% endif %}                    </div> 
+                    <div class="song-info">
+                        <h2 id="song-name">{{ songName }}</h2>
+                        <p id="artist-name">{{ artistName[:67] }}{% if artistName|length > 67 %}...{% endif %}</p>
+                        <p >Language: {{ songLang }}</p>
+                    </div>
+                    <textarea id="lyrics" class="lyric-container" rows="2" readonly>{{ songLyric }}</textarea>
+                    <p id="p" class="p" style="font-size: 20px;">we have found the song lyrics along with song information, however the song consists of gibberish/made up language.</p>
+                    <button class="translation-btn"><a href="{{url_for('index')}}">Home</a></button>   
+                </div>
+            </div>
+        {% endif %}
+    
+</body>
+{% endblock %}
